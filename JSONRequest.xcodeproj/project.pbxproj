@@ -386,6 +386,7 @@
 				50793BED19D5B57100F5DEB2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		50793BEE19D5B57100F5DEB2 /* Build configuration list for PBXNativeTarget "JSONRequestTests" */ = {
 			isa = XCConfigurationList;
@@ -394,6 +395,7 @@
 				50793BF019D5B57100F5DEB2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
