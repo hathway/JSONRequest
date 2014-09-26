@@ -14,8 +14,9 @@ Response is automatically parsed as JSON and returned in a JSON object (array, d
 
 ### GET some JSON
 ```
-JSONRequest.get("http://httpbin.org/get", params: ["hello": "world"]) { (JSON, response, error) -> Void in
+JSONRequest.get(URL, params: ["hello": "world"]) { (JSON, request, response, error) -> Void in
     println(JSON)
+    println(request)
     println(response)
     println(error)
 }
@@ -24,8 +25,9 @@ JSONRequest.get("http://httpbin.org/get", params: ["hello": "world"]) { (JSON, r
 ### POST some JSON
 ```
 let payload = ["somekey": "somevalue", "anotherkey": "another value"]
-JSONRequestManager.post("http://httpbin.org/post", payload: payload) { (JSON, response, error) -> Void in
+JSONRequestManager.post("http://httpbin.org/post", payload: payload) { (JSON, request, response, error) -> Void in
     println(JSON)
+    println(request)
     println(response)
     println(error)
 }

@@ -8,15 +8,21 @@
 
 import UIKit
 
-typealias JSONRequestComplete = (AnyObject?, NSURLResponse, NSError?) -> Void
+typealias JSONRequestComplete = (AnyObject?, NSURLRequest, NSURLResponse, NSError?) -> Void
+private typealias JSONRequestParseComplete = (AnyObject?, NSError?) -> Void
 
 class JSONRequest: NSObject {
 
     class func get(urlPath:String, params:NSDictionary?, complete:JSONRequestComplete!) {
         let request = self.request(urlPath, params: params)
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {(data, response, error) in
-//            println(NSString(data: data, encoding: NSUTF8StringEncoding))
-            self.parse(data, response: response, error: error, complete: complete)
+            if error == nil {
+                self.parse(data) { (JSON, error) in
+                    complete(JSON, request, response, error)
+                }
+            } else {
+                complete(nil, request, response, error)
+            }
         }
         task.resume()
     }
@@ -31,32 +37,39 @@ class JSONRequest: NSObject {
         }
         
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {(data, response, error) in
-//            println(NSString(data: data, encoding: NSUTF8StringEncoding))
-            self.parse(data, response: response, error: error, complete: complete)
+            if error == nil {
+                self.parse(data) { (JSON, error) in
+                    complete(JSON, request, response, error)
+                }
+            } else {
+                complete(nil, request, response, error)
+            }
         }
         task.resume()
     }
     
     private class func request(url:String, params:NSDictionary?) -> NSMutableURLRequest {
-        let parts = params == nil ? [] : params!.allKeys.map { (key) -> String in
-            return "\(key as String)=\(params![key as String]!)"
-        }
-        let query = parts.count == 0 ? "" : ("&" + "&".join(parts))
-        let URL =  NSURL(string:url + query.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!)
+        let URL =  NSURL(string:url + queryStringWithDictionary(params))
         let request = NSMutableURLRequest(URL: URL)
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         return request
     }
 
-    private class func parse(data:NSData, response:NSURLResponse, error:NSError?, complete:JSONRequestComplete!) {
-        if (error == nil) {
-            var err: NSError?
-            let JSON: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &err)
-            complete(JSON?, response, err)
-        } else {
-            complete(nil, response, error)
+    private class func queryStringWithDictionary(dict:NSDictionary?) -> String {
+        let params = dict == nil ? [] : dict!.allKeys.map { (key) -> String in
+            let name = (key as String).stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+            let value = (dict![key as String]! as String).stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+            return "\(name)=\(value)"
         }
+        return params.count == 0 ? "" : ("?" + "&".join(params))
+    }
+    
+    private class func parse(data:NSData, complete:JSONRequestParseComplete!) {
+        // println(NSString(data: data, encoding: NSUTF8StringEncoding))
+        var error: NSError?
+        let JSON: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: nil, error: &error)
+        complete(JSON, error)
     }
     
 }

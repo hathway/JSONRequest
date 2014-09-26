@@ -27,9 +27,13 @@ class JSONRequestTests: XCTestCase {
     }
     
     func testSimpleGet() {
-        JSONRequest.get("http://httpbin.org/get", params: ["hello": "world"]) { (JSON, response, error) -> Void in
-            // JSON is an NSArray, NSDictionary or nil if an error happened
+        let URL = "http://httpbin.org/get"
+        let expectation = expectationWithDescription("\(URL)")
+
+        JSONRequest.get(URL, params: ["hello": "world"]) { (JSON, request, response, error) -> Void in
+            expectation.fulfill()
             println(JSON)
+            println(request)
             println(response)
             println(error)
             XCTAssert(JSON != nil, "We got JSON")
@@ -37,6 +41,36 @@ class JSONRequestTests: XCTestCase {
             let args = data["args"]! as NSDictionary
             XCTAssert(args["hello"]! as String == "world", "We got Hello World")
         }
+        
+        waitForExpectationsWithTimeout(10) { (error) in
+            XCTAssertNil(error, "\(error)")
+        }
     }
+
+    func testComplexGet() {
+        let URL = "http://httpbin.org/get"
+        let expectation = expectationWithDescription("\(URL)")
+        
+        let params = [
+            "number": 6
+        ]
+        
+        JSONRequest.get(URL, params: params) { (JSON, request, response, error) -> Void in
+            expectation.fulfill()
+            println(JSON)
+            println(request)
+            println(response)
+            println(error)
+            XCTAssert(JSON != nil, "We got JSON")
+            let data = JSON! as NSDictionary
+            let args = data["args"]! as NSDictionary
+            XCTAssert(args["number"]! as Int == 6, "Numeric param")
+        }
+        
+        waitForExpectationsWithTimeout(10) { (error) in
+            XCTAssertNil(error, "\(error)")
+        }
+    }
+
     
 }
