@@ -52,7 +52,8 @@ class JSONRequestTests: XCTestCase {
         let expectation = expectationWithDescription("\(URL)")
         
         let params = [
-            "number": 6
+            "multi-word key": "this is a long value",
+            "empty-value": ""
         ]
         
         JSONRequest.get(URL, params: params) { (JSON, request, response, error) -> Void in
@@ -64,7 +65,7 @@ class JSONRequestTests: XCTestCase {
             XCTAssert(JSON != nil, "We got JSON")
             let data = JSON! as NSDictionary
             let args = data["args"]! as NSDictionary
-            XCTAssert(args["number"]! as Int == 6, "Numeric param")
+            XCTAssert(args["multi-word key"]! as String == "this is a long value", "Multi-word")
         }
         
         waitForExpectationsWithTimeout(10) { (error) in
