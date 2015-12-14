@@ -7,23 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		50793BDE19D5B57000F5DEB2 /* JSONRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 50793BDD19D5B57000F5DEB2 /* JSONRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		50793BE819D5B57100F5DEB2 /* JSONRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50793BE719D5B57100F5DEB2 /* JSONRequestTests.swift */; };
-		50793BF219D5B66400F5DEB2 /* JSONRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50793BF119D5B66400F5DEB2 /* JSONRequest.swift */; };
-		50793BF319D5B66400F5DEB2 /* JSONRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50793BF119D5B66400F5DEB2 /* JSONRequest.swift */; };
-		50793BF519D5B80E00F5DEB2 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 50793BF419D5B80E00F5DEB2 /* README.md */; };
-		50793BF619D5B80E00F5DEB2 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 50793BF419D5B80E00F5DEB2 /* README.md */; };
+		95975AFD1C1E2BF4004750A8 /* Sources in Resources */ = {isa = PBXBuildFile; fileRef = 95975AFC1C1E2BF4004750A8 /* Sources */; };
+		95975B081C1E2CFF004750A8 /* JSONRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95975B071C1E2CFF004750A8 /* JSONRequest.swift */; };
+		95975B0B1C1E31E0004750A8 /* JSONRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 95975B031C1E2CA0004750A8 /* JSONRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		95975B0C1C1E3362004750A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50793BCF19D5B57000F5DEB2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50793BD719D5B57000F5DEB2;
+			remoteInfo = JSONRequest;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		50793BD819D5B57000F5DEB2 /* JSONRequest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JSONRequest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		50793BDC19D5B57000F5DEB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		50793BDD19D5B57000F5DEB2 /* JSONRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSONRequest.h; sourceTree = "<group>"; };
 		50793BE319D5B57000F5DEB2 /* JSONRequestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JSONRequestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		50793BE619D5B57100F5DEB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50793BE719D5B57100F5DEB2 /* JSONRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRequestTests.swift; sourceTree = "<group>"; };
-		50793BF119D5B66400F5DEB2 /* JSONRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONRequest.swift; sourceTree = "<group>"; };
 		50793BF419D5B80E00F5DEB2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		95975AFC1C1E2BF4004750A8 /* Sources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sources; path = /Users/enekoalonso/dev/forks/JSONRequest/Sources; sourceTree = "<absolute>"; };
+		95975AFF1C1E2C68004750A8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = JSONRequest/Info.plist; sourceTree = "<group>"; };
+		95975B031C1E2CA0004750A8 /* JSONRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONRequest.h; path = JSONRequest/JSONRequest.h; sourceTree = "<group>"; };
+		95975B071C1E2CFF004750A8 /* JSONRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequest.swift; path = Sources/JSONRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,8 +56,9 @@
 		50793BCE19D5B57000F5DEB2 = {
 			isa = PBXGroup;
 			children = (
+				95975B061C1E2CC2004750A8 /* Sources */,
+				95975AFE1C1E2C47004750A8 /* JSONRequest */,
 				50793BF419D5B80E00F5DEB2 /* README.md */,
-				50793BDA19D5B57000F5DEB2 /* JSONRequest */,
 				50793BE419D5B57100F5DEB2 /* JSONRequestTests */,
 				50793BD919D5B57000F5DEB2 /* Products */,
 			);
@@ -61,24 +71,6 @@
 				50793BE319D5B57000F5DEB2 /* JSONRequestTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		50793BDA19D5B57000F5DEB2 /* JSONRequest */ = {
-			isa = PBXGroup;
-			children = (
-				50793BF119D5B66400F5DEB2 /* JSONRequest.swift */,
-				50793BDD19D5B57000F5DEB2 /* JSONRequest.h */,
-				50793BDB19D5B57000F5DEB2 /* Supporting Files */,
-			);
-			path = JSONRequest;
-			sourceTree = "<group>";
-		};
-		50793BDB19D5B57000F5DEB2 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				50793BDC19D5B57000F5DEB2 /* Info.plist */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		50793BE419D5B57100F5DEB2 /* JSONRequestTests */ = {
@@ -98,6 +90,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		95975AFE1C1E2C47004750A8 /* JSONRequest */ = {
+			isa = PBXGroup;
+			children = (
+				95975B031C1E2CA0004750A8 /* JSONRequest.h */,
+				95975AFF1C1E2C68004750A8 /* Info.plist */,
+			);
+			name = JSONRequest;
+			sourceTree = "<group>";
+		};
+		95975B061C1E2CC2004750A8 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				95975B071C1E2CFF004750A8 /* JSONRequest.swift */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -105,7 +114,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50793BDE19D5B57000F5DEB2 /* JSONRequest.h in Headers */,
+				95975B0B1C1E31E0004750A8 /* JSONRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +150,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				95975B0D1C1E3362004750A8 /* PBXTargetDependency */,
 			);
 			name = JSONRequestTests;
 			productName = JSONRequestTests;
@@ -153,7 +163,9 @@
 		50793BCF19D5B57000F5DEB2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastSwiftMigration = 0720;
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = Hathway;
 				TargetAttributes = {
 					50793BD719D5B57000F5DEB2 = {
@@ -187,6 +199,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95975AFD1C1E2BF4004750A8 /* Sources in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,8 +217,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50793BF519D5B80E00F5DEB2 /* README.md in Sources */,
-				50793BF219D5B66400F5DEB2 /* JSONRequest.swift in Sources */,
+				95975B081C1E2CFF004750A8 /* JSONRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,13 +225,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50793BF619D5B80E00F5DEB2 /* README.md in Sources */,
 				50793BE819D5B57100F5DEB2 /* JSONRequestTests.swift in Sources */,
-				50793BF319D5B66400F5DEB2 /* JSONRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		95975B0D1C1E3362004750A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50793BD719D5B57000F5DEB2 /* JSONRequest */;
+			targetProxy = 95975B0C1C1E3362004750A8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		50793BE919D5B57100F5DEB2 /* Debug */ = {
@@ -243,6 +261,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -317,6 +336,7 @@
 				INFOPLIST_FILE = JSONRequest/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.wearehathway.frameworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -332,6 +352,7 @@
 				INFOPLIST_FILE = JSONRequest/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.wearehathway.frameworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -340,16 +361,14 @@
 		50793BEF19D5B57100F5DEB2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = JSONRequestTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.wearehathway.frameworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -357,12 +376,10 @@
 		50793BF019D5B57100F5DEB2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = JSONRequestTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.wearehathway.frameworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
