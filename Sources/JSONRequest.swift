@@ -1,13 +1,12 @@
 //
-//  RequestManager.swift
-//  welkio
+//  JSONRequest.swift
+//  JSONRequest
 //
 //  Created by Eneko Alonso on 9/12/14.
 //  Copyright (c) 2014 Hathway. All rights reserved.
 //
 
-import UIKit
-
+import Foundation
 
 public typealias JSONObject = Dictionary<String, AnyObject?>
 
