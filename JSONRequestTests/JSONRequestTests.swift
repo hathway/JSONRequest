@@ -11,16 +11,6 @@ import XCTest
 @testable import JSONRequest
 
 class JSONRequestTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
 
     func testCreateRequest() {
         let jsonRequest = JSONRequest()
@@ -109,7 +99,7 @@ class JSONRequestTests: XCTestCase {
             XCTFail("Should always fail")
         }
     }
-    
+
     func testParseNilResponseWithData() {
         let request = JSONRequest()
         let result = request.parseResponse(NSData(), response: nil)
@@ -124,7 +114,8 @@ class JSONRequestTests: XCTestCase {
 
     func testSimpleGet() {
         let request = JSONRequest()
-        guard let result = try? request.get("http://httpbin.org/get", params: ["hello": "world"]) else {
+        guard let result = try? request.get("http://httpbin.org/get",
+            params: ["hello": "world"]) else {
             XCTFail("Request failed")
             return
         }
@@ -141,7 +132,8 @@ class JSONRequestTests: XCTestCase {
 
     func testFailingGet() {
         let request = JSONRequest()
-        guard let _ = try? request.get("httpppp://httpbin.org/get", params: ["hello": "world"]) else {
+        guard let _ = try? request.get("httpppp://httpbin.org/get",
+            params: ["hello": "world"]) else {
             XCTAssert(true, "Request failed")
             return
         }
