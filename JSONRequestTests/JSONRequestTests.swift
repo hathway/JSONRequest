@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Hathway. All rights reserved.
 //
 
-import UIKit
 import XCTest
 @testable import JSONRequest
 
@@ -49,7 +48,7 @@ class JSONRequestTests: XCTestCase {
 
     func testCreateURLWithParams() {
         let jsonRequest = JSONRequest()
-        let params = [
+        let params: [String: AnyObject] = [
             "a": 1,
             "b": "string",
             "c": 2.2
