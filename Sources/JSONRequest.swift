@@ -22,7 +22,7 @@ public enum JSONError: ErrorType {
 
 public enum JSONResult {
     case Success(data: AnyObject?, response: NSHTTPURLResponse)
-    case Failure(error: JSONError, response: NSHTTPURLResponse?)
+    case Failure(error: JSONError, response: NSHTTPURLResponse?, body: String?)
 }
 
 public extension JSONResult {
@@ -40,7 +40,7 @@ public extension JSONResult {
         switch self {
         case .Success(_, let response):
             return response
-        case .Failure(_, let response):
+        case .Failure(_, let response, _):
             return response
         }
     }
@@ -49,7 +49,7 @@ public extension JSONResult {
         switch self {
         case .Success:
             return nil
-        case .Failure(let error, _):
+        case .Failure(let error, _, _):
             return error
         }
     }
@@ -60,8 +60,12 @@ public class JSONRequest {
 
     private(set) var request: NSMutableURLRequest?
 
+    public var httpRequest: NSMutableURLRequest? {
+        return request
+    }
+
     public init() {
-        // Empty
+        request = NSMutableURLRequest()
     }
 
     // MARK: Non-public business logic (testable but not public outside the module)
@@ -69,21 +73,23 @@ public class JSONRequest {
     func submitAsyncRequest(method: String, url: String, queryParams: JSONObject? = nil,
         payload: AnyObject? = nil, headers: JSONObject? = nil,
         complete: (result: JSONResult) -> Void) {
+            updateRequestUrl(method, url: url, queryParams: queryParams)
+            updateRequestHeaders(headers)
+
             do {
-                try initializeRequest(method, url: url, queryParams: queryParams)
-                updateRequestHeaders(headers)
                 try updateRequestPayload(payload)
             } catch {
-                complete(result: JSONResult.Failure(error: JSONError.InvalidURL, response: nil))
+                complete(result: JSONResult.Failure(error: JSONError.PayloadSerialization,
+                    response: nil, body: nil))
                 return
             }
 
             let task = NSURLSession.sharedSession().dataTaskWithRequest(request!) {
                 (data, response, error) in
-                //            println(NSString(data: data, encoding: NSUTF8StringEncoding))
                 if error != nil {
                     complete(result: JSONResult.Failure(error: JSONError.RequestFailed,
-                        response: response as? NSHTTPURLResponse))
+                        response: response as? NSHTTPURLResponse,
+                        body: String(data: data!, encoding: NSUTF8StringEncoding)))
                     return
                 }
                 let result = self.parseResponse(data, response: response)
@@ -94,18 +100,14 @@ public class JSONRequest {
 
     func submitSyncRequest(method: String, url: String, queryParams: JSONObject? = nil,
         payload: AnyObject? = nil, headers: JSONObject? = nil) -> JSONResult {
-            do {
-                try initializeRequest(method, url: url, queryParams: queryParams)
-            } catch {
-                return JSONResult.Failure(error: JSONError.InvalidURL, response: nil)
-            }
-
+            updateRequestUrl(method, url: url, queryParams: queryParams)
             updateRequestHeaders(headers)
 
             do {
                 try updateRequestPayload(payload)
             } catch {
-                return JSONResult.Failure(error: JSONError.PayloadSerialization, response: nil)
+                return JSONResult.Failure(error: JSONError.PayloadSerialization, response: nil,
+                    body: nil)
             }
 
             do {
@@ -114,24 +116,21 @@ public class JSONRequest {
                     returningResponse: &response)
                 return parseResponse(data, response: response)
             } catch {
-                return JSONResult.Failure(error: JSONError.RequestFailed, response: nil)
+                return JSONResult.Failure(error: JSONError.RequestFailed, response: nil, body: nil)
             }
     }
 
-    func initializeRequest(method: String, url: String, queryParams: JSONObject? = nil) throws {
-        guard let url = createURL(url, queryParams: queryParams) else {
-            throw JSONError.InvalidURL
-        }
-        request = NSMutableURLRequest(URL: url)
+    func updateRequestUrl(method: String, url: String, queryParams: JSONObject? = nil) {
+        request?.URL = createURL(url, queryParams: queryParams)
         request?.HTTPMethod = method
     }
 
     func updateRequestHeaders(headers: JSONObject?) {
-        request?.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request?.addValue("application/json", forHTTPHeaderField: "Accept")
+        request?.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request?.setValue("application/json", forHTTPHeaderField: "Accept")
         if headers != nil {
             for (headerName, headerValue) in headers! {
-                request?.addValue(String(headerValue), forHTTPHeaderField: headerName)
+                request?.setValue(String(headerValue), forHTTPHeaderField: headerName)
             }
         }
     }
@@ -166,14 +165,14 @@ public class JSONRequest {
 
     func parseResponse(data: NSData?, response: NSURLResponse?) -> JSONResult {
         guard let httpResponse = response as? NSHTTPURLResponse else {
-            return JSONResult.Failure(error: JSONError.NonHTTPResponse, response: nil)
+            return JSONResult.Failure(error: JSONError.NonHTTPResponse, response: nil, body: nil)
         }
-        guard data != nil else {
+        guard data != nil && data!.length > 0 else {
             return JSONResult.Success(data: nil, response: httpResponse)
         }
-        guard let json = try? NSJSONSerialization.JSONObjectWithData(data!, options: []) else {
+        guard let json = try? NSJSONSerialization.JSONObjectWithData(data!, options: [.AllowFragments]) else {
             return JSONResult.Failure(error: JSONError.ResponseDeserialization,
-                response: httpResponse)
+                response: httpResponse, body: String(data: data!, encoding: NSUTF8StringEncoding))
         }
         return JSONResult.Success(data: json, response: httpResponse)
     }
@@ -195,6 +194,11 @@ public extension JSONRequest {
             return submitSyncRequest("POST", url: url, payload: payload, headers: headers)
     }
 
+    public func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
+        headers: JSONObject? = nil) -> JSONResult {
+            return submitSyncRequest("PUT", url: url, payload: payload, headers: headers)
+    }
+
 }
 
 
@@ -211,6 +215,12 @@ public extension JSONRequest {
     public func post(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
         headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
             submitAsyncRequest("POST", url: url, payload: payload, headers: headers,
+                complete: complete)
+    }
+
+    public func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
+        headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
+            submitAsyncRequest("PUT", url: url, payload: payload, headers: headers,
                 complete: complete)
     }
 
@@ -231,6 +241,11 @@ public extension JSONRequest {
             return JSONRequest().post(url, params: params, payload: payload, headers: headers)
     }
 
+    public class func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
+        headers: JSONObject? = nil) -> JSONResult {
+            return JSONRequest().put(url, params: params, payload: payload, headers: headers)
+    }
+
 }
 
 
@@ -247,6 +262,12 @@ public extension JSONRequest {
     public class func post(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
         headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
             JSONRequest().post(url, params: params, payload: payload, headers: headers,
+                complete: complete)
+    }
+
+    public class func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
+        headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
+            JSONRequest().put(url, params: params, payload: payload, headers: headers,
                 complete: complete)
     }
 
