@@ -170,9 +170,11 @@ public class JSONRequest {
         guard data != nil && data!.length > 0 else {
             return JSONResult.Success(data: nil, response: httpResponse)
         }
-        guard let json = try? NSJSONSerialization.JSONObjectWithData(data!, options: [.AllowFragments]) else {
-            return JSONResult.Failure(error: JSONError.ResponseDeserialization,
-                response: httpResponse, body: String(data: data!, encoding: NSUTF8StringEncoding))
+        guard let json = try? NSJSONSerialization.JSONObjectWithData(data!,
+            options: [.AllowFragments]) else {
+                return JSONResult.Failure(error: JSONError.ResponseDeserialization,
+                    response: httpResponse,
+                    body: String(data: data!, encoding: NSUTF8StringEncoding))
         }
         return JSONResult.Success(data: json, response: httpResponse)
     }
