@@ -36,6 +36,14 @@ public extension JSONResult {
         }
     }
 
+    public var arrayValue: [AnyObject] {
+        return data as? [AnyObject] ?? []
+    }
+
+    public var dictionaryValue: [String: AnyObject] {
+        return data as? [String: AnyObject] ?? [:]
+    }
+
     public var httpResponse: NSHTTPURLResponse? {
         switch self {
         case .Success(_, let response):
@@ -56,6 +64,14 @@ public extension JSONResult {
 
 }
 
+public enum JSONRequestHttpVerb: String {
+    case GET = "GET"
+    case POST = "POST"
+    case PUT = "PUT"
+    case PATCH = "PATCH"
+    case DELETE = "DELETE"
+}
+
 public class JSONRequest {
 
     private(set) var request: NSMutableURLRequest?
@@ -70,8 +86,8 @@ public class JSONRequest {
 
     // MARK: Non-public business logic (testable but not public outside the module)
 
-    func submitAsyncRequest(method: String, url: String, queryParams: JSONObject? = nil,
-        payload: AnyObject? = nil, headers: JSONObject? = nil,
+    func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
+        queryParams: JSONObject? = nil, payload: AnyObject? = nil, headers: JSONObject? = nil,
         complete: (result: JSONResult) -> Void) {
             updateRequestUrl(method, url: url, queryParams: queryParams)
             updateRequestHeaders(headers)
@@ -87,9 +103,12 @@ public class JSONRequest {
             let task = NSURLSession.sharedSession().dataTaskWithRequest(request!) {
                 (data, response, error) in
                 if error != nil {
+                    let body = data == nil
+                        ? nil
+                        : String(data: data!, encoding: NSUTF8StringEncoding)
                     complete(result: JSONResult.Failure(error: JSONError.RequestFailed,
                         response: response as? NSHTTPURLResponse,
-                        body: String(data: data!, encoding: NSUTF8StringEncoding)))
+                        body: body))
                     return
                 }
                 let result = self.parseResponse(data, response: response)
@@ -98,31 +117,28 @@ public class JSONRequest {
             task.resume()
     }
 
-    func submitSyncRequest(method: String, url: String, queryParams: JSONObject? = nil,
+    func submitSyncRequest(method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil,
         payload: AnyObject? = nil, headers: JSONObject? = nil) -> JSONResult {
-            updateRequestUrl(method, url: url, queryParams: queryParams)
-            updateRequestHeaders(headers)
-
-            do {
-                try updateRequestPayload(payload)
-            } catch {
-                return JSONResult.Failure(error: JSONError.PayloadSerialization, response: nil,
-                    body: nil)
+            let semaphore = dispatch_semaphore_create(0)
+            var requestResult: JSONResult = JSONResult.Failure(error: JSONError.RequestFailed,
+                response: nil, body: nil)
+            submitAsyncRequest(method, url: url, queryParams: queryParams, payload: payload,
+                headers: headers) { result in
+                    requestResult = result
+                    dispatch_semaphore_signal(semaphore)
             }
-
-            do {
-                var response: NSURLResponse?
-                let data = try NSURLConnection.sendSynchronousRequest(request!,
-                    returningResponse: &response)
-                return parseResponse(data, response: response)
-            } catch {
-                return JSONResult.Failure(error: JSONError.RequestFailed, response: nil, body: nil)
+            // Wait for the request to complete
+            while dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW) != 0 {
+                let intervalDate = NSDate(timeIntervalSinceNow: 0.01) // Secs
+                NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: intervalDate)
             }
+            return requestResult
     }
 
-    func updateRequestUrl(method: String, url: String, queryParams: JSONObject? = nil) {
-        request?.URL = createURL(url, queryParams: queryParams)
-        request?.HTTPMethod = method
+    func updateRequestUrl(method: JSONRequestHttpVerb, url: String,
+        queryParams: JSONObject? = nil) {
+            request?.URL = createURL(url, queryParams: queryParams)
+            request?.HTTPMethod = method.rawValue
     }
 
     func updateRequestHeaders(headers: JSONObject?) {
@@ -188,17 +204,17 @@ public extension JSONRequest {
 
     public func get(url: String, params: JSONObject? = nil,
         headers: JSONObject? = nil) -> JSONResult {
-            return submitSyncRequest("GET", url: url, queryParams: params, headers: headers)
+            return submitSyncRequest(.GET, url: url, queryParams: params, headers: headers)
     }
 
     public func post(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
         headers: JSONObject? = nil) -> JSONResult {
-            return submitSyncRequest("POST", url: url, payload: payload, headers: headers)
+            return submitSyncRequest(.POST, url: url, payload: payload, headers: headers)
     }
 
     public func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
         headers: JSONObject? = nil) -> JSONResult {
-            return submitSyncRequest("PUT", url: url, payload: payload, headers: headers)
+            return submitSyncRequest(.PUT, url: url, payload: payload, headers: headers)
     }
 
 }
@@ -210,19 +226,19 @@ public extension JSONRequest {
 
     public func get(url: String, params: JSONObject? = nil, headers: JSONObject? = nil,
         complete: (result: JSONResult) -> Void) {
-            submitAsyncRequest("GET", url: url, queryParams: params, headers: headers,
+            submitAsyncRequest(.GET, url: url, queryParams: params, headers: headers,
                 complete: complete)
     }
 
     public func post(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
         headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-            submitAsyncRequest("POST", url: url, payload: payload, headers: headers,
+            submitAsyncRequest(.POST, url: url, payload: payload, headers: headers,
                 complete: complete)
     }
 
     public func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
         headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-            submitAsyncRequest("PUT", url: url, payload: payload, headers: headers,
+            submitAsyncRequest(.PUT, url: url, payload: payload, headers: headers,
                 complete: complete)
     }
 
