@@ -129,7 +129,7 @@ public class JSONRequest {
             }
             // Wait for the request to complete
             while dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW) != 0 {
-                let intervalDate = NSDate(timeIntervalSinceNow: 10)
+                let intervalDate = NSDate(timeIntervalSinceNow: 0.01) // Secs
                 NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: intervalDate)
             }
             return requestResult

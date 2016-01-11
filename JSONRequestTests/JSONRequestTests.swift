@@ -112,33 +112,4 @@ class JSONRequestTests: XCTestCase {
         }
     }
 
-    func testSimpleGet() {
-        let request = JSONRequest()
-        let result = request.get("http://httpbin.org/get", params: ["hello": "world"])
-        switch result {
-        case .Success(let data, let response):
-            print(data)
-            XCTAssertNotNil(data)
-            XCTAssertNotNil(data?["args"])
-            XCTAssertEqual(data?["args"]??["hello"], "world")
-            XCTAssertEqual(response.statusCode, 200)
-        case .Failure:
-            XCTFail("Request failed")
-        }
-    }
-
-    func testFailingGet() {
-        let request = JSONRequest()
-        let result = request.get("httpppp://httpbin.org/get", params: ["hello": "world"])
-        switch result {
-        case .Success:
-            XCTFail("Request should have failed")
-        case .Failure(let error, let response, let body):
-            XCTAssertNotNil(error)
-            XCTAssertNil(response)
-            XCTAssertNil(body)
-            XCTAssertEqual(error, JSONError.RequestFailed)
-        }
-    }
-
 }
