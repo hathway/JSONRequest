@@ -17,7 +17,7 @@ class JSONRequestGETTests: XCTestCase {
 
     func testSimpleGet() {
         let request = JSONRequest()
-        let result = request.get(goodUrl, params: params)
+        let result = request.get(goodUrl, queryParams: params)
         switch result {
         case .Success(let data, let response):
             print(data)
@@ -31,20 +31,20 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     func testDictionaryValue() {
-        let result = JSONRequest.get(goodUrl, params: params)
+        let result = JSONRequest.get(goodUrl, queryParams: params)
         let dict = result.dictionaryValue
         XCTAssertEqual(dict["args"]?["hello"], "world")
     }
 
     func testArrayValue() {
-        let result = JSONRequest.get(goodUrl, params: params)
+        let result = JSONRequest.get(goodUrl, queryParams: params)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
 
     func testFailingGet() {
         let request = JSONRequest()
-        let result = request.get(badUrl, params: params)
+        let result = request.get(badUrl, queryParams: params)
         switch result {
         case .Success:
             XCTFail("Request should have failed")

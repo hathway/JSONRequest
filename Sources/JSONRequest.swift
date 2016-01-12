@@ -64,14 +64,6 @@ public extension JSONResult {
 
 }
 
-public enum JSONRequestHttpVerb: String {
-    case GET = "GET"
-    case POST = "POST"
-    case PUT = "PUT"
-    case PATCH = "PATCH"
-    case DELETE = "DELETE"
-}
-
 public class JSONRequest {
 
     private(set) var request: NSMutableURLRequest?
@@ -193,100 +185,6 @@ public class JSONRequest {
                     body: String(data: data!, encoding: NSUTF8StringEncoding))
         }
         return JSONResult.Success(data: json, response: httpResponse)
-    }
-
-}
-
-
-// MARK: Instance HTTP Sync methods
-
-public extension JSONRequest {
-
-    public func get(url: String, params: JSONObject? = nil,
-        headers: JSONObject? = nil) -> JSONResult {
-            return submitSyncRequest(.GET, url: url, queryParams: params, headers: headers)
-    }
-
-    public func post(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
-        headers: JSONObject? = nil) -> JSONResult {
-            return submitSyncRequest(.POST, url: url, payload: payload, headers: headers)
-    }
-
-    public func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
-        headers: JSONObject? = nil) -> JSONResult {
-            return submitSyncRequest(.PUT, url: url, payload: payload, headers: headers)
-    }
-
-}
-
-
-// MARK: Instance HTTP Async methods
-
-public extension JSONRequest {
-
-    public func get(url: String, params: JSONObject? = nil, headers: JSONObject? = nil,
-        complete: (result: JSONResult) -> Void) {
-            submitAsyncRequest(.GET, url: url, queryParams: params, headers: headers,
-                complete: complete)
-    }
-
-    public func post(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
-        headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-            submitAsyncRequest(.POST, url: url, payload: payload, headers: headers,
-                complete: complete)
-    }
-
-    public func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
-        headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-            submitAsyncRequest(.PUT, url: url, payload: payload, headers: headers,
-                complete: complete)
-    }
-
-}
-
-
-// MARK: Class HTTP Sync methods
-
-public extension JSONRequest {
-
-    public class func get(url: String, params: JSONObject? = nil,
-        headers: JSONObject? = nil) -> JSONResult {
-            return JSONRequest().get(url, params: params, headers: headers)
-    }
-
-    public class func post(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
-        headers: JSONObject? = nil) -> JSONResult {
-            return JSONRequest().post(url, params: params, payload: payload, headers: headers)
-    }
-
-    public class func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
-        headers: JSONObject? = nil) -> JSONResult {
-            return JSONRequest().put(url, params: params, payload: payload, headers: headers)
-    }
-
-}
-
-
-// MARK: Class HTTP Async methods
-
-public extension JSONRequest {
-
-    public class func get(url: String, params: JSONObject? = nil, headers: JSONObject? = nil,
-        complete: (result: JSONResult) -> Void) {
-            JSONRequest().get(url, params: params, headers: headers,
-                complete: complete)
-    }
-
-    public class func post(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
-        headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-            JSONRequest().post(url, params: params, payload: payload, headers: headers,
-                complete: complete)
-    }
-
-    public class func put(url: String, params: JSONObject? = nil, payload: AnyObject? = nil,
-        headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-            JSONRequest().put(url, params: params, payload: payload, headers: headers,
-                complete: complete)
     }
 
 }

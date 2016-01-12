@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		50793BE819D5B57100F5DEB2 /* JSONRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50793BE719D5B57100F5DEB2 /* JSONRequestTests.swift */; };
 		9575F2071C4443E8000B5A59 /* JSONRequestGETTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9575F2061C4443E8000B5A59 /* JSONRequestGETTests.swift */; };
+		9575F2091C448965000B5A59 /* JSONRequestVerbs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */; };
 		95975AFD1C1E2BF4004750A8 /* Sources in Resources */ = {isa = PBXBuildFile; fileRef = 95975AFC1C1E2BF4004750A8 /* Sources */; };
 		95975B081C1E2CFF004750A8 /* JSONRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95975B071C1E2CFF004750A8 /* JSONRequest.swift */; };
 		95975B0B1C1E31E0004750A8 /* JSONRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 95975B031C1E2CA0004750A8 /* JSONRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -33,6 +34,7 @@
 		9575F2041C443758000B5A59 /* JSONRequest.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = JSONRequest.podspec; sourceTree = "<group>"; };
 		9575F2051C443758000B5A59 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		9575F2061C4443E8000B5A59 /* JSONRequestGETTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONRequestGETTests.swift; sourceTree = "<group>"; };
+		9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestVerbs.swift; path = Sources/JSONRequestVerbs.swift; sourceTree = "<group>"; };
 		95975AFC1C1E2BF4004750A8 /* Sources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sources; path = /Users/enekoalonso/dev/forks/JSONRequest/Sources; sourceTree = "<absolute>"; };
 		95975AFF1C1E2C68004750A8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = JSONRequest/Info.plist; sourceTree = "<group>"; };
 		95975B031C1E2CA0004750A8 /* JSONRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONRequest.h; path = JSONRequest/JSONRequest.h; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				95975B071C1E2CFF004750A8 /* JSONRequest.swift */,
+				9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -138,6 +141,7 @@
 				50793BD419D5B57000F5DEB2 /* Frameworks */,
 				50793BD519D5B57000F5DEB2 /* Headers */,
 				50793BD619D5B57000F5DEB2 /* Resources */,
+				9575F20A1C4489DC000B5A59 /* SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -221,11 +225,29 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		9575F20A1C4489DC000B5A59 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = /usr/local/bin/swiftlint;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		50793BD319D5B57000F5DEB2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9575F2091C448965000B5A59 /* JSONRequestVerbs.swift in Sources */,
 				95975B081C1E2CFF004750A8 /* JSONRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
