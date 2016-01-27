@@ -29,9 +29,9 @@ if let value = postResult.data?["json"]??["hello"] as? String {
 }
 ```
 
-## Basic Async Usage
+## Asynchronous Usage
 
-### Basic GET
+### Asynchronous GET
 
 ```swift
 JSONRequest.get("http://httpbin.org/get?hello=world") { result in
@@ -41,7 +41,7 @@ JSONRequest.get("http://httpbin.org/get?hello=world") { result in
 }
 ```
 
-### Basic POST
+### Asynchronous POST
 
 ```swift
 JSONRequest.post("http://httpbin.org/post", payload: ["hello": "world"]) { result in
