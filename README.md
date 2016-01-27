@@ -68,7 +68,7 @@ JSON values include `Array`, `Dictionary`, `Int`, `Double`, `String` and `nil`)
 ### Custom Headers
 All JSONRequest requests automatically include the following default headers:
 
-```swift
+```
 Content-Type: application/json
 Accept: application/json
 ```
