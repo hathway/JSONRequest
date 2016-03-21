@@ -15,6 +15,24 @@ public enum JSONRequestHttpVerb: String {
     case DELETE = "DELETE"
 }
 
+// MARK: Instance sync/async
+
+public extension JSONRequest {
+
+    public func send(method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil,
+        payload: AnyObject? = nil, headers: JSONObject? = nil) -> JSONResult {
+            return submitSyncRequest(method, url: url, queryParams: queryParams,
+                payload: payload, headers: headers)
+    }
+
+    public func send(method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil,
+        payload: AnyObject? = nil, headers: JSONObject? = nil,
+        complete: (result: JSONResult) -> Void) {
+            submitAsyncRequest(method, url: url, queryParams: queryParams, payload: payload,
+                headers: headers, complete: complete)
+    }
+    
+}
 
 // MARK: Instance HTTP Sync methods
 
