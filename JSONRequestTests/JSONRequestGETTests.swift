@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import JSONRequest
+import JSONRequest
 
 class JSONRequestGETTests: XCTestCase {
 

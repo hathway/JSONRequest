@@ -79,73 +79,70 @@ public class JSONRequest {
     // MARK: Non-public business logic (testable but not public outside the module)
 
     func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
-        queryParams: JSONObject? = nil, payload: AnyObject? = nil, headers: JSONObject? = nil,
-        complete: (result: JSONResult) -> Void) {
-            updateRequestUrl(method, url: url, queryParams: queryParams)
-            updateRequestHeaders(headers)
+                            queryParams: JSONObject? = nil, payload: AnyObject? = nil,
+                            headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
+        updateRequestUrl(method, url: url, queryParams: queryParams)
+        updateRequestHeaders(headers)
+        updateRequestPayload(payload)
 
-            do {
-                try updateRequestPayload(payload)
-            } catch {
-                complete(result: JSONResult.Failure(error: JSONError.PayloadSerialization,
-                    response: nil, body: nil))
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request!) {
+            (data, response, error) in
+            if error != nil {
+                let result = JSONResult.Failure(error: JSONError.RequestFailed,
+                                                response: response as? NSHTTPURLResponse,
+                                                body: self.bodyStringFromData(data))
+                complete(result: result)
                 return
             }
-
-            let task = NSURLSession.sharedSession().dataTaskWithRequest(request!) {
-                (data, response, error) in
-                if error != nil {
-                    let body = data == nil
-                        ? nil
-                        : String(data: data!, encoding: NSUTF8StringEncoding)
-                    complete(result: JSONResult.Failure(error: JSONError.RequestFailed,
-                        response: response as? NSHTTPURLResponse,
-                        body: body))
-                    return
-                }
-                let result = self.parseResponse(data, response: response)
-                complete(result: result)
-            }
-            task.resume()
+            let result = self.parseResponse(data, response: response)
+            complete(result: result)
+        }
+        task.resume()
     }
 
     func submitSyncRequest(method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil,
-        payload: AnyObject? = nil, headers: JSONObject? = nil) -> JSONResult {
-            let semaphore = dispatch_semaphore_create(0)
-            var requestResult: JSONResult = JSONResult.Failure(error: JSONError.RequestFailed,
-                response: nil, body: nil)
-            submitAsyncRequest(method, url: url, queryParams: queryParams, payload: payload,
-                headers: headers) { result in
-                    requestResult = result
-                    dispatch_semaphore_signal(semaphore)
-            }
-            // Wait for the request to complete
-            while dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW) != 0 {
-                let intervalDate = NSDate(timeIntervalSinceNow: 0.01) // Secs
-                NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: intervalDate)
-            }
-            return requestResult
+                           payload: AnyObject? = nil, headers: JSONObject? = nil) -> JSONResult {
+
+        let semaphore = dispatch_semaphore_create(0)
+        var requestResult: JSONResult = JSONResult.Failure(error: JSONError.RequestFailed,
+                                                           response: nil, body: nil)
+        submitAsyncRequest(method, url: url, queryParams: queryParams, payload: payload,
+                           headers: headers) { result in
+                            requestResult = result
+                            dispatch_semaphore_signal(semaphore)
+        }
+        // Wait for the request to complete
+        while dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW) != 0 {
+            let intervalDate = NSDate(timeIntervalSinceNow: 0.01) // 10 milliseconds
+            NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: intervalDate)
+        }
+        return requestResult
     }
 
     func updateRequestUrl(method: JSONRequestHttpVerb, url: String,
-        queryParams: JSONObject? = nil) {
-            request?.URL = createURL(url, queryParams: queryParams)
-            request?.HTTPMethod = method.rawValue
+                          queryParams: JSONObject? = nil) {
+        request?.URL = createURL(url, queryParams: queryParams)
+        request?.HTTPMethod = method.rawValue
     }
 
     func updateRequestHeaders(headers: JSONObject?) {
         request?.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request?.setValue("application/json", forHTTPHeaderField: "Accept")
-        if headers != nil {
-            for (headerName, headerValue) in headers! {
-                request?.setValue(String(headerValue), forHTTPHeaderField: headerName)
+        if let headers = headers {
+            for (headerName, headerValue) in headers {
+                if let unwrapped = headerValue {
+                    request?.setValue(String(unwrapped), forHTTPHeaderField: headerName)
+                }
             }
         }
     }
 
-    func updateRequestPayload(payload: AnyObject?) throws {
-        if payload != nil {
-            request?.HTTPBody = try NSJSONSerialization.dataWithJSONObject(payload!, options: [])
+    func updateRequestPayload(payload: AnyObject?) {
+        guard let payload = payload else {
+            return
+        }
+        if NSJSONSerialization.isValidJSONObject(payload) {
+            request?.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(payload, options: [])
         }
     }
 
@@ -178,13 +175,20 @@ public class JSONRequest {
         guard data != nil && data!.length > 0 else {
             return JSONResult.Success(data: nil, response: httpResponse)
         }
-        guard let json = try? NSJSONSerialization.JSONObjectWithData(data!,
-            options: [.AllowFragments]) else {
-                return JSONResult.Failure(error: JSONError.ResponseDeserialization,
-                    response: httpResponse,
-                    body: String(data: data!, encoding: NSUTF8StringEncoding))
+        let json = try? NSJSONSerialization.JSONObjectWithData(data!, options: [.AllowFragments])
+        guard json != nil else {
+            return JSONResult.Failure(error: JSONError.ResponseDeserialization,
+                                      response: httpResponse,
+                                      body: String(data: data!, encoding: NSUTF8StringEncoding))
         }
-        return JSONResult.Success(data: json, response: httpResponse)
+        return JSONResult.Success(data: json!, response: httpResponse)
+    }
+
+    func bodyStringFromData(data: NSData?) -> String? {
+        guard let data = data else {
+            return nil
+        }
+        return String(data: data, encoding: NSUTF8StringEncoding)
     }
 
 }
