@@ -1,22 +1,22 @@
 //
-//  JSONRequestGETTests.swift
+//  JSONRequestDELETETests.swift
 //  JSONRequest
 //
-//  Created by Eneko Alonso on 1/11/16.
+//  Created by Eneko Alonso on 3/24/16.
 //  Copyright © 2016 Hathway. All rights reserved.
 //
 
 import XCTest
 import JSONRequest
 
-class JSONRequestGETTests: XCTestCase {
+class JSONRequestDELETETests: XCTestCase {
 
-    let goodUrl = "http://httpbin.org/get"
-    let badUrl = "httpppp://httpbin.org/get"
+    let goodUrl = "http://httpbin.org/delete"
+    let badUrl = "httpppp://httpbin.org/delete"
     let params: JSONObject = ["hello": "world"]
 
     func testSimple() {
-        let result = JSONRequest.get(goodUrl, queryParams: params)
+        let result = JSONRequest.delete(goodUrl, queryParams: params)
         switch result {
         case .Success(let data, let response):
             XCTAssertNotNil(data)
@@ -29,19 +29,19 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     func testDictionaryValue() {
-        let result = JSONRequest.get(goodUrl, queryParams: params)
+        let result = JSONRequest.delete(goodUrl, queryParams: params)
         let dict = result.dictionaryValue
         XCTAssertEqual(dict["args"]?["hello"], "world")
     }
 
     func testArrayValue() {
-        let result = JSONRequest.get(goodUrl, queryParams: params)
+        let result = JSONRequest.delete(goodUrl, queryParams: params)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
 
     func testFailing() {
-        let result = JSONRequest.get(badUrl, queryParams: params)
+        let result = JSONRequest.delete(badUrl, queryParams: params)
         switch result {
         case .Success:
             XCTFail("Request should have failed")
@@ -55,7 +55,7 @@ class JSONRequestGETTests: XCTestCase {
 
     func testAsync() {
         let expectation = expectationWithDescription("async")
-        JSONRequest.get(goodUrl) { (result) in
+        JSONRequest.delete(goodUrl) { (result) in
             XCTAssertNil(result.error)
             expectation.fulfill()
         }
@@ -68,7 +68,7 @@ class JSONRequestGETTests: XCTestCase {
 
     func testAsyncFail() {
         let expectation = expectationWithDescription("async")
-        JSONRequest.get(badUrl) { (result) in
+        JSONRequest.delete(badUrl) { (result) in
             XCTAssertNotNil(result.error)
             expectation.fulfill()
         }

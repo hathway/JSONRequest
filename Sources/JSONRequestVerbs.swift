@@ -42,30 +42,30 @@ public extension JSONRequest {
 
     public func get(url: String, queryParams: JSONObject? = nil,
                     headers: JSONObject? = nil) -> JSONResult {
-        return submitSyncRequest(.GET, url: url, queryParams: queryParams, headers: headers)
+        return send(.GET, url: url, queryParams: queryParams, headers: headers)
     }
 
     public func post(url: String, queryParams: JSONObject? = nil, payload: AnyObject? = nil,
                      headers: JSONObject? = nil) -> JSONResult {
-        return submitSyncRequest(.POST, url: url, queryParams: queryParams, payload: payload,
-                                 headers: headers)
+        return send(.POST, url: url, queryParams: queryParams, payload: payload,
+                    headers: headers)
     }
 
     public func put(url: String, queryParams: JSONObject? = nil, payload: AnyObject? = nil,
                     headers: JSONObject? = nil) -> JSONResult {
-        return submitSyncRequest(.PUT, url: url, queryParams: queryParams, payload: payload,
-                                 headers: headers)
+        return send(.PUT, url: url, queryParams: queryParams, payload: payload,
+                    headers: headers)
     }
 
     public func patch(url: String, queryParams: JSONObject? = nil, payload: AnyObject? = nil,
                       headers: JSONObject? = nil) -> JSONResult {
-        return submitSyncRequest(.PATCH, url: url, queryParams: queryParams, payload: payload,
-                                 headers: headers)
+        return send(.PATCH, url: url, queryParams: queryParams, payload: payload,
+                    headers: headers)
     }
 
     public func delete(url: String, queryParams: JSONObject? = nil,
                        headers: JSONObject? = nil) -> JSONResult {
-        return submitSyncRequest(.DELETE, url: url, queryParams: queryParams, headers: headers)
+        return send(.DELETE, url: url, queryParams: queryParams, headers: headers)
     }
 
 }
@@ -77,32 +77,32 @@ public extension JSONRequest {
 
     public func get(url: String, queryParams: JSONObject? = nil, headers: JSONObject? = nil,
                     complete: (result: JSONResult) -> Void) {
-        submitAsyncRequest(.GET, url: url, queryParams: queryParams, headers: headers,
-                           complete: complete)
+        send(.GET, url: url, queryParams: queryParams, headers: headers,
+             complete: complete)
     }
 
     public func post(url: String, queryParams: JSONObject? = nil, payload: AnyObject? = nil,
                      headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-        submitAsyncRequest(.POST, url: url, queryParams: queryParams, payload: payload,
-                           headers: headers, complete: complete)
+        send(.POST, url: url, queryParams: queryParams, payload: payload,
+             headers: headers, complete: complete)
     }
 
     public func put(url: String, queryParams: JSONObject? = nil, payload: AnyObject? = nil,
                     headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-        submitAsyncRequest(.PUT, url: url, queryParams: queryParams, payload: payload,
-                           headers: headers, complete: complete)
+        send(.PUT, url: url, queryParams: queryParams, payload: payload,
+             headers: headers, complete: complete)
     }
 
     public func patch(url: String, queryParams: JSONObject? = nil, payload: AnyObject? = nil,
                       headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-        submitAsyncRequest(.PATCH, url: url, queryParams: queryParams, payload: payload,
-                           headers: headers, complete: complete)
+        send(.PATCH, url: url, queryParams: queryParams, payload: payload,
+             headers: headers, complete: complete)
     }
 
     public func delete(url: String, queryParams: JSONObject? = nil, payload: AnyObject? = nil,
                        headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
-        submitAsyncRequest(.DELETE, url: url, queryParams: queryParams, headers: headers,
-                           complete: complete)
+        send(.DELETE, url: url, queryParams: queryParams, headers: headers,
+             complete: complete)
     }
 
 }

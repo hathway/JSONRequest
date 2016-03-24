@@ -1,27 +1,30 @@
 //
-//  JSONRequestGETTests.swift
+//  JSONRequestPOSTTests.swift
 //  JSONRequest
 //
-//  Created by Eneko Alonso on 1/11/16.
+//  Created by Eneko Alonso on 3/24/16.
 //  Copyright © 2016 Hathway. All rights reserved.
 //
 
 import XCTest
 import JSONRequest
 
-class JSONRequestGETTests: XCTestCase {
+class JSONRequestPOSTTests: XCTestCase {
 
-    let goodUrl = "http://httpbin.org/get"
-    let badUrl = "httpppp://httpbin.org/get"
+    let goodUrl = "http://httpbin.org/post"
+    let badUrl = "httpppp://httpbin.org/post"
     let params: JSONObject = ["hello": "world"]
+    let payload: AnyObject = ["hi": "there"]
 
     func testSimple() {
-        let result = JSONRequest.get(goodUrl, queryParams: params)
+        let result = JSONRequest.post(goodUrl, queryParams: params, payload: payload)
         switch result {
         case .Success(let data, let response):
             XCTAssertNotNil(data)
             XCTAssertNotNil(data?["args"])
             XCTAssertEqual(data?["args"]??["hello"], "world")
+            XCTAssertNotNil(data?["json"])
+            XCTAssertEqual(data?["json"]??["hi"], "there")
             XCTAssertEqual(response.statusCode, 200)
         case .Failure:
             XCTFail("Request failed")
@@ -29,19 +32,19 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     func testDictionaryValue() {
-        let result = JSONRequest.get(goodUrl, queryParams: params)
+        let result = JSONRequest.post(goodUrl, payload: payload)
         let dict = result.dictionaryValue
-        XCTAssertEqual(dict["args"]?["hello"], "world")
+        XCTAssertEqual(dict["json"]?["hi"], "there")
     }
 
     func testArrayValue() {
-        let result = JSONRequest.get(goodUrl, queryParams: params)
+        let result = JSONRequest.post(goodUrl, payload: payload)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
 
     func testFailing() {
-        let result = JSONRequest.get(badUrl, queryParams: params)
+        let result = JSONRequest.post(badUrl, payload: payload)
         switch result {
         case .Success:
             XCTFail("Request should have failed")
@@ -55,7 +58,7 @@ class JSONRequestGETTests: XCTestCase {
 
     func testAsync() {
         let expectation = expectationWithDescription("async")
-        JSONRequest.get(goodUrl) { (result) in
+        JSONRequest.post(goodUrl) { (result) in
             XCTAssertNil(result.error)
             expectation.fulfill()
         }
@@ -68,7 +71,7 @@ class JSONRequestGETTests: XCTestCase {
 
     func testAsyncFail() {
         let expectation = expectationWithDescription("async")
-        JSONRequest.get(badUrl) { (result) in
+        JSONRequest.post(badUrl) { (result) in
             XCTAssertNotNil(result.error)
             expectation.fulfill()
         }
