@@ -14,7 +14,7 @@ public enum JSONError: ErrorType {
     case InvalidURL
     case PayloadSerialization
 
-    case RequestFailed
+    case RequestFailed(error: NSError)
     case NonHTTPResponse
     case ResponseDeserialization
     case UnknownError
@@ -68,6 +68,9 @@ public class JSONRequest {
 
     private(set) var request: NSMutableURLRequest?
 
+    public static var requestTimeout = 5.0
+    public static var resourceTimeout = 10.0
+
     public var httpRequest: NSMutableURLRequest? {
         return request
     }
@@ -85,10 +88,10 @@ public class JSONRequest {
         updateRequestHeaders(headers)
         updateRequestPayload(payload)
 
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request!) {
+        let task = networkSession().dataTaskWithRequest(request!) {
             (data, response, error) in
-            if error != nil {
-                let result = JSONResult.Failure(error: JSONError.RequestFailed,
+            if let error = error {
+                let result = JSONResult.Failure(error: JSONError.RequestFailed(error: error),
                                                 response: response as? NSHTTPURLResponse,
                                                 body: self.bodyStringFromData(data))
                 complete(result: result)
@@ -100,11 +103,18 @@ public class JSONRequest {
         task.resume()
     }
 
+    func networkSession() -> NSURLSession {
+        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+        config.timeoutIntervalForRequest = JSONRequest.requestTimeout
+        config.timeoutIntervalForResource = JSONRequest.resourceTimeout
+        return NSURLSession(configuration: config)
+    }
+
     func submitSyncRequest(method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil,
                            payload: AnyObject? = nil, headers: JSONObject? = nil) -> JSONResult {
 
         let semaphore = dispatch_semaphore_create(0)
-        var requestResult: JSONResult = JSONResult.Failure(error: JSONError.RequestFailed,
+        var requestResult: JSONResult = JSONResult.Failure(error: JSONError.UnknownError,
                                                            response: nil, body: nil)
         submitAsyncRequest(method, url: url, queryParams: queryParams, payload: payload,
                            headers: headers) { result in
