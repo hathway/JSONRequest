@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SystemConfiguration
 
 public typealias JSONObject = Dictionary<String, AnyObject?>
 
@@ -14,9 +15,12 @@ public enum JSONError: ErrorType {
     case InvalidURL
     case PayloadSerialization
 
+    case NoInternetConnection
     case RequestFailed(error: NSError)
+
     case NonHTTPResponse
     case ResponseDeserialization
+
     case UnknownError
 }
 
@@ -84,6 +88,12 @@ public class JSONRequest {
     func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
                             queryParams: JSONObject? = nil, payload: AnyObject? = nil,
                             headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
+        if isConnectedToNetwork() == false {
+            let error = JSONError.NoInternetConnection
+            complete(result: .Failure(error: error, response: nil, body: nil))
+            return
+        }
+
         updateRequestUrl(method, url: url, queryParams: queryParams)
         updateRequestHeaders(headers)
         updateRequestPayload(payload)
@@ -199,6 +209,30 @@ public class JSONRequest {
             return nil
         }
         return String(data: data, encoding: NSUTF8StringEncoding)
+    }
+
+    func isConnectedToNetwork() -> Bool {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+
+        let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
+            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
+        }
+        guard let reachability = defaultRouteReachability else {
+            return false
+        }
+
+        var flags: SCNetworkReachabilityFlags = []
+        SCNetworkReachabilityGetFlags(reachability, &flags)
+        if flags.isEmpty {
+            return false
+        }
+
+        let isReachable = flags.contains(.Reachable)
+        let needsConnection = flags.contains(.ConnectionRequired)
+        
+        return isReachable && !needsConnection
     }
 
 }
