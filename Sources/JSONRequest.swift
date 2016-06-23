@@ -174,10 +174,7 @@ public class JSONRequest {
             }
             for (key, value) in queryParams! {
                 if let unwrapped = value {
-                    let encoded = String(unwrapped)
-                        .stringByAddingPercentEncodingWithAllowedCharacters(
-                            .URLHostAllowedCharacterSet())
-                    let item = NSURLQueryItem(name: key, value: encoded)
+                    let item = NSURLQueryItem(name: key, value: String(unwrapped))
                     components?.queryItems?.append(item)
                 } else {
                     let item = NSURLQueryItem(name: key, value: nil)
