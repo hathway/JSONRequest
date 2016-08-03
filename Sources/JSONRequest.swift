@@ -72,6 +72,7 @@ public class JSONRequest {
 
     private(set) var request: NSMutableURLRequest?
 
+    public static var userAgent: String?
     public static var requestTimeout = 5.0
     public static var resourceTimeout = 10.0
 
@@ -117,6 +118,9 @@ public class JSONRequest {
         let config = NSURLSessionConfiguration.defaultSessionConfiguration()
         config.timeoutIntervalForRequest = JSONRequest.requestTimeout
         config.timeoutIntervalForResource = JSONRequest.resourceTimeout
+        if let userAgent = JSONRequest.userAgent {
+            config.HTTPAdditionalHeaders = ["User-Agent": userAgent]
+        }
         return NSURLSession(configuration: config)
     }
 
