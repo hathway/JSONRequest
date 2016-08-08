@@ -72,6 +72,7 @@ public class JSONRequest {
 
     private(set) var request: NSMutableURLRequest?
 
+    public static var log: (String -> Void)?
     public static var userAgent: String?
     public static var requestTimeout = 5.0
     public static var resourceTimeout = 10.0
@@ -111,6 +112,7 @@ public class JSONRequest {
             let result = self.parseResponse(data, response: response)
             complete(result: result)
         }
+        traceTask(task)
         task.resume()
     }
 
@@ -234,6 +236,13 @@ public class JSONRequest {
         let needsConnection = flags.contains(.ConnectionRequired)
         
         return isReachable && !needsConnection
+    }
+
+
+    private func traceTask(task: NSURLSessionDataTask) {
+        if let log = JSONRequest.log {
+            log("Hello")
+        }
     }
 
 }
