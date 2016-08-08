@@ -100,9 +100,10 @@ public class JSONRequest {
         updateRequestHeaders(headers)
         updateRequestPayload(payload)
 
-        let task: NSURLSessionDataTask
-        task = networkSession().dataTaskWithRequest(request!) { (data, response, error) in
-            self.traceResponse(data, httpResponse: response as? NSHTTPURLResponse, error: error)
+        let start = NSDate()
+        let task = networkSession().dataTaskWithRequest(request!) { (data, response, error) in
+            let elapsed = -start.timeIntervalSinceNow
+            self.traceResponse(elapsed, responseData: data, httpResponse: response as? NSHTTPURLResponse, error: error)
             if let error = error {
                 let result = JSONResult.Failure(error: JSONError.RequestFailed(error: error),
                                                 response: response as? NSHTTPURLResponse,
@@ -242,8 +243,7 @@ public class JSONRequest {
             return
         }
 
-        log("========== JSONRequest ==========")
-        log(">>>> Request >>>>")
+        log(">>>>>>>>>> JSON Request >>>>>>>>>>")
         if let method = task.currentRequest?.HTTPMethod {
             log("HTTP Method: \(method)")
         }
@@ -251,35 +251,34 @@ public class JSONRequest {
             log("Url: \(url)")
         }
         if let headers = task.currentRequest?.allHTTPHeaderFields {
-            log("Headers: \(objectToJSONString(headers, pretty: false))")
+            log("Headers: \(objectToJSONString(headers, pretty: true))")
         }
         if let payload = task.currentRequest?.HTTPBody,
             let body = String(data: payload, encoding: NSUTF8StringEncoding) {
             log("Payload: \(body)")
         }
-        log(">>>>>>>>")
     }
 
-    private func traceResponse(responseData: NSData?, httpResponse: NSHTTPURLResponse?, error: NSError?) {
+    private func traceResponse(elapsed: NSTimeInterval, responseData: NSData?, httpResponse: NSHTTPURLResponse?,
+                               error: NSError?) {
         guard let log = JSONRequest.log else {
             return
         }
 
-        log("========== JSONRequest ==========")
-        log("<<<< Response <<<<")
+        log("<<<<<<<<<< JSON Response <<<<<<<<<<")
+        log("Time Elapsed: \(elapsed)")
         if let statusCode = httpResponse?.statusCode {
             log("Status Code: \(statusCode)")
         }
         if let headers = httpResponse?.allHeaderFields {
-            log("Headers: \(objectToJSONString(headers, pretty: false))")
+            log("Headers: \(objectToJSONString(headers, pretty: true))")
         }
         if let data = responseData, let body = JSONToObject(data) {
-            log("Body: \(dataToUTFString(data))")
+            log("Body: \(objectToJSONString(body, pretty: true))")
         }
         if let errorString = error?.localizedDescription {
             log("Error: \(errorString)")
         }
-        log("<<<<<<<<")
     }
 
     private func JSONToObject(data: NSData) -> AnyObject? {
