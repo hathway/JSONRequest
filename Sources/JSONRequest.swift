@@ -100,8 +100,9 @@ public class JSONRequest {
         updateRequestHeaders(headers)
         updateRequestPayload(payload)
 
-        let task = networkSession().dataTaskWithRequest(request!) {
-            (data, response, error) in
+        let task: NSURLSessionDataTask
+        task = networkSession().dataTaskWithRequest(request!) { (data, response, error) in
+            self.traceResponse(data, httpResponse: response as? NSHTTPURLResponse, error: error)
             if let error = error {
                 let result = JSONResult.Failure(error: JSONError.RequestFailed(error: error),
                                                 response: response as? NSHTTPURLResponse,
@@ -167,9 +168,7 @@ public class JSONRequest {
         guard let payload = payload else {
             return
         }
-        if NSJSONSerialization.isValidJSONObject(payload) {
-            request?.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(payload, options: [])
-        }
+        request?.HTTPBody = objectToJSON(payload)
     }
 
     func createURL(urlString: String, queryParams: JSONObject?) -> NSURL? {
@@ -195,16 +194,15 @@ public class JSONRequest {
         guard let httpResponse = response as? NSHTTPURLResponse else {
             return JSONResult.Failure(error: JSONError.NonHTTPResponse, response: nil, body: nil)
         }
-        guard data != nil && data!.length > 0 else {
+        guard let data = data where data.length > 0 else {
             return JSONResult.Success(data: nil, response: httpResponse)
         }
-        let json = try? NSJSONSerialization.JSONObjectWithData(data!, options: [.AllowFragments])
-        guard json != nil else {
+        guard let json = JSONToObject(data) else {
             return JSONResult.Failure(error: JSONError.ResponseDeserialization,
                                       response: httpResponse,
-                                      body: String(data: data!, encoding: NSUTF8StringEncoding))
+                                      body: dataToUTFString(data))
         }
-        return JSONResult.Success(data: json!, response: httpResponse)
+        return JSONResult.Success(data: json, response: httpResponse)
     }
 
     func bodyStringFromData(data: NSData?) -> String? {
@@ -240,9 +238,71 @@ public class JSONRequest {
 
 
     private func traceTask(task: NSURLSessionDataTask) {
-        if let log = JSONRequest.log {
-            log("Hello")
+        guard let log = JSONRequest.log, let request = task.currentRequest else {
+            return
         }
+
+        log("========== JSONRequest ==========")
+        log(">>>> Request >>>>")
+        if let method = task.currentRequest?.HTTPMethod {
+            log("HTTP Method: \(method)")
+        }
+        if let url = task.currentRequest?.URL?.absoluteString {
+            log("Url: \(url)")
+        }
+        if let headers = task.currentRequest?.allHTTPHeaderFields {
+            log("Headers: \(objectToJSONString(headers, pretty: false))")
+        }
+        if let payload = task.currentRequest?.HTTPBody,
+            let body = String(data: payload, encoding: NSUTF8StringEncoding) {
+            log("Payload: \(body)")
+        }
+        log(">>>>>>>>")
+    }
+
+    private func traceResponse(responseData: NSData?, httpResponse: NSHTTPURLResponse?, error: NSError?) {
+        guard let log = JSONRequest.log else {
+            return
+        }
+
+        log("========== JSONRequest ==========")
+        log("<<<< Response <<<<")
+        if let statusCode = httpResponse?.statusCode {
+            log("Status Code: \(statusCode)")
+        }
+        if let headers = httpResponse?.allHeaderFields {
+            log("Headers: \(objectToJSONString(headers, pretty: false))")
+        }
+        if let data = responseData, let body = JSONToObject(data) {
+            log("Body: \(dataToUTFString(data))")
+        }
+        if let errorString = error?.localizedDescription {
+            log("Error: \(errorString)")
+        }
+        log("<<<<<<<<")
+    }
+
+    private func JSONToObject(data: NSData) -> AnyObject? {
+        return try? NSJSONSerialization.JSONObjectWithData(data, options: [.AllowFragments])
+    }
+
+    private func objectToJSON(object: AnyObject, pretty: Bool = false) -> NSData? {
+        if NSJSONSerialization.isValidJSONObject(object) {
+            let options = pretty ? NSJSONWritingOptions.PrettyPrinted : []
+            return try? NSJSONSerialization.dataWithJSONObject(object, options: options)
+        }
+        return nil
+    }
+
+    private func objectToJSONString(object: AnyObject, pretty: Bool) -> String {
+        if let data = objectToJSON(object, pretty: pretty) {
+            return dataToUTFString(data)
+        }
+        return ""
+    }
+
+    private func dataToUTFString(data: NSData) -> String {
+        return String(data: data, encoding: NSUTF8StringEncoding) ?? ""
     }
 
 }
