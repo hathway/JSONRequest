@@ -5,7 +5,7 @@ JSONRequest is a tiny Swift library to do HTTP JSON requests.
 
 ![](https://img.shields.io/cocoapods/v/JSONRequest.svg)
 ![](http://img.shields.io/badge/iOS-8.4%2B-blue.svg)
-![](http://img.shields.io/badge/Swift-3-orange.svg)
+![](http://img.shields.io/badge/Swift-3.0-orange.svg)
 
 JSONRequest provides a clean and easy-to-use API to submit HTTP requests both **asynchronously** and **synchronously** (see [Why Synchronous? Are you crazy?](http://github.com)).
 
