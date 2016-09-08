@@ -9,75 +9,75 @@
 import Foundation
 import SystemConfiguration
 
-public typealias JSONObject = Dictionary<String, AnyObject?>
+public typealias JSONObject = Dictionary<String, Any>
 
-public enum JSONError: ErrorType {
-    case InvalidURL
-    case PayloadSerialization
+public enum JSONError: Error {
+    case invalidURL
+    case payloadSerialization
 
-    case NoInternetConnection
-    case RequestFailed(error: NSError)
+    case noInternetConnection
+    case requestFailed(error: Error)
 
-    case NonHTTPResponse
-    case ResponseDeserialization
+    case nonHTTPResponse
+    case responseDeserialization
 
-    case UnknownError
+    case unknownError
 }
 
 public enum JSONResult {
-    case Success(data: AnyObject?, response: NSHTTPURLResponse)
-    case Failure(error: JSONError, response: NSHTTPURLResponse?, body: String?)
+    case success(data: Any?, response: HTTPURLResponse)
+    case failure(error: JSONError, response: HTTPURLResponse?, body: String?)
 }
 
 public extension JSONResult {
 
-    public var data: AnyObject? {
+    public var data: Any? {
         switch self {
-        case .Success(let data, _):
+        case .success(let data, _):
             return data
-        case .Failure:
+        case .failure:
             return nil
         }
     }
 
-    public var arrayValue: [AnyObject] {
-        return data as? [AnyObject] ?? []
+    public var arrayValue: [Any] {
+        return data as? [Any] ?? []
     }
 
-    public var dictionaryValue: [String: AnyObject] {
-        return data as? [String: AnyObject] ?? [:]
+    public var dictionaryValue: [String: Any] {
+        return data as? [String: Any] ?? [:]
     }
 
-    public var httpResponse: NSHTTPURLResponse? {
+    public var httpResponse: HTTPURLResponse? {
         switch self {
-        case .Success(_, let response):
+        case .success(_, let response):
             return response
-        case .Failure(_, let response, _):
+        case .failure(_, let response, _):
             return response
         }
     }
 
-    public var error: ErrorType? {
+    public var error: Error? {
         switch self {
-        case .Success:
+        case .success:
             return nil
-        case .Failure(let error, _, _):
+        case .failure(let error, _, _):
             return error
         }
     }
 
 }
 
-public class JSONRequest {
+open class JSONRequest {
 
-    private(set) var request: NSMutableURLRequest?
+    fileprivate(set) var request: NSMutableURLRequest?
 
-    public static var log: (String -> Void)?
-    public static var userAgent: String?
-    public static var requestTimeout = 5.0
-    public static var resourceTimeout = 10.0
+    open static var log: ((String) -> Void)?
+    open static var userAgent: String?
+    open static var requestTimeout = 5.0
+    open static var resourceTimeout = 10.0
 
-    public var httpRequest: NSMutableURLRequest? {
+    open var httpRequest: NSMutableURLRequest? {
         return request
     }
 
@@ -88,138 +88,138 @@ public class JSONRequest {
     // MARK: Non-public business logic (testable but not public outside the module)
 
     func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
-                            queryParams: JSONObject? = nil, payload: AnyObject? = nil,
-                            headers: JSONObject? = nil, complete: (result: JSONResult) -> Void) {
+                            queryParams: JSONObject? = nil, payload: Any? = nil,
+                            headers: JSONObject? = nil, complete: @escaping (JSONResult) -> Void) {
         if isConnectedToNetwork() == false {
-            let error = JSONError.NoInternetConnection
-            complete(result: .Failure(error: error, response: nil, body: nil))
+            let error = JSONError.noInternetConnection
+            complete(.failure(error: error, response: nil, body: nil))
             return
         }
 
-        updateRequestUrl(method, url: url, queryParams: queryParams)
-        updateRequestHeaders(headers)
-        updateRequestPayload(payload)
+        updateRequest(method: method, url: url, queryParams: queryParams)
+        updateRequest(headers: headers)
+        updateRequest(payload: payload)
 
-        let start = NSDate()
-        let task = networkSession().dataTaskWithRequest(request!) { (data, response, error) in
+        let start = Date()
+        let session = networkSession()
+        let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
-            self.traceResponse(elapsed, responseData: data, httpResponse: response as? NSHTTPURLResponse, error: error)
+            self.traceResponse(elapsed: elapsed, responseData: data,
+                               httpResponse: response as? HTTPURLResponse,
+                               error: error as NSError?)
             if let error = error {
-                let result = JSONResult.Failure(error: JSONError.RequestFailed(error: error),
-                                                response: response as? NSHTTPURLResponse,
-                                                body: self.bodyStringFromData(data))
-                complete(result: result)
+                let result = JSONResult.failure(error: JSONError.requestFailed(error: error),
+                                                response: response as? HTTPURLResponse,
+                                                body: self.body(fromData: data))
+                complete(result)
                 return
             }
-            let result = self.parseResponse(data, response: response)
-            complete(result: result)
+            let result = self.parse(data: data, response: response)
+            complete(result)
         }
-        traceTask(task)
+        trace(task: task)
         task.resume()
     }
 
-    func networkSession() -> NSURLSession {
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+    func networkSession() -> URLSession {
+        let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = JSONRequest.requestTimeout
         config.timeoutIntervalForResource = JSONRequest.resourceTimeout
         if let userAgent = JSONRequest.userAgent {
-            config.HTTPAdditionalHeaders = ["User-Agent": userAgent]
+            config.httpAdditionalHeaders = ["User-Agent": userAgent]
         }
-        return NSURLSession(configuration: config)
+        return URLSession(configuration: config)
     }
 
-    func submitSyncRequest(method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil,
-                           payload: AnyObject? = nil, headers: JSONObject? = nil) -> JSONResult {
+    func submitSyncRequest(method: JSONRequestHttpVerb, url: String,
+                           queryParams: JSONObject? = nil,
+                           payload: Any? = nil,
+                           headers: JSONObject? = nil) -> JSONResult {
 
-        let semaphore = dispatch_semaphore_create(0)
-        var requestResult: JSONResult = JSONResult.Failure(error: JSONError.UnknownError,
+        let semaphore = DispatchSemaphore(value: 0)
+        var requestResult: JSONResult = JSONResult.failure(error: JSONError.unknownError,
                                                            response: nil, body: nil)
-        submitAsyncRequest(method, url: url, queryParams: queryParams, payload: payload,
-                           headers: headers) { result in
+        submitAsyncRequest(method: method, url: url, queryParams: queryParams,
+                           payload: payload, headers: headers) { result in
                             requestResult = result
-                            dispatch_semaphore_signal(semaphore)
+                            semaphore.signal()
         }
         // Wait for the request to complete
-        while dispatch_semaphore_wait(semaphore, DISPATCH_TIME_NOW) != 0 {
-            let intervalDate = NSDate(timeIntervalSinceNow: 0.01) // 10 milliseconds
-            NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: intervalDate)
+        while semaphore.wait(timeout: DispatchTime.now()) == .timedOut {
+            let intervalDate = Date(timeIntervalSinceNow: 0.01) // 10 milliseconds
+            RunLoop.current.run(mode: RunLoopMode.defaultRunLoopMode, before: intervalDate)
         }
         return requestResult
     }
 
-    func updateRequestUrl(method: JSONRequestHttpVerb, url: String,
-                          queryParams: JSONObject? = nil) {
-        request?.URL = createURL(url, queryParams: queryParams)
-        request?.HTTPMethod = method.rawValue
+    func updateRequest(method: JSONRequestHttpVerb, url: String,
+                       queryParams: JSONObject? = nil) {
+        request?.url = createURL(urlString: url, queryParams: queryParams)
+        request?.httpMethod = method.rawValue
     }
 
-    func updateRequestHeaders(headers: JSONObject?) {
+    func updateRequest(headers: JSONObject?) {
         request?.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request?.setValue("application/json", forHTTPHeaderField: "Accept")
         if let headers = headers {
             for (headerName, headerValue) in headers {
-                if let unwrapped = headerValue {
-                    request?.setValue(String(unwrapped), forHTTPHeaderField: headerName)
-                }
+                request?.setValue(String(describing: headerValue), forHTTPHeaderField: headerName)
             }
         }
     }
 
-    func updateRequestPayload(payload: AnyObject?) {
+    func updateRequest(payload: Any?) {
         guard let payload = payload else {
             return
         }
-        request?.HTTPBody = objectToJSON(payload)
+        request?.httpBody = objectToJSON(object: payload)
     }
 
-    func createURL(urlString: String, queryParams: JSONObject?) -> NSURL? {
-        let components = NSURLComponents(string: urlString)
+    func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
+        var components = URLComponents(string: urlString)
         if queryParams != nil {
             if components?.queryItems == nil {
                 components?.queryItems = []
             }
             for (key, value) in queryParams! {
-                if let unwrapped = value {
-                    let item = NSURLQueryItem(name: key, value: String(unwrapped))
-                    components?.queryItems?.append(item)
-                } else {
-                    let item = NSURLQueryItem(name: key, value: nil)
-                    components?.queryItems?.append(item)
-                }
+                let item = URLQueryItem(name: key, value: String(describing: value))
+                components?.queryItems?.append(item)
             }
         }
-        return components?.URL
+        return components?.url
     }
 
-    func parseResponse(data: NSData?, response: NSURLResponse?) -> JSONResult {
-        guard let httpResponse = response as? NSHTTPURLResponse else {
-            return JSONResult.Failure(error: JSONError.NonHTTPResponse, response: nil, body: nil)
+    func parse(data: Data?, response: URLResponse?) -> JSONResult {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            return JSONResult.failure(error: JSONError.nonHTTPResponse, response: nil, body: nil)
         }
-        guard let data = data where data.length > 0 else {
-            return JSONResult.Success(data: nil, response: httpResponse)
+        guard let data = data, data.count > 0 else {
+            return JSONResult.success(data: nil, response: httpResponse)
         }
-        guard let json = JSONToObject(data) else {
-            return JSONResult.Failure(error: JSONError.ResponseDeserialization,
+        guard let json = JSONToObject(data: data) else {
+            return JSONResult.failure(error: JSONError.responseDeserialization,
                                       response: httpResponse,
-                                      body: dataToUTFString(data))
+                                      body: dataToUTFString(data: data))
         }
-        return JSONResult.Success(data: json, response: httpResponse)
+        return JSONResult.success(data: json, response: httpResponse)
     }
 
-    func bodyStringFromData(data: NSData?) -> String? {
+    func body(fromData data: Data?) -> String? {
         guard let data = data else {
             return nil
         }
-        return String(data: data, encoding: NSUTF8StringEncoding)
+        return String(data: data, encoding: String.Encoding.utf8)
     }
 
-    public func isConnectedToNetwork() -> Bool {
+    open func isConnectedToNetwork() -> Bool {
         var zeroAddress = sockaddr_in()
-        zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
+        zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
         zeroAddress.sin_family = sa_family_t(AF_INET)
 
-        let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
-            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
         }
         guard let reachability = defaultRouteReachability else {
             return false
@@ -231,36 +231,36 @@ public class JSONRequest {
             return false
         }
 
-        let isReachable = flags.contains(.Reachable)
-        let needsConnection = flags.contains(.ConnectionRequired)
-        
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+
         return isReachable && !needsConnection
     }
 
 
-    private func traceTask(task: NSURLSessionDataTask) {
-        guard let log = JSONRequest.log, let request = task.currentRequest else {
+    fileprivate func trace(task: URLSessionDataTask) {
+        guard let log = JSONRequest.log else {
             return
         }
 
         log(">>>>>>>>>> JSON Request >>>>>>>>>>")
-        if let method = task.currentRequest?.HTTPMethod {
+        if let method = task.currentRequest?.httpMethod {
             log("HTTP Method: \(method)")
         }
-        if let url = task.currentRequest?.URL?.absoluteString {
+        if let url = task.currentRequest?.url?.absoluteString {
             log("Url: \(url)")
         }
         if let headers = task.currentRequest?.allHTTPHeaderFields {
-            log("Headers: \(objectToJSONString(headers, pretty: true))")
+            log("Headers: \(objectToJSONString(object: headers as Any, pretty: true))")
         }
-        if let payload = task.currentRequest?.HTTPBody,
-            let body = String(data: payload, encoding: NSUTF8StringEncoding) {
+        if let payload = task.currentRequest?.httpBody,
+            let body = String(data: payload, encoding: String.Encoding.utf8) {
             log("Payload: \(body)")
         }
     }
 
-    private func traceResponse(elapsed: NSTimeInterval, responseData: NSData?, httpResponse: NSHTTPURLResponse?,
-                               error: NSError?) {
+    fileprivate func traceResponse(elapsed: TimeInterval, responseData: Data?,
+                                   httpResponse: HTTPURLResponse?, error: NSError?) {
         guard let log = JSONRequest.log else {
             return
         }
@@ -271,37 +271,37 @@ public class JSONRequest {
             log("Status Code: \(statusCode)")
         }
         if let headers = httpResponse?.allHeaderFields {
-            log("Headers: \(objectToJSONString(headers, pretty: true))")
+            log("Headers: \(objectToJSONString(object: headers as Any, pretty: true))")
         }
-        if let data = responseData, let body = JSONToObject(data) {
-            log("Body: \(objectToJSONString(body, pretty: true))")
+        if let data = responseData, let body = JSONToObject(data: data) {
+            log("Body: \(objectToJSONString(object: body, pretty: true))")
         }
         if let errorString = error?.localizedDescription {
             log("Error: \(errorString)")
         }
     }
 
-    private func JSONToObject(data: NSData) -> AnyObject? {
-        return try? NSJSONSerialization.JSONObjectWithData(data, options: [.AllowFragments])
+    fileprivate func JSONToObject(data: Data) -> Any? {
+        return try? JSONSerialization.jsonObject(with: data, options: [.allowFragments])
     }
 
-    private func objectToJSON(object: AnyObject, pretty: Bool = false) -> NSData? {
-        if NSJSONSerialization.isValidJSONObject(object) {
-            let options = pretty ? NSJSONWritingOptions.PrettyPrinted : []
-            return try? NSJSONSerialization.dataWithJSONObject(object, options: options)
+    fileprivate func objectToJSON(object: Any, pretty: Bool = false) -> Data? {
+        if JSONSerialization.isValidJSONObject(object) {
+            let options = pretty ? JSONSerialization.WritingOptions.prettyPrinted : []
+            return try? JSONSerialization.data(withJSONObject: object, options: options)
         }
         return nil
     }
 
-    private func objectToJSONString(object: AnyObject, pretty: Bool) -> String {
-        if let data = objectToJSON(object, pretty: pretty) {
-            return dataToUTFString(data)
+    fileprivate func objectToJSONString(object: Any, pretty: Bool) -> String {
+        if let data = objectToJSON(object: object, pretty: pretty) {
+            return dataToUTFString(data: data)
         }
         return ""
     }
 
-    private func dataToUTFString(data: NSData) -> String {
-        return String(data: data, encoding: NSUTF8StringEncoding) ?? ""
+    fileprivate func dataToUTFString(data: Data) -> String {
+        return String(data: data, encoding: String.Encoding.utf8) ?? ""
     }
 
 }
