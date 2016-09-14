@@ -172,15 +172,18 @@ public class JSONRequest {
         request?.HTTPBody = objectToJSON(payload)
     }
 
-    func createURL(urlString: String, queryParams: JSONObject?) -> NSURL? {
+    // Query parameters should follow RFC 3986 standard 
+    // https://tools.ietf.org/html/rfc3986#section-2.2
+    // Manual fix for plus and space encoding from http://www.openradar.me/24076063
+    public func createURL(urlString: String, queryParams: JSONObject?) -> NSURL? {
         let components = NSURLComponents(string: urlString)
         if queryParams != nil {
             if components?.queryItems == nil {
                 components?.queryItems = []
             }
             for (key, value) in queryParams! {
-                if let unwrapped = value {
-                    let item = NSURLQueryItem(name: key, value: String(unwrapped))
+                if let unwrappedValue = value {
+                    let item = NSURLQueryItem(name: key, value: String(unwrappedValue))
                     components?.queryItems?.append(item)
                 } else {
                     let item = NSURLQueryItem(name: key, value: nil)
@@ -188,6 +191,9 @@ public class JSONRequest {
                 }
             }
         }
+        components?.percentEncodedQuery = components?.percentEncodedQuery?
+            .stringByReplacingOccurrencesOfString("+", withString: "%2B")
+            .stringByReplacingOccurrencesOfString("%20", withString: "+")
         return components?.URL
     }
 
