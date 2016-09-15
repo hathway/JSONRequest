@@ -103,7 +103,8 @@ public class JSONRequest {
         let start = NSDate()
         let task = networkSession().dataTaskWithRequest(request!) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
-            self.traceResponse(elapsed, responseData: data, httpResponse: response as? NSHTTPURLResponse, error: error)
+            self.traceResponse(self.request!, elapsed: elapsed, responseData: data,
+                               httpResponse: response as? NSHTTPURLResponse, error: error)
             if let error = error {
                 let result = JSONResult.Failure(error: JSONError.RequestFailed(error: error),
                                                 response: response as? NSHTTPURLResponse,
@@ -172,7 +173,7 @@ public class JSONRequest {
         request?.HTTPBody = objectToJSON(payload)
     }
 
-    // Query parameters should follow RFC 3986 standard 
+    // Query parameters should follow RFC 3986 standard
     // https://tools.ietf.org/html/rfc3986#section-2.2
     // Manual fix for plus and space encoding from http://www.openradar.me/24076063
     public func createURL(urlString: String, queryParams: JSONObject?) -> NSURL? {
@@ -239,7 +240,7 @@ public class JSONRequest {
 
         let isReachable = flags.contains(.Reachable)
         let needsConnection = flags.contains(.ConnectionRequired)
-        
+
         return isReachable && !needsConnection
     }
 
@@ -265,7 +266,8 @@ public class JSONRequest {
         }
     }
 
-    private func traceResponse(elapsed: NSTimeInterval, responseData: NSData?, httpResponse: NSHTTPURLResponse?,
+    private func traceResponse(request: NSMutableURLRequest, elapsed: NSTimeInterval,
+                               responseData: NSData?, httpResponse: NSHTTPURLResponse?,
                                error: NSError?) {
         guard let log = JSONRequest.log else {
             return
@@ -273,6 +275,9 @@ public class JSONRequest {
 
         log("<<<<<<<<<< JSON Response <<<<<<<<<<")
         log("Time Elapsed: \(elapsed)")
+        if let url = request.URL {
+            log("Url: \(url.absoluteString)")
+        }
         if let statusCode = httpResponse?.statusCode {
             log("Status Code: \(statusCode)")
         }
