@@ -175,7 +175,7 @@ open class JSONRequest {
         request?.httpBody = objectToJSON(object: payload)
     }
 
-    func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
+    open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
         var components = URLComponents(string: urlString)
         if queryParams != nil {
             if components?.queryItems == nil {
