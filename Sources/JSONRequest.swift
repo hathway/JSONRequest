@@ -12,30 +12,30 @@ import SystemConfiguration
 public typealias JSONObject = Dictionary<String, Any>
 
 public enum JSONError: Error {
-    case InvalidURL
-    case PayloadSerialization
+    case invalidURL
+    case payloadSerialization
 
-    case NoInternetConnection
-    case RequestFailed(error: Error)
+    case noInternetConnection
+    case requestFailed(error: Error)
 
-    case NonHTTPResponse
-    case ResponseDeserialization
+    case nonHTTPResponse
+    case responseDeserialization
 
-    case UnknownError
+    case unknownError
 }
 
 public enum JSONResult {
-    case Success(data: Any?, response: HTTPURLResponse)
-    case Failure(error: JSONError, response: HTTPURLResponse?, body: String?)
+    case success(data: Any?, response: HTTPURLResponse)
+    case failure(error: JSONError, response: HTTPURLResponse?, body: String?)
 }
 
 public extension JSONResult {
 
     public var data: Any? {
         switch self {
-        case .Success(let data, _):
+        case .success(let data, _):
             return data
-        case .Failure:
+        case .failure:
             return nil
         }
     }
@@ -50,18 +50,18 @@ public extension JSONResult {
 
     public var httpResponse: HTTPURLResponse? {
         switch self {
-        case .Success(_, let response):
+        case .success(_, let response):
             return response
-        case .Failure(_, let response, _):
+        case .failure(_, let response, _):
             return response
         }
     }
 
     public var error: Error? {
         switch self {
-        case .Success:
+        case .success:
             return nil
-        case .Failure(let error, _, _):
+        case .failure(let error, _, _):
             return error
         }
     }
@@ -91,8 +91,8 @@ open class JSONRequest {
                             queryParams: JSONObject? = nil, payload: Any? = nil,
                             headers: JSONObject? = nil, complete: @escaping (JSONResult) -> Void) {
         if isConnectedToNetwork() == false {
-            let error = JSONError.NoInternetConnection
-            complete(.Failure(error: error, response: nil, body: nil))
+            let error = JSONError.noInternetConnection
+            complete(.failure(error: error, response: nil, body: nil))
             return
         }
 
@@ -108,7 +108,7 @@ open class JSONRequest {
                                httpResponse: response as? HTTPURLResponse,
                                error: error as NSError?)
             if let error = error {
-                let result = JSONResult.Failure(error: JSONError.RequestFailed(error: error),
+                let result = JSONResult.failure(error: JSONError.requestFailed(error: error),
                                                 response: response as? HTTPURLResponse,
                                                 body: self.body(fromData: data))
                 complete(result)
@@ -137,7 +137,7 @@ open class JSONRequest {
                            headers: JSONObject? = nil) -> JSONResult {
 
         let semaphore = DispatchSemaphore(value: 0)
-        var requestResult: JSONResult = JSONResult.Failure(error: JSONError.UnknownError,
+        var requestResult: JSONResult = JSONResult.failure(error: JSONError.unknownError,
                                                            response: nil, body: nil)
         submitAsyncRequest(method: method, url: url, queryParams: queryParams,
                            payload: payload, headers: headers) { result in
@@ -191,17 +191,17 @@ open class JSONRequest {
 
     func parse(data: Data?, response: URLResponse?) -> JSONResult {
         guard let httpResponse = response as? HTTPURLResponse else {
-            return JSONResult.Failure(error: JSONError.NonHTTPResponse, response: nil, body: nil)
+            return JSONResult.failure(error: JSONError.nonHTTPResponse, response: nil, body: nil)
         }
         guard let data = data, data.count > 0 else {
-            return JSONResult.Success(data: nil, response: httpResponse)
+            return JSONResult.success(data: nil, response: httpResponse)
         }
         guard let json = JSONToObject(data: data) else {
-            return JSONResult.Failure(error: JSONError.ResponseDeserialization,
+            return JSONResult.failure(error: JSONError.responseDeserialization,
                                       response: httpResponse,
                                       body: dataToUTFString(data: data))
         }
-        return JSONResult.Success(data: json, response: httpResponse)
+        return JSONResult.success(data: json, response: httpResponse)
     }
 
     func body(fromData data: Data?) -> String? {
