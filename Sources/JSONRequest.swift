@@ -76,6 +76,7 @@ open class JSONRequest {
     open static var userAgent: String?
     open static var requestTimeout = 5.0
     open static var resourceTimeout = 10.0
+    open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
 
     open var httpRequest: NSMutableURLRequest? {
         return request
@@ -123,6 +124,7 @@ open class JSONRequest {
 
     func networkSession() -> URLSession {
         let config = URLSessionConfiguration.default
+        config.requestCachePolicy = JSONRequest.requestCachePolicy
         config.timeoutIntervalForRequest = JSONRequest.requestTimeout
         config.timeoutIntervalForResource = JSONRequest.resourceTimeout
         if let userAgent = JSONRequest.userAgent {
