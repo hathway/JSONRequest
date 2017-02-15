@@ -76,7 +76,8 @@ open class JSONRequest {
     open static var userAgent: String?
     open static var requestTimeout = 5.0
     open static var resourceTimeout = 10.0
-    open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
+    open static var requestCachePolicy: NSURLRequest.CachePolicy = .reloadIgnoringLocalCacheData
+    static var requestSession: URLSession? = nil
 
     open var httpRequest: NSMutableURLRequest? {
         return request
@@ -115,7 +116,20 @@ open class JSONRequest {
                 complete(result)
                 return
             }
-            let result = self.parse(data: data, response: response)
+            let urlRequest = self.request as? URLRequest
+            var cachedURLResponse = URLCache.shared.cachedResponse(for: urlRequest!)
+            
+            var dataToParsed = data
+            
+            if cachedURLResponse != nil && dataToParsed?.count == 0 {
+                dataToParsed = cachedURLResponse?.data
+            } else if cachedURLResponse == nil && dataToParsed?.count != 0 {
+                cachedURLResponse = CachedURLResponse(response: response!,
+                                                      data: dataToParsed!)
+                URLCache.shared.storeCachedResponse(cachedURLResponse!,
+                                                    for: self.request! as URLRequest)
+            }
+            let result = self.parse(data: dataToParsed, response: response)
             complete(result)
         }
         trace(task: task)
