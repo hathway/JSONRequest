@@ -116,20 +116,7 @@ open class JSONRequest {
                 complete(result)
                 return
             }
-            let urlRequest = self.request as? URLRequest
-            var cachedURLResponse = URLCache.shared.cachedResponse(for: urlRequest!)
-            
-            var dataToParsed = data
-            
-            if cachedURLResponse != nil && dataToParsed?.count == 0 {
-                dataToParsed = cachedURLResponse?.data
-            } else if cachedURLResponse == nil && dataToParsed?.count != 0 {
-                cachedURLResponse = CachedURLResponse(response: response!,
-                                                      data: dataToParsed!)
-                URLCache.shared.storeCachedResponse(cachedURLResponse!,
-                                                    for: self.request! as URLRequest)
-            }
-            let result = self.parse(data: dataToParsed, response: response)
+            let result = self.parse(data: data, response: response)
             complete(result)
         }
         trace(task: task)
