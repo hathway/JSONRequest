@@ -6,7 +6,6 @@
 //  Copyright © 2016 Hathway. All rights reserved.
 //
 
-
 public enum JSONRequestHttpVerb: String {
     case GET = "GET"
     case POST = "POST"
@@ -70,7 +69,6 @@ public extension JSONRequest {
 
 }
 
-
 // MARK: Instance HTTP Async methods
 
 public extension JSONRequest {
@@ -107,7 +105,6 @@ public extension JSONRequest {
 
 }
 
-
 // MARK: Class HTTP Sync methods
 
 public extension JSONRequest {
@@ -141,7 +138,6 @@ public extension JSONRequest {
     }
 
 }
-
 
 // MARK: Class HTTP Async methods
 
