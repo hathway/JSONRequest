@@ -239,7 +239,6 @@ open class JSONRequest {
         return isReachable && !needsConnection
     }
 
-
     fileprivate func trace(task: URLSessionDataTask) {
         guard let log = JSONRequest.log else {
             return
