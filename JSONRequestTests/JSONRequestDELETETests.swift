@@ -18,13 +18,13 @@ class JSONRequestDELETETests: XCTestCase {
     func testSimple() {
         let result = JSONRequest.delete(url: goodUrl, queryParams: params)
         switch result {
-        case .Success(let data, let response):
+        case .success(let data, let response):
             XCTAssertNotNil(data)
             let object = data as? JSONObject
             XCTAssertNotNil(object?["args"])
             XCTAssertEqual((object?["args"] as? JSONObject)?["hello"] as? String, "world")
             XCTAssertEqual(response.statusCode, 200)
-        case .Failure:
+        case .failure:
             XCTFail("Request failed")
         }
     }
@@ -44,9 +44,9 @@ class JSONRequestDELETETests: XCTestCase {
     func testFailing() {
         let result = JSONRequest.delete(url: badUrl, queryParams: params)
         switch result {
-        case .Success:
+        case .success:
             XCTFail("Request should have failed")
-        case .Failure(let error, let response, let body):
+        case .failure(let error, let response, let body):
             XCTAssertNotNil(error)
             XCTAssertNil(response)
             XCTAssertNil(body)
