@@ -19,7 +19,6 @@ env:
 
 install:
   - ./install_swiftlint.sh
-  - bundle install
 
 script:
   - set -o pipefail
