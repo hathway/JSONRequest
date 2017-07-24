@@ -1,0 +1,13 @@
+fastlane_version "1.109.0"
+
+default_platform :ios
+
+desc "Builds and tests the app"
+lane :test do |options|
+
+    scan(
+        workspace: "JSONRequest.xcworkspace",
+        devices: ["iPhone 6s"],
+        scheme: "JSONRequest"
+    )
+end
