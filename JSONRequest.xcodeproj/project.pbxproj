@@ -18,6 +18,7 @@
 		957B333D1CA43EAD00A4A2C6 /* JSONRequestDELETETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957B333C1CA43EAD00A4A2C6 /* JSONRequestDELETETests.swift */; };
 		95975B081C1E2CFF004750A8 /* JSONRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95975B071C1E2CFF004750A8 /* JSONRequest.swift */; };
 		95975B0B1C1E31E0004750A8 /* JSONRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 95975B031C1E2CA0004750A8 /* JSONRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D4F9B0F01F268BE3004C6B15 /* testFiles in Resources */ = {isa = PBXBuildFile; fileRef = D4F9B0EF1F268BE3004C6B15 /* testFiles */; };
 		F5CA216D29A78D7BD6E012C3 /* Pods_JSONRequestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F6AFE01224BBF6E8DD4CBAD /* Pods_JSONRequestTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		95975B071C1E2CFF004750A8 /* JSONRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequest.swift; path = Sources/JSONRequest.swift; sourceTree = "<group>"; };
 		95975B0E1C1F39D2004750A8 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		A262DBB8FA4EFE8496CA36C8 /* Pods-JSONRequest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JSONRequest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JSONRequest/Pods-JSONRequest.debug.xcconfig"; sourceTree = "<group>"; };
+		D4F9B0EF1F268BE3004C6B15 /* testFiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = testFiles; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 		50793BE419D5B57100F5DEB2 /* JSONRequestTests */ = {
 			isa = PBXGroup;
 			children = (
+				D4F9B0EF1F268BE3004C6B15 /* testFiles */,
 				957B333C1CA43EAD00A4A2C6 /* JSONRequestDELETETests.swift */,
 				9575F2061C4443E8000B5A59 /* JSONRequestGETTests.swift */,
 				957B333A1CA43EA200A4A2C6 /* JSONRequestPATCHTests.swift */,
@@ -271,6 +274,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4F9B0F01F268BE3004C6B15 /* testFiles in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
