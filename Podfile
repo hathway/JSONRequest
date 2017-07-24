@@ -6,6 +6,7 @@ target 'JSONRequest' do
   use_frameworks!
 
   # Pods for JSONRequest
+  pod 'SwiftLint', '~> 0.15.0'
 
   target 'JSONRequestTests' do
     inherit! :search_paths

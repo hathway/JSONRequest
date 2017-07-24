@@ -70,6 +70,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		32A23E08346748F1793F899C5FF672C1 /* SwiftLint */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = SwiftLint;
+			path = SwiftLint;
+			sourceTree = "<group>";
+		};
 		64715F137BB66CBB99929D3D59311A51 /* Pods-JSONRequestTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -93,9 +101,18 @@
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
+				9758CC519AE2C57A9659FFC01AAD26F9 /* Pods */,
 				15ECCE6A5CC4C69CA287E09482FDEC9B /* Products */,
 				A4887E863052F1E9298F58F1F68026BC /* Targets Support Files */,
 			);
+			sourceTree = "<group>";
+		};
+		9758CC519AE2C57A9659FFC01AAD26F9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				32A23E08346748F1793F899C5FF672C1 /* SwiftLint */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		A4887E863052F1E9298F58F1F68026BC /* Targets Support Files */ = {
