@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import JSONRequest
+@testable import JSONRequest
 import DVR
 
 class JSONRequestDELETETests: XCTestCase {
@@ -15,6 +15,11 @@ class JSONRequestDELETETests: XCTestCase {
     let goodUrl = "http://httpbin.org/delete"
     let badUrl = "httpppp://httpbin.org/delete"
     let params: JSONObject = ["hello": "world"]
+
+    override func setUp() {
+        JSONRequest.requireNetwork = false
+        super.setUp()
+    }
 
     override func tearDown() {
         JSONRequest.urlSession = nil

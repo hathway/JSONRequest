@@ -83,6 +83,8 @@ open class JSONRequest {
         return request
     }
 
+    internal static var requireNetwork = true
+
     public init() {
         request = NSMutableURLRequest()
     }
@@ -92,7 +94,7 @@ open class JSONRequest {
     func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
                             queryParams: JSONObject? = nil, payload: Any? = nil,
                             headers: JSONObject? = nil, complete: @escaping (JSONResult) -> Void) {
-        if (isConnectedToNetwork() == false) && (JSONRequest.urlSession == nil) {
+        if (isConnectedToNetwork() == false) && (JSONRequest.requireNetwork) {
             let error = JSONError.noInternetConnection
             complete(.failure(error: error, response: nil, body: nil))
             return

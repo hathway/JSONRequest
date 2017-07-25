@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import JSONRequest
+@testable import JSONRequest
 import DVR
 
 class JSONRequestPUTTests: XCTestCase {
@@ -16,6 +16,11 @@ class JSONRequestPUTTests: XCTestCase {
     let badUrl = "httpppp://httpbin.org/put"
     let params: JSONObject = ["hello": "world"]
     let payload: Any = ["hi": "there"]
+
+    override func setUp() {
+        JSONRequest.requireNetwork = false
+        super.setUp()
+    }
 
     override func tearDown() {
         JSONRequest.urlSession = nil
