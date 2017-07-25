@@ -1,0 +1,62 @@
+{
+  "interactions" : [
+    {
+      "response" : {
+        "status" : 200,
+        "headers" : {
+          "Content-Type" : "application\/json",
+          "Connection" : "keep-alive",
+          "Content-Length" : "517",
+          "X-Processed-Time" : "0.000833988189697",
+          "Access-Control-Allow-Credentials" : "true",
+          "X-Powered-By" : "Flask",
+          "Access-Control-Allow-Origin" : "*",
+          "Server" : "meinheld\/0.6.1",
+          "Via" : "1.1 vegur",
+          "Date" : "Mon, 24 Jul 2017 18:52:16 GMT"
+        },
+        "body" : {
+          "json" : {
+            "hi" : "there"
+          },
+          "origin" : "72.29.171.50",
+          "url" : "http:\/\/httpbin.org\/post",
+          "data" : "{\"hi\":\"there\"}",
+          "headers" : {
+            "Accept" : "application\/json",
+            "Accept-Encoding" : "gzip, deflate",
+            "Connection" : "close",
+            "Content-Type" : "application\/json",
+            "Host" : "httpbin.org",
+            "Content-Length" : "14",
+            "User-Agent" : "xctest (unknown version) CFNetwork\/811.4.18 Darwin\/16.6.0",
+            "Accept-Language" : "en-us"
+          },
+          "args" : {
+
+          },
+          "files" : {
+
+          },
+          "form" : {
+
+          }
+        },
+        "url" : "http:\/\/httpbin.org\/post"
+      },
+      "recorded_at" : 1500922336.488623,
+      "request" : {
+        "headers" : {
+          "Content-Type" : "application\/json",
+          "Accept" : "application\/json"
+        },
+        "method" : "POST",
+        "body" : {
+          "hi" : "there"
+        },
+        "url" : "http:\/\/httpbin.org\/post"
+      }
+    }
+  ],
+  "name" : "testFiles\/testArrayValuePOST"
+}

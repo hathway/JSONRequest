@@ -8,6 +8,7 @@
 
 import XCTest
 import JSONRequest
+import DVR
 
 class JSONRequestPOSTTests: XCTestCase {
 
@@ -16,7 +17,13 @@ class JSONRequestPOSTTests: XCTestCase {
     let params: JSONObject = ["hello": "world"]
     let payload: Any = ["hi": "there"]
 
+    override func tearDown() {
+        JSONRequest.urlSession = nil
+        super.tearDown()
+    }
+
     func testSimple() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testSimplePOST")
         let result = JSONRequest.post(url: goodUrl, queryParams: params, payload: payload)
         switch result {
         case .success(let data, let response):
@@ -33,18 +40,21 @@ class JSONRequestPOSTTests: XCTestCase {
     }
 
     func testDictionaryValue() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testDictionaryValuePOST")
         let result = JSONRequest.post(url: goodUrl, payload: payload)
         let dict = result.dictionaryValue
         XCTAssertEqual((dict["json"] as? JSONObject)?["hi"] as? String, "there")
     }
 
     func testArrayValue() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testArrayValuePOST")
         let result = JSONRequest.post(url: goodUrl, payload: payload)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
 
     func testFailing() {
+        // We don't use DVR on this test because it is designed to fail immediately
         let result = JSONRequest.post(url: badUrl, payload: payload)
         switch result {
         case .success:
@@ -58,6 +68,7 @@ class JSONRequestPOSTTests: XCTestCase {
     }
 
     func testAsync() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testAsyncPOST")
         let expectation = self.expectation(description: "async")
         JSONRequest.post(url: goodUrl) { (result) in
             XCTAssertNil(result.error)
@@ -71,6 +82,7 @@ class JSONRequestPOSTTests: XCTestCase {
     }
 
     func testAsyncFail() {
+        // We don't use DVR on this test because it is designed to fail immediately
         let expectation = self.expectation(description: "async")
         JSONRequest.post(url: badUrl) { (result) in
             XCTAssertNotNil(result.error)
