@@ -7,7 +7,8 @@
 //
 
 import XCTest
-import JSONRequest
+@testable import JSONRequest
+import DVR
 
 class JSONRequestDELETETests: XCTestCase {
 
@@ -15,7 +16,18 @@ class JSONRequestDELETETests: XCTestCase {
     let badUrl = "httpppp://httpbin.org/delete"
     let params: JSONObject = ["hello": "world"]
 
+    override func setUp() {
+        JSONRequest.requireNetwork = false
+        super.setUp()
+    }
+
+    override func tearDown() {
+        JSONRequest.urlSession = nil
+        super.tearDown()
+    }
+
     func testSimple() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testSimpleDELETE")
         let result = JSONRequest.delete(url: goodUrl, queryParams: params)
         switch result {
         case .success(let data, let response):
@@ -30,18 +42,21 @@ class JSONRequestDELETETests: XCTestCase {
     }
 
     func testDictionaryValue() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testDictionaryValueDELETE")
         let result = JSONRequest.delete(url: goodUrl, queryParams: params)
         let dict = result.dictionaryValue
         XCTAssertEqual((dict["args"] as? JSONObject)?["hello"] as? String, "world")
     }
 
     func testArrayValue() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testArrayValueDELETE")
         let result = JSONRequest.delete(url: goodUrl, queryParams: params)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
 
     func testFailing() {
+        // We don't use DVR on this test because it is designed to fail immediately
         let result = JSONRequest.delete(url: badUrl, queryParams: params)
         switch result {
         case .success:
@@ -55,6 +70,7 @@ class JSONRequestDELETETests: XCTestCase {
     }
 
     func testAsync() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testAsyncDELETE")
         let expectation = self.expectation(description: "async")
         JSONRequest.delete(url: goodUrl) { (result) in
             XCTAssertNil(result.error)
@@ -68,6 +84,7 @@ class JSONRequestDELETETests: XCTestCase {
     }
 
     func testAsyncFail() {
+        // We don't use DVR on this test because it is designed to fail immediately
         let expectation = self.expectation(description: "async")
         JSONRequest.delete(url: badUrl) { (result) in
             XCTAssertNotNil(result.error)
