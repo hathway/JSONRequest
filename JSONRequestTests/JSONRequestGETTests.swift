@@ -22,13 +22,12 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     override func tearDown() {
-        JSONRequest.urlSession = nil
         super.tearDown()
     }
 
     func testSimple() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testSimpleGET")
-        let result = JSONRequest.get(url: goodUrl, queryParams: params)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testSimpleGET"))
+        let result = jsonRequest.get(url: goodUrl, queryParams: params)
         switch result {
         case .success(let data, let response):
             XCTAssertNotNil(data)
@@ -42,14 +41,14 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     func testDictionaryValue() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testDictionaryValueGET")
-        let result = JSONRequest.get(url: goodUrl, queryParams: params)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testDictionaryValueGET"))
+        let result = jsonRequest.get(url: goodUrl, queryParams: params)
         let dict = result.dictionaryValue
         XCTAssertEqual((dict["args"] as? JSONObject)?["hello"] as? String, "world")
     }
 
     func testArrayValue() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testArrayValueGET")
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testArrayValueGET"))
         let result = JSONRequest.get(url: goodUrl, queryParams: params)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
@@ -70,9 +69,9 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     func testAsync() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testAsyncGET")
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testAsyncGET"))
         let expectation = self.expectation(description: "async")
-        JSONRequest.get(url: goodUrl) { (result) in
+        jsonRequest.get(url: goodUrl) { (result) in
             XCTAssertNil(result.error)
             expectation.fulfill()
         }

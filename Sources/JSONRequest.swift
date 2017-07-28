@@ -78,17 +78,18 @@ open class JSONRequest {
     open static var resourceTimeout = 10.0
     open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
 
-    /* Used for dependency injection of outside URLSessions (keep nil to use default) */
-    open static var urlSession: URLSession?
-
     open var httpRequest: NSMutableURLRequest? {
         return request
     }
 
+    /* Used for dependency injection of outside URLSessions (keep nil to use default) */
+    private var urlSession: URLSession?
+
     /* Set to false during testing to avoid test failures due to lack of internet access */
     internal static var requireNetworkAccess = true
 
-    public init() {
+    public init(session: URLSession? = nil) {
+        urlSession = session
         request = NSMutableURLRequest()
     }
 
@@ -108,7 +109,7 @@ open class JSONRequest {
         updateRequest(payload: payload)
 
         let start = Date()
-        let session = JSONRequest.urlSession ?? networkSession()
+        let session = urlSession ?? networkSession()
         let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
             self.traceResponse(elapsed: elapsed, responseData: data,

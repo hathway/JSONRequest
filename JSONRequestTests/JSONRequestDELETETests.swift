@@ -22,13 +22,12 @@ class JSONRequestDELETETests: XCTestCase {
     }
 
     override func tearDown() {
-        JSONRequest.urlSession = nil
         super.tearDown()
     }
 
     func testSimple() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testSimpleDELETE")
-        let result = JSONRequest.delete(url: goodUrl, queryParams: params)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testSimpleDELETE"))
+        let result = jsonRequest.delete(url: goodUrl, queryParams: params)
         switch result {
         case .success(let data, let response):
             XCTAssertNotNil(data)
@@ -42,14 +41,14 @@ class JSONRequestDELETETests: XCTestCase {
     }
 
     func testDictionaryValue() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testDictionaryValueDELETE")
-        let result = JSONRequest.delete(url: goodUrl, queryParams: params)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testDictionaryValueDELETE"))
+        let result = jsonRequest.delete(url: goodUrl, queryParams: params)
         let dict = result.dictionaryValue
         XCTAssertEqual((dict["args"] as? JSONObject)?["hello"] as? String, "world")
     }
 
     func testArrayValue() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testArrayValueDELETE")
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testArrayValueDELETE"))
         let result = JSONRequest.delete(url: goodUrl, queryParams: params)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
@@ -70,9 +69,9 @@ class JSONRequestDELETETests: XCTestCase {
     }
 
     func testAsync() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testAsyncDELETE")
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testAsyncDELETE"))
         let expectation = self.expectation(description: "async")
-        JSONRequest.delete(url: goodUrl) { (result) in
+        jsonRequest.delete(url: goodUrl) { (result) in
             XCTAssertNil(result.error)
             expectation.fulfill()
         }

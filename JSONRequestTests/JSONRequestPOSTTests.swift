@@ -23,13 +23,12 @@ class JSONRequestPOSTTests: XCTestCase {
     }
 
     override func tearDown() {
-        JSONRequest.urlSession = nil
         super.tearDown()
     }
 
     func testSimple() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testSimplePOST")
-        let result = JSONRequest.post(url: goodUrl, queryParams: params, payload: payload)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testSimplePOST"))
+        let result = jsonRequest.post(url: goodUrl, queryParams: params, payload: payload)
         switch result {
         case .success(let data, let response):
             XCTAssertNotNil(data)
@@ -45,15 +44,15 @@ class JSONRequestPOSTTests: XCTestCase {
     }
 
     func testDictionaryValue() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testDictionaryValuePOST")
-        let result = JSONRequest.post(url: goodUrl, payload: payload)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testDictionaryValuePOST"))
+        let result = jsonRequest.post(url: goodUrl, payload: payload)
         let dict = result.dictionaryValue
         XCTAssertEqual((dict["json"] as? JSONObject)?["hi"] as? String, "there")
     }
 
     func testArrayValue() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testArrayValuePOST")
-        let result = JSONRequest.post(url: goodUrl, payload: payload)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testArrayValuePOST"))
+        let result = jsonRequest.post(url: goodUrl, payload: payload)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
@@ -73,9 +72,9 @@ class JSONRequestPOSTTests: XCTestCase {
     }
 
     func testAsync() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testAsyncPOST")
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testAsyncPOST"))
         let expectation = self.expectation(description: "async")
-        JSONRequest.post(url: goodUrl) { (result) in
+        jsonRequest.post(url: goodUrl) { (result) in
             XCTAssertNil(result.error)
             expectation.fulfill()
         }

@@ -23,13 +23,12 @@ class JSONRequestPATCHTests: XCTestCase {
     }
 
     override func tearDown() {
-        JSONRequest.urlSession = nil
         super.tearDown()
     }
 
     func testSimple() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testSimplePATCH")
-        let result = JSONRequest.patch(url: goodUrl, queryParams: params, payload: payload)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testSimplePATCH"))
+        let result = jsonRequest.patch(url: goodUrl, queryParams: params, payload: payload)
         switch result {
         case .success(let data, let response):
             XCTAssertNotNil(data)
@@ -45,15 +44,15 @@ class JSONRequestPATCHTests: XCTestCase {
     }
 
     func testDictionaryValue() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testDictionaryValuePATCH")
-        let result = JSONRequest.patch(url: goodUrl, payload: payload)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testDictionaryValuePATCH"))
+        let result = jsonRequest.patch(url: goodUrl, payload: payload)
         let dict = result.dictionaryValue
         XCTAssertEqual((dict["json"] as? JSONObject)?["hi"] as? String, "there")
     }
 
     func testArrayValue() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testArrayValuePATCH")
-        let result = JSONRequest.patch(url: goodUrl, payload: payload)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testArrayValuePATCH"))
+        let result = jsonRequest.patch(url: goodUrl, payload: payload)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
@@ -73,9 +72,9 @@ class JSONRequestPATCHTests: XCTestCase {
     }
 
     func testAsync() {
-        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testAsyncPATCH")
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testAsyncPATCH"))
         let expectation = self.expectation(description: "async")
-        JSONRequest.patch(url: goodUrl) { (result) in
+        jsonRequest.patch(url: goodUrl) { (result) in
             XCTAssertNil(result.error)
             expectation.fulfill()
         }
