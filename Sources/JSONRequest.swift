@@ -82,7 +82,15 @@ open class JSONRequest {
         return request
     }
 
-    public init() {
+    /* Used for dependency injection of outside URLSessions (keep nil to use default) */
+    private var urlSession: URLSession?
+
+    /* Set to false during testing to avoid test failures due to lack of internet access */
+    internal static var requireNetworkAccess = true
+
+    /* Omit the session parameter to use the default URLSession */
+    public init(session: URLSession? = nil) {
+        urlSession = session
         request = NSMutableURLRequest()
     }
 
@@ -91,7 +99,7 @@ open class JSONRequest {
     func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
                             queryParams: JSONObject? = nil, payload: Any? = nil,
                             headers: JSONObject? = nil, complete: @escaping (JSONResult) -> Void) {
-        if isConnectedToNetwork() == false {
+        if (isConnectedToNetwork() == false) && (JSONRequest.requireNetworkAccess) {
             let error = JSONError.noInternetConnection
             complete(.failure(error: error, response: nil, body: nil))
             return
@@ -102,7 +110,7 @@ open class JSONRequest {
         updateRequest(payload: payload)
 
         let start = Date()
-        let session = networkSession()
+        let session = urlSession ?? networkSession()
         let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
             self.traceResponse(elapsed: elapsed, responseData: data,

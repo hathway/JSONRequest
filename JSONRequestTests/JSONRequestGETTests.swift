@@ -7,7 +7,8 @@
 //
 
 import XCTest
-import JSONRequest
+@testable import JSONRequest
+import DVR
 
 class JSONRequestGETTests: XCTestCase {
 
@@ -15,8 +16,18 @@ class JSONRequestGETTests: XCTestCase {
     let badUrl = "httpppp://httpbin.org/get"
     let params: JSONObject = ["hello": "world"]
 
+    override func setUp() {
+        JSONRequest.requireNetworkAccess = false
+        super.setUp()
+    }
+
+    override func tearDown() {
+        super.tearDown()
+    }
+
     func testSimple() {
-        let result = JSONRequest.get(url: goodUrl, queryParams: params)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testSimpleGET"))
+        let result = jsonRequest.get(url: goodUrl, queryParams: params)
         switch result {
         case .success(let data, let response):
             XCTAssertNotNil(data)
@@ -24,24 +35,27 @@ class JSONRequestGETTests: XCTestCase {
             XCTAssertNotNil(object?["args"])
             XCTAssertEqual((object?["args"] as? JSONObject)?["hello"] as? String, "world")
             XCTAssertEqual(response.statusCode, 200)
-        case .failure:
-            XCTFail("Request failed")
+        case .failure(let error):
+            XCTFail("Request failed with \(error)")
         }
     }
 
     func testDictionaryValue() {
-        let result = JSONRequest.get(url: goodUrl, queryParams: params)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testDictionaryValueGET"))
+        let result = jsonRequest.get(url: goodUrl, queryParams: params)
         let dict = result.dictionaryValue
         XCTAssertEqual((dict["args"] as? JSONObject)?["hello"] as? String, "world")
     }
 
     func testArrayValue() {
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testArrayValueGET"))
         let result = JSONRequest.get(url: goodUrl, queryParams: params)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
 
     func testFailing() {
+        // We don't use DVR on this test because it is designed to fail immediately
         let result = JSONRequest.get(url: badUrl, queryParams: params)
         switch result {
         case .success:
@@ -55,8 +69,9 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     func testAsync() {
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testAsyncGET"))
         let expectation = self.expectation(description: "async")
-        JSONRequest.get(url: goodUrl) { (result) in
+        jsonRequest.get(url: goodUrl) { (result) in
             XCTAssertNil(result.error)
             expectation.fulfill()
         }
@@ -68,6 +83,7 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     func testAsyncFail() {
+        // We don't use DVR on this test because it is designed to fail immediately
         let expectation = self.expectation(description: "async")
         JSONRequest.get(url: badUrl) { (result) in
             XCTAssertNotNil(result.error)

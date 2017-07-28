@@ -1,0 +1,57 @@
+{
+  "interactions" : [
+    {
+      "response" : {
+        "status" : 200,
+        "headers" : {
+          "Content-Type" : "application\/json",
+          "Connection" : "keep-alive",
+          "Content-Length" : "478",
+          "X-Processed-Time" : "0.000734090805054",
+          "Access-Control-Allow-Credentials" : "true",
+          "X-Powered-By" : "Flask",
+          "Access-Control-Allow-Origin" : "*",
+          "Server" : "meinheld\/0.6.1",
+          "Via" : "1.1 vegur",
+          "Date" : "Mon, 24 Jul 2017 20:02:45 GMT"
+        },
+        "body" : {
+          "json" : null,
+          "origin" : "72.29.171.50",
+          "url" : "http:\/\/httpbin.org\/put",
+          "data" : "",
+          "headers" : {
+            "Accept" : "application\/json",
+            "Accept-Encoding" : "gzip, deflate",
+            "Connection" : "close",
+            "Content-Type" : "application\/json",
+            "Host" : "httpbin.org",
+            "Content-Length" : "0",
+            "User-Agent" : "xctest (unknown version) CFNetwork\/811.4.18 Darwin\/16.6.0",
+            "Accept-Language" : "en-us"
+          },
+          "args" : {
+
+          },
+          "files" : {
+
+          },
+          "form" : {
+
+          }
+        },
+        "url" : "http:\/\/httpbin.org\/put"
+      },
+      "recorded_at" : 1500926565.628556,
+      "request" : {
+        "headers" : {
+          "Content-Type" : "application\/json",
+          "Accept" : "application\/json"
+        },
+        "method" : "PUT",
+        "url" : "http:\/\/httpbin.org\/put"
+      }
+    }
+  ],
+  "name" : "testFiles\/testAsyncPUT"
+}
