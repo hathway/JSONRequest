@@ -77,10 +77,13 @@ open class JSONRequest {
     open static var requestTimeout = 5.0
     open static var resourceTimeout = 10.0
     open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
+    open static var urlSession: URLSession?
 
     open var httpRequest: NSMutableURLRequest? {
         return request
     }
+
+    internal static var requireNetwork = true
 
     public init() {
         request = NSMutableURLRequest()
@@ -91,7 +94,7 @@ open class JSONRequest {
     func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
                             queryParams: JSONObject? = nil, payload: Any? = nil,
                             headers: JSONObject? = nil, complete: @escaping (JSONResult) -> Void) {
-        if isConnectedToNetwork() == false {
+        if (isConnectedToNetwork() == false) && (JSONRequest.requireNetwork) {
             let error = JSONError.noInternetConnection
             complete(.failure(error: error, response: nil, body: nil))
             return
@@ -102,7 +105,7 @@ open class JSONRequest {
         updateRequest(payload: payload)
 
         let start = Date()
-        let session = networkSession()
+        let session = JSONRequest.urlSession ?? networkSession()
         let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
             self.traceResponse(elapsed: elapsed, responseData: data,
