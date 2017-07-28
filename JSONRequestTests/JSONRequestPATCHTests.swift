@@ -7,7 +7,8 @@
 //
 
 import XCTest
-import JSONRequest
+@testable import JSONRequest
+import DVR
 
 class JSONRequestPATCHTests: XCTestCase {
 
@@ -16,7 +17,18 @@ class JSONRequestPATCHTests: XCTestCase {
     let params: JSONObject = ["hello": "world"]
     let payload: Any = ["hi": "there"]
 
+    override func setUp() {
+        JSONRequest.requireNetwork = false
+        super.setUp()
+    }
+
+    override func tearDown() {
+        JSONRequest.urlSession = nil
+        super.tearDown()
+    }
+
     func testSimple() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testSimplePATCH")
         let result = JSONRequest.patch(url: goodUrl, queryParams: params, payload: payload)
         switch result {
         case .success(let data, let response):
@@ -33,18 +45,21 @@ class JSONRequestPATCHTests: XCTestCase {
     }
 
     func testDictionaryValue() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testDictionaryValuePATCH")
         let result = JSONRequest.patch(url: goodUrl, payload: payload)
         let dict = result.dictionaryValue
         XCTAssertEqual((dict["json"] as? JSONObject)?["hi"] as? String, "there")
     }
 
     func testArrayValue() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testArrayValuePATCH")
         let result = JSONRequest.patch(url: goodUrl, payload: payload)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
 
     func testFailing() {
+        // We don't use DVR on this test because it is designed to fail immediately
         let result = JSONRequest.patch(url: badUrl, payload: payload)
         switch result {
         case .success:
@@ -58,6 +73,7 @@ class JSONRequestPATCHTests: XCTestCase {
     }
 
     func testAsync() {
+        JSONRequest.urlSession = DVR.Session(cassetteName: "testFiles/testAsyncPATCH")
         let expectation = self.expectation(description: "async")
         JSONRequest.patch(url: goodUrl) { (result) in
             XCTAssertNil(result.error)
@@ -71,6 +87,7 @@ class JSONRequestPATCHTests: XCTestCase {
     }
 
     func testAsyncFail() {
+        // We don't use DVR on this test because it is designed to fail immediately
         let expectation = self.expectation(description: "async")
         JSONRequest.patch(url: badUrl) { (result) in
             XCTAssertNotNil(result.error)
