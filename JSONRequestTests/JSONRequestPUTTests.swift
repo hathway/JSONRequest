@@ -18,7 +18,7 @@ class JSONRequestPUTTests: XCTestCase {
     let payload: Any = ["hi": "there"]
 
     override func setUp() {
-        JSONRequest.requireNetwork = false
+        JSONRequest.requireNetworkAccess = false
         super.setUp()
     }
 

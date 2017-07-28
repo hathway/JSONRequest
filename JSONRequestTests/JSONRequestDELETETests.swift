@@ -17,7 +17,7 @@ class JSONRequestDELETETests: XCTestCase {
     let params: JSONObject = ["hello": "world"]
 
     override func setUp() {
-        JSONRequest.requireNetwork = false
+        JSONRequest.requireNetworkAccess = false
         super.setUp()
     }
 

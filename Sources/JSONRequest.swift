@@ -77,13 +77,16 @@ open class JSONRequest {
     open static var requestTimeout = 5.0
     open static var resourceTimeout = 10.0
     open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
+
+    /* Used for dependency injection of outside URLSessions (keep nil to use default) */
     open static var urlSession: URLSession?
 
     open var httpRequest: NSMutableURLRequest? {
         return request
     }
 
-    internal static var requireNetwork = true
+    /* Set to false during testing to avoid test failures due to lack of internet access */
+    internal static var requireNetworkAccess = true
 
     public init() {
         request = NSMutableURLRequest()
@@ -94,7 +97,7 @@ open class JSONRequest {
     func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
                             queryParams: JSONObject? = nil, payload: Any? = nil,
                             headers: JSONObject? = nil, complete: @escaping (JSONResult) -> Void) {
-        if (isConnectedToNetwork() == false) && (JSONRequest.requireNetwork) {
+        if (isConnectedToNetwork() == false) && (JSONRequest.requireNetworkAccess) {
             let error = JSONError.noInternetConnection
             complete(.failure(error: error, response: nil, body: nil))
             return
