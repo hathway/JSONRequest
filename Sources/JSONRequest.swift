@@ -186,17 +186,14 @@ open class JSONRequest {
     }
 
     open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
-        var components = URLComponents(string: urlString)
-        if queryParams != nil {
-            if components?.queryItems == nil {
-                components?.queryItems = []
-            }
-            for (key, value) in queryParams! {
-                let item = URLQueryItem(name: key, value: String(describing: value))
-                components?.queryItems?.append(item)
-            }
+        guard let baseURL = URL(string: urlString) else {
+            return nil
         }
-        return components?.url
+        guard let queryParams = queryParams else {
+            return baseURL
+        }
+
+        return url(baseURL, appendingPercentEncodingOf: queryParams)
     }
 
     func parse(data: Data?, response: URLResponse?) -> JSONResult {
