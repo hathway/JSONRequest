@@ -7,7 +7,7 @@ JSONRequest is a tiny Swift library to do HTTP JSON requests.
 ![](http://img.shields.io/badge/iOS-8.4%2B-blue.svg)
 ![](http://img.shields.io/badge/Swift-3.0-orange.svg)
 
-JSONRequest provides a clean and easy-to-use API to submit HTTP requests both **asynchronously** and **synchronously** (see [Why Synchronous? Are you crazy?](http://github.com)).
+JSONRequest provides a clean and easy-to-use API to submit HTTP requests both **asynchronously** and **synchronously** (see [Why Synchronous? Are you crazy?](#why-synchronous-are-you-crazy)).
 
 ## Synchronous Usage
 
@@ -74,6 +74,36 @@ Accept: application/json
 ```
 
 The underlining `NSMutableURLRequest` object can be accessed via the `urlRequest` property.
+
+## Testing
+
+### DVR
+JSONRequest uses [DVR](https://github.com/venmo/DVR) for testing. DVR records the HTTP interactions of the tests and replays them during future runthroughs.
+
+#### Usage
+Each test target should contain a setup function that should look like this:
+```swift
+override func setUp() {
+    JSONRequest.requireNetworkAccess = false
+    // anything else that needs to be setup
+    super.setUp()
+}
+```
+Setting the ```requireNetworkAccess``` variable disables errors due to lack of internet, allowing tests to pass wherever you might need to test.
+
+**It should be noted that internet access is REQUIRED the first time a test is run so that DVR can record the responses given.**
+
+After you have your target setup you can test easily by creating your own instance of JSONRequest and pointing it to the stored response file.
+
+```swift
+func testMyAmazingChange() {
+    let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testMyAmazingChange"))
+    // all network calls and asserts using jsonRequest
+}
+```
+The first time the test is run DVR will record the requests and responses made, storing both in the file indicated.
+When the test has finished DVR will abort testing and print out the location of the saved file which you will need to add to xcode.
+DVR will only record one cassette per test case, so to re-record a test simply delete the corresponding cassette and re-run the test; DVR will record the interaction and generate a new cassette.
 
 ## Why Synchronous? Are you crazy?
 
