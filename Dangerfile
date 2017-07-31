@@ -1,7 +1,7 @@
 # Test coverage report
 xcov.report(
    scheme: 'JSONRequest',
-   minimum_coverage_percentage: 80,
+   minimum_coverage_percentage: 80.0,
    ignore_file_path: '.xcovignore',
    only_project_targets: true
 )
