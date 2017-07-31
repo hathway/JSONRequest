@@ -103,6 +103,7 @@ func testMyAmazingChange() {
 ```
 The first time the test is run DVR will record the requests and responses made, storing both in the file indicated.
 When the test has finished DVR will abort testing and print out the location of the saved file which you will need to add to xcode.
+DVR will only record one cassette per test case, so to re-record a test simply delete the corresponding cassette and re-run the test; DVR will record the interaction and generate a new cassette.
 
 ## Why Synchronous? Are you crazy?
 
