@@ -24,19 +24,26 @@ class JSONRequestTests: XCTestCase {
         XCTAssertNil(url)
     }
 
-    func testCreateEmptyURL() {
-        let jsonRequest = JSONRequest()
-        let url = jsonRequest.createURL(urlString: "", queryParams: nil)
-        XCTAssertNotNil(url)
-        XCTAssertEqual(url?.absoluteString, "")
-    }
-
     func testCreateURL() {
         let jsonRequest = JSONRequest()
         let url = jsonRequest.createURL(urlString: "http://httpbin.org",
                                         queryParams: nil)
         XCTAssertNotNil(url)
         XCTAssertEqual(url?.absoluteString, "http://httpbin.org")
+    }
+
+    func testEncodesBasicURLQueryParameters() {
+        let jsonRequest = JSONRequest()
+        let url = jsonRequest.createURL(urlString: "http://httpbin.org", queryParams: ["hello": "world"])
+        XCTAssertNotNil(url)
+        XCTAssert(url?.query == "hello=world")
+    }
+
+    func testEncodesEscapableURLQueryParameters() {
+        let jsonRequest = JSONRequest()
+        let url = jsonRequest.createURL(urlString: "http://httpbin.org", queryParams: ["hello!$&'()*+,;=:#[]@": "world!$&'()*+,;=:#[]@"])
+        XCTAssertNotNil(url)
+        XCTAssertEqual(url?.query, "hello%21%24%26%27%28%29%2A%2B%2C%3B%3D%3A%23%5B%5D%40=world%21%24%26%27%28%29%2A%2B%2C%3B%3D%3A%23%5B%5D%40")
     }
 
     func testCreateURLWithParam() {
@@ -60,21 +67,6 @@ class JSONRequestTests: XCTestCase {
         XCTAssert(url?.absoluteString.contains("aaaa=1") ?? false)
         XCTAssert(url?.absoluteString.contains("bbbb=string") ?? false)
         XCTAssert(url?.absoluteString.contains("cccc=2.2") ?? false)
-    }
-
-    func testCreateURLWithNilParams() {
-        let jsonRequest = JSONRequest()
-        let params: JSONObject = [
-            "aaaa": 1,
-            "bbbb": "string",
-            "cccc": 5.5
-        ]
-        let url = jsonRequest.createURL(urlString: "http://httpbin.org", queryParams: params)
-        XCTAssertNotNil(url)
-        XCTAssertNotNil(url?.absoluteString)
-        XCTAssertEqual(url?.absoluteString.contains("aaaa=1"), true)
-        XCTAssertEqual(url?.absoluteString.contains("bbbb=string"), true)
-        XCTAssertEqual(url?.absoluteString.contains("cccc=5.5"), true)
     }
 
     func testCreateURLWithUrlParams() {
