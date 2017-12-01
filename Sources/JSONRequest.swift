@@ -10,6 +10,7 @@ import Foundation
 import SystemConfiguration
 
 public typealias JSONObject = Dictionary<String, Any>
+public typealias APITripTimeObject = (path: String, tripTime: TimeInterval)
 
 public enum JSONError: Error {
     case invalidURL
@@ -77,6 +78,8 @@ open class JSONRequest {
     open static var requestTimeout = 5.0
     open static var resourceTimeout = 10.0
     open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
+
+    open static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
 
     open var httpRequest: NSMutableURLRequest? {
         return request
@@ -253,6 +256,9 @@ open class JSONRequest {
         if let method = task.currentRequest?.httpMethod {
             log("HTTP Method: \(method)")
         }
+        if let path = task.currentRequest?.url?.path {
+            log("PATH: \(path)")
+        }
         if let url = task.currentRequest?.url?.absoluteString {
             log("Url: \(url)")
         }
@@ -275,6 +281,9 @@ open class JSONRequest {
         log("Time Elapsed: \(elapsed)")
         if let url = request?.url {
             log("Url: \(url.absoluteString)")
+            log("PATH: \(url.path)")
+            let apiTripObject = APITripTimeObject(path: url.path, tripTime: elapsed)
+            NotificationCenter.default.post(name: JSONRequest.serviceTripTimeNotification, object: apiTripObject)
         }
         if let statusCode = httpResponse?.statusCode {
             log("Status Code: \(statusCode)")
@@ -314,3 +323,4 @@ open class JSONRequest {
     }
 
 }
+
