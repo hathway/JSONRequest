@@ -133,6 +133,41 @@ open class JSONRequest {
         task.resume()
     }
 
+    func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
+                            queryParams: JSONObject? = nil, payload: Any? = nil,
+                            headers: JSONObject? = nil, timeOut: TimeInterval, complete: @escaping (JSONResult) -> Void) {
+        if (isConnectedToNetwork() == false) && (JSONRequest.requireNetworkAccess) {
+            let error = JSONError.noInternetConnection
+            complete(.failure(error: error, response: nil, body: nil))
+            return
+        }
+
+        updateRequest(method: method, url: url, queryParams: queryParams)
+        updateRequest(headers: headers)
+        updateRequest(payload: payload)
+
+        let start = Date()
+        let session = urlSession ?? networkSession()
+        session.configuration.timeoutIntervalForRequest = timeOut
+        let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
+            let elapsed = -start.timeIntervalSinceNow
+            self.traceResponse(elapsed: elapsed, responseData: data,
+                               httpResponse: response as? HTTPURLResponse,
+                               error: error as NSError?)
+            if let error = error {
+                let result = JSONResult.failure(error: JSONError.requestFailed(error: error),
+                                                response: response as? HTTPURLResponse,
+                                                body: self.body(fromData: data))
+                complete(result)
+                return
+            }
+            let result = self.parse(data: data, response: response)
+            complete(result)
+        }
+        trace(task: task)
+        task.resume()
+    }
+
     func networkSession() -> URLSession {
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = JSONRequest.requestCachePolicy
@@ -154,6 +189,27 @@ open class JSONRequest {
                                                            response: nil, body: nil)
         submitAsyncRequest(method: method, url: url, queryParams: queryParams,
                            payload: payload, headers: headers) { result in
+                            requestResult = result
+                            semaphore.signal()
+        }
+        // Wait for the request to complete
+        while semaphore.wait(timeout: DispatchTime.now()) == .timedOut {
+            let intervalDate = Date(timeIntervalSinceNow: 0.01) // 10 milliseconds
+            RunLoop.current.run(mode: RunLoopMode.defaultRunLoopMode, before: intervalDate)
+        }
+        return requestResult
+    }
+
+    func submitSyncRequest(method: JSONRequestHttpVerb, url: String,
+                           queryParams: JSONObject? = nil,
+                           payload: Any? = nil,
+                           headers: JSONObject? = nil,
+                           timeOut: TimeInterval) -> JSONResult {
+        let semaphore = DispatchSemaphore(value: 0)
+        var requestResult: JSONResult = JSONResult.failure(error: JSONError.unknownError,
+                                                           response: nil, body: nil)
+        submitAsyncRequest(method: method, url: url, queryParams: queryParams,
+                           payload: payload, headers: headers, timeOut: timeOut) { result in
                             requestResult = result
                             semaphore.signal()
         }
@@ -189,14 +245,17 @@ open class JSONRequest {
     }
 
     open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
-        guard let baseURL = URL(string: urlString) else {
-            return nil
+        var components = URLComponents(string: urlString)
+        if queryParams != nil {
+            if components?.queryItems == nil {
+                components?.queryItems = []
+            }
+            for (key, value) in queryParams! {
+                let item = URLQueryItem(name: key, value: String(describing: value))
+                components?.queryItems?.append(item)
+            }
         }
-        guard let queryParams = queryParams else {
-            return baseURL
-        }
-
-        return url(baseURL, appendingPercentEncodingOf: queryParams)
+        return components?.url
     }
 
     func parse(data: Data?, response: URLResponse?) -> JSONResult {
@@ -323,4 +382,3 @@ open class JSONRequest {
     }
 
 }
-
