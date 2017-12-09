@@ -101,7 +101,7 @@ open class JSONRequest {
 
     func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
                             queryParams: JSONObject? = nil, payload: Any? = nil,
-                            headers: JSONObject? = nil, complete: @escaping (JSONResult) -> Void) {
+                            headers: JSONObject? = nil, timeOut: TimeInterval? = nil, complete: @escaping (JSONResult) -> Void) {
         if (isConnectedToNetwork() == false) && (JSONRequest.requireNetworkAccess) {
             let error = JSONError.noInternetConnection
             complete(.failure(error: error, response: nil, body: nil))
@@ -112,8 +112,8 @@ open class JSONRequest {
         updateRequest(headers: headers)
         updateRequest(payload: payload)
 
+        var session = urlSession ?? networkSession(forcedTimeout: timeOut)
         let start = Date()
-        let session = urlSession ?? networkSession()
         let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
             self.traceResponse(elapsed: elapsed, responseData: data,
@@ -133,46 +133,11 @@ open class JSONRequest {
         task.resume()
     }
 
-    func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
-                            queryParams: JSONObject? = nil, payload: Any? = nil,
-                            headers: JSONObject? = nil, timeOut: TimeInterval, complete: @escaping (JSONResult) -> Void) {
-        if (isConnectedToNetwork() == false) && (JSONRequest.requireNetworkAccess) {
-            let error = JSONError.noInternetConnection
-            complete(.failure(error: error, response: nil, body: nil))
-            return
-        }
-
-        updateRequest(method: method, url: url, queryParams: queryParams)
-        updateRequest(headers: headers)
-        updateRequest(payload: payload)
-
-        let start = Date()
-        let session = urlSession ?? networkSession()
-        session.configuration.timeoutIntervalForRequest = timeOut
-        let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
-            let elapsed = -start.timeIntervalSinceNow
-            self.traceResponse(elapsed: elapsed, responseData: data,
-                               httpResponse: response as? HTTPURLResponse,
-                               error: error as NSError?)
-            if let error = error {
-                let result = JSONResult.failure(error: JSONError.requestFailed(error: error),
-                                                response: response as? HTTPURLResponse,
-                                                body: self.body(fromData: data))
-                complete(result)
-                return
-            }
-            let result = self.parse(data: data, response: response)
-            complete(result)
-        }
-        trace(task: task)
-        task.resume()
-    }
-
-    func networkSession() -> URLSession {
+    func networkSession(forcedTimeout: TimeInterval? = nil) -> URLSession {
         let config = URLSessionConfiguration.default
         config.requestCachePolicy = JSONRequest.requestCachePolicy
-        config.timeoutIntervalForRequest = JSONRequest.requestTimeout
-        config.timeoutIntervalForResource = JSONRequest.resourceTimeout
+        config.timeoutIntervalForRequest = forcedTimeout ?? JSONRequest.requestTimeout
+        config.timeoutIntervalForResource = forcedTimeout ?? JSONRequest.resourceTimeout
         if let userAgent = JSONRequest.userAgent {
             config.httpAdditionalHeaders = ["User-Agent": userAgent]
         }
@@ -182,29 +147,9 @@ open class JSONRequest {
     func submitSyncRequest(method: JSONRequestHttpVerb, url: String,
                            queryParams: JSONObject? = nil,
                            payload: Any? = nil,
-                           headers: JSONObject? = nil) -> JSONResult {
-
-        let semaphore = DispatchSemaphore(value: 0)
-        var requestResult: JSONResult = JSONResult.failure(error: JSONError.unknownError,
-                                                           response: nil, body: nil)
-        submitAsyncRequest(method: method, url: url, queryParams: queryParams,
-                           payload: payload, headers: headers) { result in
-                            requestResult = result
-                            semaphore.signal()
-        }
-        // Wait for the request to complete
-        while semaphore.wait(timeout: DispatchTime.now()) == .timedOut {
-            let intervalDate = Date(timeIntervalSinceNow: 0.01) // 10 milliseconds
-            RunLoop.current.run(mode: RunLoopMode.defaultRunLoopMode, before: intervalDate)
-        }
-        return requestResult
-    }
-
-    func submitSyncRequest(method: JSONRequestHttpVerb, url: String,
-                           queryParams: JSONObject? = nil,
-                           payload: Any? = nil,
                            headers: JSONObject? = nil,
-                           timeOut: TimeInterval) -> JSONResult {
+                           timeOut: TimeInterval? = nil) -> JSONResult {
+
         let semaphore = DispatchSemaphore(value: 0)
         var requestResult: JSONResult = JSONResult.failure(error: JSONError.unknownError,
                                                            response: nil, body: nil)
@@ -220,7 +165,7 @@ open class JSONRequest {
         }
         return requestResult
     }
-
+    
     func updateRequest(method: JSONRequestHttpVerb, url: String,
                        queryParams: JSONObject? = nil) {
         request?.url = createURL(urlString: url, queryParams: queryParams)
