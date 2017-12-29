@@ -77,7 +77,8 @@ open class JSONRequest {
     open static var userAgent: String?
     open static var requestTimeout = 5.0
     open static var resourceTimeout = 10.0
-    open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
+    open static var requestCachePolicy: NSURLRequest.CachePolicy = .reloadIgnoringLocalCacheData
+    static var requestSession: URLSession? = nil
 
     open static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
 
