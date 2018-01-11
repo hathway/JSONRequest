@@ -106,7 +106,7 @@ private func escape(_ string: String) -> String {
             let endIndex = string.index(index, offsetBy: batchSize, limitedBy: string.endIndex) ?? string.endIndex
             let range = startIndex..<endIndex
 
-            let substring = string.substring(with: range)
+            let substring = String(string[range])
 
             escaped += substring.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? substring
 
