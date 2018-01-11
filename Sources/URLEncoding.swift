@@ -127,7 +127,6 @@ private func query(_ parameters: [String: Any]) -> String {
     return components.map { "\($0)=\($1)" }.joined(separator: "&")
 }
 
-
 /// Checks that the underling type of a given NSNumber is a Bool
 private func isBoolean(number: NSNumber) -> Bool {
     return CFBooleanGetTypeID() == CFGetTypeID(number)

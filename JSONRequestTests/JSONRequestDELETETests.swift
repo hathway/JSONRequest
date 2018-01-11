@@ -49,7 +49,7 @@ class JSONRequestDELETETests: XCTestCase {
 
     func testArrayValue() {
         let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testArrayValueDELETE"))
-        let result = JSONRequest.delete(url: goodUrl, queryParams: params)
+        let result = jsonRequest.delete(url: goodUrl, queryParams: params)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }

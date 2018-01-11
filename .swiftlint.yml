@@ -1,4 +1,9 @@
-included:
-- Sources
-- JSONRequestTests
-
+force_cast: warning # implicitly
+included: # paths to include during linting. `--path` is ignored if present.
+    - Sources
+    - HDK
+disabled_rules:
+    - line_length
+identifier_name:
+    excluded:
+        - to

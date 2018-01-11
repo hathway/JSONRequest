@@ -102,7 +102,11 @@ class JSONRequestTests: XCTestCase {
         let result = request.parse(data: nil, response: nil)
         switch result {
         case .failure(let error, let response, let body):
-//            XCTAssertEqual(error, JSONError.nonHTTPResponse)
+            if case JSONError.nonHTTPResponse = error {
+                // ok
+            } else {
+                XCTFail("Wrokng error \(error)")
+            }
             XCTAssertNil(response)
             XCTAssertNil(body)
         case .success:
@@ -115,7 +119,11 @@ class JSONRequestTests: XCTestCase {
         let result = request.parse(data: Data(), response: nil)
         switch result {
         case .failure(let error, let response, let body):
-//            XCTAssertEqual(error, JSONError.nonHTTPResponse)
+            if case JSONError.nonHTTPResponse = error {
+                // ok
+            } else {
+                XCTFail("Wrokng error \(error)")
+            }
             XCTAssertNil(response)
             XCTAssertNil(body)
         case .success:

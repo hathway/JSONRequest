@@ -49,7 +49,7 @@ class JSONRequestGETTests: XCTestCase {
 
     func testArrayValue() {
         let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testArrayValueGET"))
-        let result = JSONRequest.get(url: goodUrl, queryParams: params)
+        let result = jsonRequest.get(url: goodUrl, queryParams: params)
         let array = result.arrayValue
         XCTAssertEqual(array.count, 0)
     }
