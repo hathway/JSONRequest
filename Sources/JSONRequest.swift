@@ -9,7 +9,7 @@
 import Foundation
 import SystemConfiguration
 
-public typealias JSONObject = Dictionary<String, Any>
+public typealias JSONObject = [String: Any]
 public typealias APITripTimeObject = (path: String, tripTime: TimeInterval)
 
 public enum JSONError: Error {
@@ -112,7 +112,7 @@ open class JSONRequest {
         updateRequest(headers: headers)
         updateRequest(payload: payload)
 
-        var session = urlSession ?? networkSession(forcedTimeout: timeOut)
+        let session = urlSession ?? networkSession(forcedTimeout: timeOut)
         let start = Date()
         let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
@@ -165,7 +165,7 @@ open class JSONRequest {
         }
         return requestResult
     }
-    
+
     func updateRequest(method: JSONRequestHttpVerb, url: String,
                        queryParams: JSONObject? = nil) {
         request?.url = createURL(urlString: url, queryParams: queryParams)

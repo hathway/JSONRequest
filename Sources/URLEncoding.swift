@@ -106,7 +106,7 @@ private func escape(_ string: String) -> String {
             let endIndex = string.index(index, offsetBy: batchSize, limitedBy: string.endIndex) ?? string.endIndex
             let range = startIndex..<endIndex
 
-            let substring = string.substring(with: range)
+            let substring = String(string[range])
 
             escaped += substring.addingPercentEncoding(withAllowedCharacters: allowedCharacterSet) ?? substring
 
@@ -126,7 +126,6 @@ private func query(_ parameters: [String: Any]) -> String {
     }
     return components.map { "\($0)=\($1)" }.joined(separator: "&")
 }
-
 
 /// Checks that the underling type of a given NSNumber is a Bool
 private func isBoolean(number: NSNumber) -> Bool {

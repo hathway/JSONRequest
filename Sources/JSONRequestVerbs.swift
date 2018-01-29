@@ -7,11 +7,11 @@
 //
 
 public enum JSONRequestHttpVerb: String {
-    case GET = "GET"
-    case POST = "POST"
-    case PUT = "PUT"
-    case PATCH = "PATCH"
-    case DELETE = "DELETE"
+    case GET
+    case POST
+    case PUT
+    case PATCH
+    case DELETE
 }
 
 // MARK: Instance basic sync/async
@@ -170,6 +170,4 @@ public extension JSONRequest {
         JSONRequest().delete(url: url, queryParams: queryParams, headers: headers,
                              complete: complete)
     }
-
 }
-
