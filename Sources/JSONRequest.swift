@@ -74,10 +74,25 @@ open class JSONRequest {
     fileprivate(set) var request: NSMutableURLRequest?
 
     open static var log: ((String) -> Void)?
-    open static var userAgent: String?
-    open static var requestTimeout = 5.0
-    open static var resourceTimeout = 10.0
-    open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
+    open static var userAgent: String? {
+        didSet {
+            if let value = userAgent {
+                sessionConfig.httpAdditionalHeaders = ["User-Agent": value]
+            } else {
+                sessionConfig.httpAdditionalHeaders?.removeValue(forKey: "User-Agent")
+            }
+            updateSessionConfig()
+        }
+    }
+    open static var requestTimeout = 5.0 {
+        didSet { updateSessionConfig() }
+    }
+    open static var resourceTimeout = 10.0 {
+        didSet { updateSessionConfig() }
+    }
+    open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy {
+        didSet { updateSessionConfig() }
+    }
 
     open static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
 
@@ -97,6 +112,27 @@ open class JSONRequest {
         request = NSMutableURLRequest()
     }
 
+    private static var _sessionConfig: URLSessionConfiguration?
+    private static var sessionConfig: URLSessionConfiguration {
+        get {
+            guard _sessionConfig == nil else { return _sessionConfig! }
+            _sessionConfig = URLSessionConfiguration.default
+            let capacity = 50 * 1024 * 1024 // MBs
+            let urlCache = URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil)
+            _sessionConfig?.urlCache = urlCache
+            return _sessionConfig!
+        }
+    }
+
+    private static var urlSession: URLSession! = nil
+
+    private static func updateSessionConfig() {
+        sessionConfig.requestCachePolicy = requestCachePolicy
+        sessionConfig.timeoutIntervalForResource = resourceTimeout
+        sessionConfig.timeoutIntervalForRequest = requestTimeout
+        urlSession = URLSession(configuration: JSONRequest.sessionConfig)
+    }
+
     // MARK: Non-public business logic (testable but not public outside the module)
 
     func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
@@ -112,7 +148,7 @@ open class JSONRequest {
         updateRequest(headers: headers)
         updateRequest(payload: payload)
 
-        let session = urlSession ?? networkSession(forcedTimeout: timeOut)
+        var session = urlSession ?? networkSession()
         let start = Date()
         let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
@@ -134,14 +170,9 @@ open class JSONRequest {
     }
 
     func networkSession(forcedTimeout: TimeInterval? = nil) -> URLSession {
-        let config = URLSessionConfiguration.default
-        config.requestCachePolicy = JSONRequest.requestCachePolicy
-        config.timeoutIntervalForRequest = forcedTimeout ?? JSONRequest.requestTimeout
-        config.timeoutIntervalForResource = forcedTimeout ?? JSONRequest.resourceTimeout
-        if let userAgent = JSONRequest.userAgent {
-            config.httpAdditionalHeaders = ["User-Agent": userAgent]
-        }
-        return URLSession(configuration: config)
+        guard urlSession == nil else { return urlSession! }
+        urlSession = URLSession(configuration: JSONRequest.sessionConfig)
+        return urlSession!
     }
 
     func submitSyncRequest(method: JSONRequestHttpVerb, url: String,
