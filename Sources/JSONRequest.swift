@@ -117,11 +117,14 @@ open class JSONRequest {
         get {
             guard _sessionConfig == nil else { return _sessionConfig! }
             _sessionConfig = URLSessionConfiguration.default
-            let capacity = 50 * 1024 * 1024 // MBs
-            let urlCache = URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil)
-            _sessionConfig?.urlCache = urlCache
+            // FYI, from Apple's documentation: NSURLSession won't attempt to cache a file larger than 5% of the cache size
+            // https://goo.gl/CpVNqZ
             return _sessionConfig!
         }
+    }
+
+    open static var maxEstimatedResponseMegabytes: Int = 5 {
+        didSet { updateSessionConfig() }
     }
 
     private static var urlSession: URLSession! = nil
@@ -130,6 +133,9 @@ open class JSONRequest {
         sessionConfig.requestCachePolicy = requestCachePolicy
         sessionConfig.timeoutIntervalForResource = resourceTimeout
         sessionConfig.timeoutIntervalForRequest = requestTimeout
+        let capacity: Int = (maxEstimatedResponseMegabytes * 20) * 1024 * 1024 // max response should be less than 5% of cache size
+        let urlCache = URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil)
+        sessionConfig.urlCache = urlCache
         urlSession = URLSession(configuration: JSONRequest.sessionConfig)
     }
 
@@ -148,7 +154,7 @@ open class JSONRequest {
         updateRequest(headers: headers)
         updateRequest(payload: payload)
 
-        var session = urlSession ?? networkSession()
+        let session = urlSession ?? networkSession()
         let start = Date()
         let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
