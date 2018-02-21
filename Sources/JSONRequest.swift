@@ -71,8 +71,6 @@ public extension JSONResult {
 
 open class JSONRequest {
 
-    fileprivate(set) var request: NSMutableURLRequest?
-
     open static var log: ((String) -> Void)?
     open static var userAgent: String? {
         didSet {
@@ -96,10 +94,6 @@ open class JSONRequest {
 
     open static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
 
-    open var httpRequest: NSMutableURLRequest? {
-        return request
-    }
-
     /* Used for dependency injection of outside URLSessions (keep nil to use default) */
     private var urlSession: URLSession?
 
@@ -109,18 +103,15 @@ open class JSONRequest {
     /* Omit the session parameter to use the default URLSession */
     public init(session: URLSession? = nil) {
         urlSession = session
-        request = NSMutableURLRequest()
     }
 
     private static var _sessionConfig: URLSessionConfiguration?
     private static var sessionConfig: URLSessionConfiguration {
-        get {
-            guard _sessionConfig == nil else { return _sessionConfig! }
-            _sessionConfig = URLSessionConfiguration.default
-            // FYI, from Apple's documentation: NSURLSession won't attempt to cache a file larger than 5% of the cache size
-            // https://goo.gl/CpVNqZ
-            return _sessionConfig!
-        }
+        guard _sessionConfig == nil else { return _sessionConfig! }
+        _sessionConfig = URLSessionConfiguration.default
+        // FYI, from Apple's documentation: NSURLSession won't attempt to cache a file larger than 5% of the cache size
+        // https://goo.gl/CpVNqZ
+        return _sessionConfig!
     }
 
     open static var maxEstimatedResponseMegabytes: Int = 5 {
@@ -150,13 +141,22 @@ open class JSONRequest {
             return
         }
 
-        updateRequest(method: method, url: url, queryParams: queryParams)
-        updateRequest(headers: headers)
-        updateRequest(payload: payload)
+        var request = URLRequest(url: URL(string: url)!,
+                                 cachePolicy: JSONRequest.requestCachePolicy,
+                                 timeoutInterval: timeOut ?? 10.0)
+
+        updateRequest(&request, method: method, url: url, queryParams: queryParams)
+        updateRequest(&request, headers: headers)
+        updateRequest(&request, payload: payload)
 
         let session = urlSession ?? networkSession()
         let start = Date()
-        let task = session.dataTask(with: request! as URLRequest) { (data, response, error) in
+
+        if let cache = session.configuration.urlCache, cache.cachedResponse(for: request) == nil {
+            removeCachingHeaders(&request)
+        }
+
+        let task = session.dataTask(with: request) { (data, response, error) in
             let elapsed = -start.timeIntervalSinceNow
             self.traceResponse(elapsed: elapsed, responseData: data,
                                httpResponse: response as? HTTPURLResponse,
@@ -203,27 +203,34 @@ open class JSONRequest {
         return requestResult
     }
 
-    func updateRequest(method: JSONRequestHttpVerb, url: String,
+    func updateRequest(_ request: inout URLRequest,
+                       method: JSONRequestHttpVerb, url: String,
                        queryParams: JSONObject? = nil) {
-        request?.url = createURL(urlString: url, queryParams: queryParams)
-        request?.httpMethod = method.rawValue
+        request.url = createURL(urlString: url, queryParams: queryParams)
+        request.httpMethod = method.rawValue
     }
 
-    func updateRequest(headers: JSONObject?) {
-        request?.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request?.setValue("application/json", forHTTPHeaderField: "Accept")
+    func updateRequest(_ request: inout URLRequest, headers: JSONObject?) {
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
         if let headers = headers {
             for (headerName, headerValue) in headers {
-                request?.setValue(String(describing: headerValue), forHTTPHeaderField: headerName)
+                request.setValue(String(describing: headerValue), forHTTPHeaderField: headerName)
             }
         }
     }
 
-    func updateRequest(payload: Any?) {
+    func removeCachingHeaders(_ request: inout URLRequest) {
+        request.setValue(nil, forHTTPHeaderField: "If-None-Match")
+        request.setValue(nil, forHTTPHeaderField: "If-Modified-Since")
+    }
+
+    func updateRequest(_ request: inout URLRequest,
+                       payload: Any?) {
         guard let payload = payload else {
             return
         }
-        request?.httpBody = objectToJSON(object: payload)
+        request.httpBody = objectToJSON(object: payload)
     }
 
     open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
@@ -317,7 +324,7 @@ open class JSONRequest {
 
         log("<<<<<<<<<< JSON Response <<<<<<<<<<")
         log("Time Elapsed: \(elapsed)")
-        if let url = request?.url {
+        if let url = httpResponse?.url {
             log("Url: \(url.absoluteString)")
             log("PATH: \(url.path)")
             let apiTripObject = APITripTimeObject(path: url.path, tripTime: elapsed)
