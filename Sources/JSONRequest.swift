@@ -152,7 +152,8 @@ open class JSONRequest {
         let session = urlSession ?? networkSession()
         let start = Date()
 
-        if let cache = session.configuration.urlCache, cache.cachedResponse(for: request) == nil {
+        let cachedResponse: CachedURLResponse? = session.configuration.urlCache?.cachedResponse(for: request)
+        if let cache = session.configuration.urlCache, cachedResponse == nil {
             removeCachingHeaders(&request)
         }
 
@@ -167,9 +168,25 @@ open class JSONRequest {
                                                 body: self.body(fromData: data))
                 complete(result)
                 return
+            } else if let httpResponse = (response as? HTTPURLResponse),
+                httpResponse.statusCode == 304,
+                let cachedResponseObj = cachedResponse {
+                /*  For some rediculous reason, there are cases where the cache contains a response for the HTTP request (as verified
+                 by the conditional check above), but that cached response isn't passed transparently to us as a 200OK response, and is
+                 instead a 304, which throws the consumer out of wack since there's no guarantee they have cached the data themselves.
+
+                 So, if we got a 304, AND we have a cached response object, let's parse & process that instead here. Yay for caching >:-(
+                 */
+                print("Unexpected 304 returned when a cached value exists. Parsing & returning cached response")
+                self.traceResponse(elapsed: elapsed, responseData: cachedResponseObj.data,
+                                   httpResponse: cachedResponseObj.response as? HTTPURLResponse,
+                                   error: error as NSError?)
+                let result = self.parse(data: cachedResponseObj.data, response: cachedResponseObj.response)
+                complete(result)
+            } else {
+                let result = self.parse(data: data, response: response)
+                complete(result)
             }
-            let result = self.parse(data: data, response: response)
-            complete(result)
         }
         trace(task: task)
         task.resume()
