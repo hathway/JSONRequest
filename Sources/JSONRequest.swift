@@ -198,6 +198,7 @@ open class JSONRequest {
         let config = JSONRequest.sessionConfig
         if let timeout = forcedTimeout {
             config.timeoutIntervalForRequest = timeout
+            config.timeoutIntervalForResource = timeout
         }
         let session = URLSession(configuration: config)
         if forcedTimeout == nil {
