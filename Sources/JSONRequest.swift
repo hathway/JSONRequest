@@ -91,6 +91,8 @@ open class JSONRequest {
     /* Set to false during testing to avoid test failures due to lack of internet access */
     internal static var requireNetworkAccess = true
 
+    public static var sessionConfigurationDelegate: ((URLSessionConfiguration) -> Void)?
+
     /* Omit the session parameter to use the default URLSession */
     public init(session: URLSession? = nil) {
         urlSession = session
@@ -141,6 +143,7 @@ open class JSONRequest {
         if let userAgent = JSONRequest.userAgent {
             config.httpAdditionalHeaders = ["User-Agent": userAgent]
         }
+        JSONRequest.sessionConfigurationDelegate?(config)
         return URLSession(configuration: config)
     }
 
