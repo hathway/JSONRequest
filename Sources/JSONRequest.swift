@@ -152,11 +152,13 @@ open class JSONRequest {
         updateRequest(&request, headers: headers)
         updateRequest(&request, payload: payload)
 
-        let session = urlSession ?? networkSession()
+        let session = (timeOut == urlSession?.configuration.timeoutIntervalForRequest
+            ? (urlSession ?? networkSession())
+            : networkSession(forcedTimeout: timeOut))
         let start = Date()
 
         let cachedResponse: CachedURLResponse? = session.configuration.urlCache?.cachedResponse(for: request)
-        if let cache = session.configuration.urlCache, cachedResponse == nil {
+        if cachedResponse == nil {
             removeCachingHeaders(&request)
         }
 
@@ -196,9 +198,17 @@ open class JSONRequest {
     }
 
     func networkSession(forcedTimeout: TimeInterval? = nil) -> URLSession {
-        guard urlSession == nil else { return urlSession! }
-        urlSession = URLSession(configuration: JSONRequest.sessionConfig)
-        return urlSession!
+        let config = JSONRequest.sessionConfig
+        if let timeout = forcedTimeout {
+            config.timeoutIntervalForRequest = timeout
+            config.timeoutIntervalForResource = timeout
+        }
+        let session = URLSession(configuration: config)
+        if forcedTimeout == nil {
+            // if there isn't a custom timeout, set the member variable with this new session we've created for future use.
+            urlSession = session
+        }
+        return session
     }
 
     func submitSyncRequest(method: JSONRequestHttpVerb, url: String,
