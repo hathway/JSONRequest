@@ -105,6 +105,8 @@ open class JSONRequest {
         urlSession = session
     }
 
+    public static var sessionConfigurationDelegate: ((URLSessionConfiguration) -> ())?
+
     private static var _sessionConfig: URLSessionConfiguration?
     private static var sessionConfig: URLSessionConfiguration {
         guard _sessionConfig == nil else { return _sessionConfig! }
@@ -127,6 +129,7 @@ open class JSONRequest {
         let capacity: Int = (maxEstimatedResponseMegabytes * 20) * 1024 * 1024 // max response should be less than 5% of cache size
         let urlCache = URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil)
         sessionConfig.urlCache = urlCache
+        sessionConfigurationDelegate?(sessionConfig)
         urlSession = URLSession(configuration: JSONRequest.sessionConfig)
     }
 
