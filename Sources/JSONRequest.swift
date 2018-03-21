@@ -153,15 +153,14 @@ open class JSONRequest {
         var requestResult: JSONResult = JSONResult.failure(error: JSONError.unknownError,
                                                            response: nil, body: nil)
 
-        let group = DispatchGroup()
-        group.enter()
+        let semaphore = DispatchSemaphore(value: 0)
         submitAsyncRequest(method: method, url: url, queryParams: queryParams,
                            payload: payload, headers: headers, timeOut: timeOut) { result in
                             requestResult = result
-                            group.leave()
+                            semaphore.signal()
         }
         // Wait for the request to complete
-        group.wait()    // Timeout will be handled by the HTTP layer
+        semaphore.wait()    // Timeout will be handled by the HTTP layer
         return requestResult
     }
 
