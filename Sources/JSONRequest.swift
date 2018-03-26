@@ -150,19 +150,17 @@ open class JSONRequest {
                            headers: JSONObject? = nil,
                            timeOut: TimeInterval? = nil) -> JSONResult {
 
-        let semaphore = DispatchSemaphore(value: 0)
         var requestResult: JSONResult = JSONResult.failure(error: JSONError.unknownError,
                                                            response: nil, body: nil)
+
+        let semaphore = DispatchSemaphore(value: 0)
         submitAsyncRequest(method: method, url: url, queryParams: queryParams,
                            payload: payload, headers: headers, timeOut: timeOut) { result in
                             requestResult = result
                             semaphore.signal()
         }
         // Wait for the request to complete
-        while semaphore.wait(timeout: DispatchTime.now()) == .timedOut {
-            let intervalDate = Date(timeIntervalSinceNow: 0.01) // 10 milliseconds
-            RunLoop.current.run(mode: RunLoopMode.defaultRunLoopMode, before: intervalDate)
-        }
+        semaphore.wait()    // Timeout will be handled by the HTTP layer
         return requestResult
     }
 
