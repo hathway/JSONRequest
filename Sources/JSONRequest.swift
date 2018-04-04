@@ -91,6 +91,10 @@ open class JSONRequest {
     /* Set to false during testing to avoid test failures due to lack of internet access */
     internal static var requireNetworkAccess = true
 
+    /* Delegate that allows additional configurations to be made to the URLSessionConfiguration used for the JSONRequest instance.
+        This delegate will be called *after* JSONRequest configures the instance for its needs. Keep in mind making
+        significant changes to the URLSessionConfiguration object could cause undefined behavior that JSONRequest cannot control.
+    */
     public static var sessionConfigurationDelegate: ((URLSessionConfiguration) -> Void)?
 
     /* Omit the session parameter to use the default URLSession */
