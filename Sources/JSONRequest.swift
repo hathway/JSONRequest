@@ -100,6 +100,12 @@ open class JSONRequest {
     /* Set to false during testing to avoid test failures due to lack of internet access */
     internal static var requireNetworkAccess = true
 
+    /* Delegate that allows additional configurations to be made to the URLSessionConfiguration used for the JSONRequest instance.
+        This delegate will be called *after* JSONRequest configures the instance for its needs. Keep in mind making
+        significant changes to the URLSessionConfiguration object could cause undefined behavior that JSONRequest cannot control.
+    */
+    public static var sessionConfigurationDelegate: ((URLSessionConfiguration) -> Void)?
+
     /* Omit the session parameter to use the default URLSession */
     public init(session: URLSession? = nil) {
         urlSession = session
@@ -127,6 +133,7 @@ open class JSONRequest {
         let capacity: Int = (maxEstimatedResponseMegabytes * 20) * 1024 * 1024 // max response should be less than 5% of cache size
         let urlCache = URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil)
         sessionConfig.urlCache = urlCache
+        JSONRequest.sessionConfigurationDelegate?(sessionconfig)
         urlSession = URLSession(configuration: JSONRequest.sessionConfig)
     }
 
