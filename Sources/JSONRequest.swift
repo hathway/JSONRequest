@@ -91,6 +91,9 @@ open class JSONRequest {
     open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy {
         didSet { updateSessionConfig() }
     }
+    open static var isURLCacheEnabled: Bool = true {
+        didSet { updateSessionConfig() }
+    }
 
     open static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
 
@@ -131,7 +134,7 @@ open class JSONRequest {
         sessionConfig.timeoutIntervalForResource = resourceTimeout
         sessionConfig.timeoutIntervalForRequest = requestTimeout
         let capacity: Int = (maxEstimatedResponseMegabytes * 20) * 1024 * 1024 // max response should be less than 5% of cache size
-        let urlCache = URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil)
+        let urlCache: URLCache? = isURLCacheEnabled ? URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil) : nil
         sessionConfig.urlCache = urlCache
         JSONRequest.sessionConfigurationDelegate?(sessionConfig)
         urlSession = URLSession(configuration: JSONRequest.sessionConfig)
