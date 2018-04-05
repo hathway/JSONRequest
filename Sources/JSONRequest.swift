@@ -133,7 +133,7 @@ open class JSONRequest {
         let capacity: Int = (maxEstimatedResponseMegabytes * 20) * 1024 * 1024 // max response should be less than 5% of cache size
         let urlCache = URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil)
         sessionConfig.urlCache = urlCache
-        JSONRequest.sessionConfigurationDelegate?(sessionconfig)
+        JSONRequest.sessionConfigurationDelegate?(sessionConfig)
         urlSession = URLSession(configuration: JSONRequest.sessionConfig)
     }
 
