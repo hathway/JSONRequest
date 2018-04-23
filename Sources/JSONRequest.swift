@@ -153,7 +153,7 @@ open class JSONRequest {
 
         var request = URLRequest(url: URL(string: url)!,
                                  cachePolicy: JSONRequest.requestCachePolicy,
-                                 timeoutInterval: timeOut ?? 10.0)
+                                 timeoutInterval: timeOut ?? JSONRequest.requestTimeout)
 
         updateRequest(&request, method: method, url: url, queryParams: queryParams)
         updateRequest(&request, headers: headers)
