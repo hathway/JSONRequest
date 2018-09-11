@@ -146,16 +146,16 @@ open class JSONRequest {
         if let unwrappedTimeout = timeOut {
             request.timeoutInterval = unwrappedTimeout
         }
-        updateRequest(&request, method: method, url: url, queryParams: queryParams)
-        updateRequest(&request, headers: headers)
-        updateRequest(&request, payload: payload)
+        JSONRequest.updateRequest(&request, method: method, url: url, queryParams: queryParams)
+        JSONRequest.updateRequest(&request, headers: headers)
+        JSONRequest.updateRequest(&request, payload: payload)
 
         let session = self.urlSession
         let start = Date()
 
         let cachedResponse: CachedURLResponse? = session.configuration.urlCache?.cachedResponse(for: request)
         if cachedResponse == nil {
-            removeCachingHeaders(&request)
+            JSONRequest.removeCachingHeaders(&request)
         }
 
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -213,14 +213,14 @@ open class JSONRequest {
         return requestResult
     }
 
-    func updateRequest(_ request: inout URLRequest,
+    static func updateRequest(_ request: inout URLRequest,
                        method: JSONRequestHttpVerb, url: String,
                        queryParams: JSONObject? = nil) {
         request.url = createURL(urlString: url, queryParams: queryParams)
         request.httpMethod = method.rawValue
     }
 
-    func updateRequest(_ request: inout URLRequest, headers: JSONObject?) {
+    static func updateRequest(_ request: inout URLRequest, headers: JSONObject?) {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         if let headers = headers {
@@ -230,12 +230,12 @@ open class JSONRequest {
         }
     }
 
-    func removeCachingHeaders(_ request: inout URLRequest) {
+    static func removeCachingHeaders(_ request: inout URLRequest) {
         request.setValue(nil, forHTTPHeaderField: "If-None-Match")
         request.setValue(nil, forHTTPHeaderField: "If-Modified-Since")
     }
 
-    func updateRequest(_ request: inout URLRequest,
+    static func updateRequest(_ request: inout URLRequest,
                        payload: Any?) {
         guard let payload = payload else {
             return
@@ -243,7 +243,7 @@ open class JSONRequest {
         request.httpBody = objectToJSON(object: payload)
     }
 
-    open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
+    static open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
         guard let baseURL = URL(string: urlString) else {
             return nil
         }
@@ -264,7 +264,7 @@ open class JSONRequest {
         guard let json = JSONToObject(data: data) else {
             return JSONResult.failure(error: JSONError.responseDeserialization,
                                       response: httpResponse,
-                                      body: dataToUTFString(data: data))
+                                      body: JSONRequest.dataToUTFString(data: data))
         }
         return JSONResult.success(data: json, response: httpResponse)
     }
@@ -318,7 +318,7 @@ open class JSONRequest {
             log("Url: \(url)")
         }
         if let headers = task.currentRequest?.allHTTPHeaderFields {
-            log("Headers: \(objectToJSONString(object: headers as Any, pretty: true))")
+            log("Headers: \(JSONRequest.objectToJSONString(object: headers as Any, pretty: true))")
         }
         if let payload = task.currentRequest?.httpBody,
             let body = String(data: payload, encoding: String.Encoding.utf8) {
@@ -344,10 +344,10 @@ open class JSONRequest {
             log("Status Code: \(statusCode)")
         }
         if let headers = httpResponse?.allHeaderFields {
-            log("Headers: \(objectToJSONString(object: headers as Any, pretty: true))")
+            log("Headers: \(JSONRequest.objectToJSONString(object: headers as Any, pretty: true))")
         }
         if let data = responseData, let body = JSONToObject(data: data) {
-            log("Body: \(objectToJSONString(object: body, pretty: true))")
+            log("Body: \(JSONRequest.objectToJSONString(object: body, pretty: true))")
         }
         if let errorString = error?.localizedDescription {
             log("Error: \(errorString)")
@@ -358,7 +358,7 @@ open class JSONRequest {
         return try? JSONSerialization.jsonObject(with: data, options: [.allowFragments])
     }
 
-    fileprivate func objectToJSON(object: Any, pretty: Bool = false) -> Data? {
+    static fileprivate func objectToJSON(object: Any, pretty: Bool = false) -> Data? {
         if JSONSerialization.isValidJSONObject(object) {
             let options = pretty ? JSONSerialization.WritingOptions.prettyPrinted : []
             return try? JSONSerialization.data(withJSONObject: object, options: options)
@@ -366,14 +366,14 @@ open class JSONRequest {
         return nil
     }
 
-    fileprivate func objectToJSONString(object: Any, pretty: Bool) -> String {
+    static fileprivate func objectToJSONString(object: Any, pretty: Bool) -> String {
         if let data = objectToJSON(object: object, pretty: pretty) {
             return dataToUTFString(data: data)
         }
         return ""
     }
 
-    fileprivate func dataToUTFString(data: Data) -> String {
+    static fileprivate func dataToUTFString(data: Data) -> String {
         return String(data: data, encoding: String.Encoding.utf8) ?? ""
     }
 

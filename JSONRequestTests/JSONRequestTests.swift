@@ -12,56 +12,50 @@ import XCTest
 class JSONRequestTests: XCTestCase {
 
     func testHTTPRequest() {
-        let jsonRequest = JSONRequest()
-        jsonRequest.updateRequest(method: .GET, url: "")
-        XCTAssertNotNil(jsonRequest.request)
-        XCTAssertEqual(jsonRequest.request?.httpMethod, "GET")
+        var request = URLRequest(url: URL(string: "http://google.com")!)
+        JSONRequest.updateRequest(&request, method: .GET, url: "")
+        XCTAssertNotNil(request)
+        XCTAssertEqual(request.httpMethod, "GET")
     }
 
     func testCreateBadURL() {
-        let jsonRequest = JSONRequest()
-        let url = jsonRequest.createURL(urlString: "bad url", queryParams: nil)
+        let url = JSONRequest.createURL(urlString: "bad url", queryParams: nil)
         XCTAssertNil(url)
     }
 
     func testCreateURL() {
-        let jsonRequest = JSONRequest()
-        let url = jsonRequest.createURL(urlString: "http://httpbin.org",
+        let url = JSONRequest.createURL(urlString: "http://httpbin.org",
                                         queryParams: nil)
         XCTAssertNotNil(url)
         XCTAssertEqual(url?.absoluteString, "http://httpbin.org")
     }
 
     func testEncodesBasicURLQueryParameters() {
-        let jsonRequest = JSONRequest()
-        let url = jsonRequest.createURL(urlString: "http://httpbin.org", queryParams: ["hello": "world"])
+        let url = JSONRequest.createURL(urlString: "http://httpbin.org", queryParams: ["hello": "world"])
         XCTAssertNotNil(url)
         XCTAssert(url?.query == "hello=world")
     }
 
     func testEncodesEscapableURLQueryParameters() {
-        let jsonRequest = JSONRequest()
-        let url = jsonRequest.createURL(urlString: "http://httpbin.org", queryParams: ["hello!$&'()*+,;=:#[]@": "world!$&'()*+,;=:#[]@"])
+        let url = JSONRequest.createURL(urlString: "http://httpbin.org", queryParams: ["hello!$&'()*+,;=:#[]@": "world!$&'()*+,;=:#[]@"])
         XCTAssertNotNil(url)
         XCTAssertEqual(url?.query, "hello%21%24%26%27%28%29%2A%2B%2C%3B%3D%3A%23%5B%5D%40=world%21%24%26%27%28%29%2A%2B%2C%3B%3D%3A%23%5B%5D%40")
     }
 
     func testCreateURLWithParam() {
-        let jsonRequest = JSONRequest()
-        let url = jsonRequest.createURL(urlString: "http://httpbin.org",
+        let url = JSONRequest.createURL(urlString: "http://httpbin.org",
                                         queryParams: ["q": "JSONRequest"])
         XCTAssertNotNil(url)
         XCTAssertEqual(url?.absoluteString, "http://httpbin.org?q=JSONRequest")
     }
 
     func testCreateURLWithParams() {
-        let jsonRequest = JSONRequest()
         let params: [String: AnyObject] = [
             "aaaa": 1 as AnyObject,
             "bbbb": "string" as AnyObject,
             "cccc": 2.2 as AnyObject
         ]
-        let url = jsonRequest.createURL(urlString: "http://httpbin.org", queryParams: params)
+        let url = JSONRequest.createURL(urlString: "http://httpbin.org", queryParams: params)
         XCTAssertNotNil(url)
         XCTAssertNotNil(url?.absoluteString)
         XCTAssert(url?.absoluteString.contains("aaaa=1") ?? false)
@@ -70,8 +64,7 @@ class JSONRequestTests: XCTestCase {
     }
 
     func testCreateURLWithUrlParams() {
-        let jsonRequest = JSONRequest()
-        let url = jsonRequest.createURL(urlString: "http://httpbin.org?aaaa=1&bbbb=string&cccc=2.2",
+        let url = JSONRequest.createURL(urlString: "http://httpbin.org?aaaa=1&bbbb=string&cccc=2.2",
                                         queryParams: nil)
         XCTAssertNotNil(url)
         XCTAssertNotNil(url?.absoluteString)
@@ -81,13 +74,12 @@ class JSONRequestTests: XCTestCase {
     }
 
     func testCreateURLWithUrlAndQueryParams() {
-        let jsonRequest = JSONRequest()
         let params = [
             "aaaa": 1,
             "bbbb": "string",
             "cccc": 2.2
         ] as [String : Any]
-        let url = jsonRequest.createURL(urlString: "http://httpbin.org?aaaa=1",
+        let url = JSONRequest.createURL(urlString: "http://httpbin.org?aaaa=1",
                                         queryParams: params)
         XCTAssertNotNil(url)
         XCTAssertNotNil(url?.absoluteString)
@@ -159,16 +151,11 @@ class JSONRequestTests: XCTestCase {
 //        }
 //    }
 
-    func testHttpRequestGetter() {
-        let request = JSONRequest()
-        XCTAssertNotNil(request.httpRequest)
-    }
-
     func testPayload() {
         let payload = ["Hello": "world"]
-        let request = JSONRequest()
-        request.updateRequest(payload: payload)
-        XCTAssertNotNil(request.httpRequest?.httpBody)
+        var request = URLRequest(url: URL(string: "http://www.google.com")!)
+        JSONRequest.updateRequest(&request, payload: payload)
+        XCTAssertNotNil(request.httpBody)
     }
 
 //    func testInvalidPayload() {
@@ -185,9 +172,9 @@ class JSONRequestTests: XCTestCase {
 
     func testUpdateRequestHeaders() {
         let headers: JSONObject = ["User-Agent": "XCTest"]
-        let request = JSONRequest()
-        request.updateRequest(headers: headers)
-        XCTAssertEqual(request.httpRequest?.allHTTPHeaderFields?["User-Agent"], "XCTest")
+        var request = URLRequest(url: URL(string: "http://www.google.com")!)
+        JSONRequest.updateRequest(&request, headers: headers)
+        XCTAssertEqual(request.allHTTPHeaderFields?["User-Agent"], "XCTest")
     }
 
 //    fileprivate func binaryData() -> Data {

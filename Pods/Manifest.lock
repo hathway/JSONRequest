@@ -1,12 +1,21 @@
 PODS:
-  - DVR (1.1.0)
+  - DVR (1.2.0)
 
 DEPENDENCIES:
-  - DVR (~> 1.0)
+  - "DVR (from `git@github.com:hathway/DVR.git`)"
+
+EXTERNAL SOURCES:
+  DVR:
+    :git: "git@github.com:hathway/DVR.git"
+
+CHECKOUT OPTIONS:
+  DVR:
+    :commit: cf54d19eae0bd8392d0653d3395f6624f35624da
+    :git: "git@github.com:hathway/DVR.git"
 
 SPEC CHECKSUMS:
-  DVR: f785f86273f7a3a94335acf44611ac2cbf5920f9
+  DVR: 9dc55056f169b701a34e420b79cd7ac263d74fb9
 
-PODFILE CHECKSUM: c101fa753f28c720b49dbc6323bb77406bb42cbf
+PODFILE CHECKSUM: 26b5ae2737f15c8c7cdf802b5e8041740aad322a
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3

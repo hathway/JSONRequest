@@ -4,9 +4,13 @@ open class Session: URLSession {
 
     // MARK: - Properties
 
+    public static var defaultTestBundle: Bundle? {
+        return Bundle.allBundles.first { $0.bundlePath.hasSuffix(".xctest") }
+    }
+
     open var outputDirectory: String
-    open let cassetteName: String
-    open let backingSession: URLSession
+    public let cassetteName: String
+    public let backingSession: URLSession
     open var recordingEnabled = true
 
     private let testBundle: Bundle
@@ -21,9 +25,13 @@ open class Session: URLSession {
         return backingSession.delegate
     }
 
+    open override var configuration: URLSessionConfiguration {
+        return backingSession.configuration
+    }
+
     // MARK: - Initializers
 
-    public init(outputDirectory: String = "~/Desktop/DVR/", cassetteName: String, testBundle: Bundle = Bundle.allBundles.filter() { $0.bundlePath.hasSuffix(".xctest") }.first!, backingSession: URLSession = URLSession.shared) {
+    public init(outputDirectory: String = "~/Desktop/DVR/", cassetteName: String, testBundle: Bundle = Session.defaultTestBundle!, backingSession: URLSession = URLSession.shared) {
         self.outputDirectory = outputDirectory
         self.cassetteName = cassetteName
         self.testBundle = testBundle
