@@ -1,8 +1,14 @@
 PODS:
   - DVR (1.2.0)
+  - SwiftLint (0.27.0)
 
 DEPENDENCIES:
   - "DVR (from `git@github.com:hathway/DVR.git`)"
+  - SwiftLint
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - SwiftLint
 
 EXTERNAL SOURCES:
   DVR:
@@ -15,7 +21,8 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   DVR: 9dc55056f169b701a34e420b79cd7ac263d74fb9
+  SwiftLint: 3207c1faa2240bf8973b191820a116113cd11073
 
-PODFILE CHECKSUM: 26b5ae2737f15c8c7cdf802b5e8041740aad322a
+PODFILE CHECKSUM: ec76d9085a208321742e8e1cf4d42457619395e4
 
 COCOAPODS: 1.5.3

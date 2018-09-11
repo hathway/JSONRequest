@@ -10,6 +10,7 @@ target 'JSONRequest' do
   target 'JSONRequestTests' do
     inherit! :search_paths
     pod 'DVR',  :git => 'git@github.com:hathway/DVR.git'
+    pod 'SwiftLint'
   end
 
 end

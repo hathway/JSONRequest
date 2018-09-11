@@ -214,8 +214,8 @@ open class JSONRequest {
     }
 
     static func updateRequest(_ request: inout URLRequest,
-                       method: JSONRequestHttpVerb, url: String,
-                       queryParams: JSONObject? = nil) {
+                              method: JSONRequestHttpVerb, url: String,
+                              queryParams: JSONObject? = nil) {
         request.url = createURL(urlString: url, queryParams: queryParams)
         request.httpMethod = method.rawValue
     }
@@ -236,7 +236,7 @@ open class JSONRequest {
     }
 
     static func updateRequest(_ request: inout URLRequest,
-                       payload: Any?) {
+                              payload: Any?) {
         guard let payload = payload else {
             return
         }

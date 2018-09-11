@@ -7,20 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2729C7F0360C21361B9BF47169B5C79B /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 660F14245C5CF8A614B7DEC8FAE9632E /* URLRequest.swift */; };
-		3787E62CD86BB8252244DE917AECEDF6 /* DVR-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B29668F224EB29C8E23B0E02AB4FD42C /* DVR-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		44E67975BCA4B99A0F86CF9FBE3291F1 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3376C5620F25C971584F1D417D545B26 /* Session.swift */; };
-		4D921C60A50FEF935633F8D66CAA6162 /* SessionDownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F99C2552708543D5A85A76ABB00856E /* SessionDownloadTask.swift */; };
+		2729C7F0360C21361B9BF47169B5C79B /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5AC6925D316BD178382129CA13D31E /* URLRequest.swift */; };
+		3787E62CD86BB8252244DE917AECEDF6 /* DVR-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B69FD2845EA04C996177137A0650E2AD /* DVR-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		44E67975BCA4B99A0F86CF9FBE3291F1 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6D22C70B18F5F7A51F0423315E6106 /* Session.swift */; };
+		4D921C60A50FEF935633F8D66CAA6162 /* SessionDownloadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BBEA70D0AAE366C881B7953999BA2C /* SessionDownloadTask.swift */; };
 		5A1F4CB557FE1971C6521C703A5710CB /* Pods-JSONRequest-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 09F341788089B652ECD6BE5A694BEDEC /* Pods-JSONRequest-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		743D7652083B780B642EA304A3C3866B /* SessionUploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13912BB99C61233A79310FA05EA999B /* SessionUploadTask.swift */; };
-		8564F6CF59B0502577F65EF68E33B40C /* URLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CE5373FC23E316B0C2C287C7E8D4D4 /* URLResponse.swift */; };
-		8A7646FD5DB412BEA135493939A531A1 /* DVR-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A4F28C4E6AE93D50B4F95A0D929C8A /* DVR-dummy.m */; };
-		91ED33CC8FF3ECB3D8426A682EF59335 /* HTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 905354BF255AC546B12955A2C16336C9 /* HTTPURLResponse.swift */; };
+		743D7652083B780B642EA304A3C3866B /* SessionUploadTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7CD9EE3B5C33A0AD08504DADFD7582 /* SessionUploadTask.swift */; };
+		8564F6CF59B0502577F65EF68E33B40C /* URLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3224A227B9EAD944BB5A100E16187D55 /* URLResponse.swift */; };
+		8A7646FD5DB412BEA135493939A531A1 /* DVR-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 168F748845A45309E132426184A6D5D4 /* DVR-dummy.m */; };
+		91ED33CC8FF3ECB3D8426A682EF59335 /* HTTPURLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B95B86D2E401D1BC5919E5738684FD /* HTTPURLResponse.swift */; };
 		940F14CF44489F8B53B6A914DDA83F43 /* Pods-JSONRequestTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A64315CF58880C074129A7833B7C1BFC /* Pods-JSONRequestTests-dummy.m */; };
 		97BB1CE1A83BF0A761F029046817D126 /* Pods-JSONRequest-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DAAA89BF4847BAB373D78BEFE7F20 /* Pods-JSONRequest-dummy.m */; };
-		A85FD6FBBC414630129E451C60BBBA74 /* Cassette.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B5F464F17C72F97346BA455405148F /* Cassette.swift */; };
-		B03D1BA40886A9D3F1B7D0C014C4A3DB /* SessionDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA743C15110977568614167FA9A4768 /* SessionDataTask.swift */; };
-		B350DFF03E2CBCF8E0322859DA9DFAE9 /* Interaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D904F11FAAB5377DB540D013ECA7A6DF /* Interaction.swift */; };
+		A85FD6FBBC414630129E451C60BBBA74 /* Cassette.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A41566765A11B28EFCF16648A2531B /* Cassette.swift */; };
+		B03D1BA40886A9D3F1B7D0C014C4A3DB /* SessionDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07902B675AAE68AA8ED2A4E0D932DD7 /* SessionDataTask.swift */; };
+		B350DFF03E2CBCF8E0322859DA9DFAE9 /* Interaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727EE36471BB3DB1DC2CD9436FF2561B /* Interaction.swift */; };
 		B4A64C841652701ED995761E9D156746 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
 		D3CE736D1DDC9550ABA4F5CD65E47C70 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
 		D5A27FF28FF6970112CA5DF6175BF64F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
@@ -45,45 +45,45 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00DD27F5A48C0D96FA7F169B00837677 /* DVR.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DVR.xcconfig; sourceTree = "<group>"; };
 		07F6FD9674C4E5A6814B4DD3A9E94F3D /* Pods-JSONRequestTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JSONRequestTests-frameworks.sh"; sourceTree = "<group>"; };
 		09F341788089B652ECD6BE5A694BEDEC /* Pods-JSONRequest-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-JSONRequest-umbrella.h"; sourceTree = "<group>"; };
-		0F99C2552708543D5A85A76ABB00856E /* SessionDownloadTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionDownloadTask.swift; path = Sources/DVR/SessionDownloadTask.swift; sourceTree = "<group>"; };
-		135A81EC12AC4DA1913A633AF50E73E7 /* DVR.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = DVR.modulemap; sourceTree = "<group>"; };
-		18A4F28C4E6AE93D50B4F95A0D929C8A /* DVR-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "DVR-dummy.m"; sourceTree = "<group>"; };
+		168F748845A45309E132426184A6D5D4 /* DVR-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "DVR-dummy.m"; sourceTree = "<group>"; };
 		1A9DAAA89BF4847BAB373D78BEFE7F20 /* Pods-JSONRequest-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-JSONRequest-dummy.m"; sourceTree = "<group>"; };
-		26CE5373FC23E316B0C2C287C7E8D4D4 /* URLResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = URLResponse.swift; path = Sources/DVR/URLResponse.swift; sourceTree = "<group>"; };
 		27149599B6D7C49EA759536C67E8CBB3 /* Pods_JSONRequest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_JSONRequest.framework; path = "Pods-JSONRequest.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3376C5620F25C971584F1D417D545B26 /* Session.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Session.swift; path = Sources/DVR/Session.swift; sourceTree = "<group>"; };
+		27BBEA70D0AAE366C881B7953999BA2C /* SessionDownloadTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionDownloadTask.swift; path = Sources/DVR/SessionDownloadTask.swift; sourceTree = "<group>"; };
+		29BFF760129DB1073BCDDD0DC110E202 /* DVR-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DVR-prefix.pch"; sourceTree = "<group>"; };
+		3224A227B9EAD944BB5A100E16187D55 /* URLResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = URLResponse.swift; path = Sources/DVR/URLResponse.swift; sourceTree = "<group>"; };
 		37F31B599660783E7924FB4B628AAE9C /* Pods-JSONRequestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JSONRequestTests.debug.xcconfig"; sourceTree = "<group>"; };
-		3CA743C15110977568614167FA9A4768 /* SessionDataTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionDataTask.swift; path = Sources/DVR/SessionDataTask.swift; sourceTree = "<group>"; };
 		439E0B57312CEEA6FF1944E3C533B957 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		47B09AC286D34B79F9EE3EB39278BA0F /* DVR.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DVR.xcconfig; sourceTree = "<group>"; };
+		48B95B86D2E401D1BC5919E5738684FD /* HTTPURLResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HTTPURLResponse.swift; path = Sources/DVR/HTTPURLResponse.swift; sourceTree = "<group>"; };
 		4E86457A0836C0D334C72978D96B69E4 /* Pods-JSONRequest-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JSONRequest-acknowledgements.markdown"; sourceTree = "<group>"; };
+		55DE2EA1BAF2B91039E41F60E4542704 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		5B156F34DEC458322837DB95802375AB /* Pods-JSONRequest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JSONRequest.release.xcconfig"; sourceTree = "<group>"; };
-		660F14245C5CF8A614B7DEC8FAE9632E /* URLRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = URLRequest.swift; path = Sources/DVR/URLRequest.swift; sourceTree = "<group>"; };
+		5F6D22C70B18F5F7A51F0423315E6106 /* Session.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Session.swift; path = Sources/DVR/Session.swift; sourceTree = "<group>"; };
+		5F7CD9EE3B5C33A0AD08504DADFD7582 /* SessionUploadTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionUploadTask.swift; path = Sources/DVR/SessionUploadTask.swift; sourceTree = "<group>"; };
 		6BE6F1CB75356353ED78431C3C38AA9D /* Pods_JSONRequestTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_JSONRequestTests.framework; path = "Pods-JSONRequestTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E0E8A195C369125B9D586C44EEC2A35 /* Pods-JSONRequestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JSONRequestTests.release.xcconfig"; sourceTree = "<group>"; };
+		727EE36471BB3DB1DC2CD9436FF2561B /* Interaction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Interaction.swift; path = Sources/DVR/Interaction.swift; sourceTree = "<group>"; };
 		87217DF19BBA2F6D89DE6AF34815F4A5 /* Pods-JSONRequest.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-JSONRequest.modulemap"; sourceTree = "<group>"; };
 		8933351720EBC287E10497551439D1EC /* Pods-JSONRequestTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JSONRequestTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		8D61F78F78F81EE3D4A9D5BE4C121D83 /* Pods-JSONRequest-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JSONRequest-acknowledgements.plist"; sourceTree = "<group>"; };
-		8F90A4BF49B845B48EFE8918FF0B985A /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		905354BF255AC546B12955A2C16336C9 /* HTTPURLResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HTTPURLResponse.swift; path = Sources/DVR/HTTPURLResponse.swift; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A64315CF58880C074129A7833B7C1BFC /* Pods-JSONRequestTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-JSONRequestTests-dummy.m"; sourceTree = "<group>"; };
-		A7678A69C80182E3533EE856F33449EF /* DVR-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DVR-prefix.pch"; sourceTree = "<group>"; };
 		A938436A4A78D063CA8CAFED573E55B8 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B028EF4FDBE69D411E9CCB78E1870414 /* Pods-JSONRequest-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JSONRequest-resources.sh"; sourceTree = "<group>"; };
 		B1823EFF796EEFF1325BAC65656AFEE5 /* Pods-JSONRequestTests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JSONRequestTests-resources.sh"; sourceTree = "<group>"; };
-		B29668F224EB29C8E23B0E02AB4FD42C /* DVR-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DVR-umbrella.h"; sourceTree = "<group>"; };
+		B69FD2845EA04C996177137A0650E2AD /* DVR-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DVR-umbrella.h"; sourceTree = "<group>"; };
 		C72033ABC8FB9AB7BDA165555A010FC9 /* DVR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = DVR.framework; path = DVR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE9A0663DBA833287FBD96487D6430A6 /* Pods-JSONRequestTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-JSONRequestTests-umbrella.h"; sourceTree = "<group>"; };
 		CF2E3DAB7A46008D3E5ED18FC7D3A6DB /* Pods-JSONRequestTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-JSONRequestTests.modulemap"; sourceTree = "<group>"; };
-		D13912BB99C61233A79310FA05EA999B /* SessionUploadTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionUploadTask.swift; path = Sources/DVR/SessionUploadTask.swift; sourceTree = "<group>"; };
-		D4B5F464F17C72F97346BA455405148F /* Cassette.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Cassette.swift; path = Sources/DVR/Cassette.swift; sourceTree = "<group>"; };
-		D904F11FAAB5377DB540D013ECA7A6DF /* Interaction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Interaction.swift; path = Sources/DVR/Interaction.swift; sourceTree = "<group>"; };
+		D051C7D1F609D0480BB5520E0069297B /* DVR.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = DVR.modulemap; sourceTree = "<group>"; };
+		D07902B675AAE68AA8ED2A4E0D932DD7 /* SessionDataTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionDataTask.swift; path = Sources/DVR/SessionDataTask.swift; sourceTree = "<group>"; };
+		DC5AC6925D316BD178382129CA13D31E /* URLRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = URLRequest.swift; path = Sources/DVR/URLRequest.swift; sourceTree = "<group>"; };
 		DE0DE4BD8CEAA7D5B7F88F60E16E1510 /* Pods-JSONRequestTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JSONRequestTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		E073BFD169DA343C67ACE326D83B8791 /* Pods-JSONRequest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JSONRequest.debug.xcconfig"; sourceTree = "<group>"; };
+		E8A41566765A11B28EFCF16648A2531B /* Cassette.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Cassette.swift; path = Sources/DVR/Cassette.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,36 +114,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2348754DE8EF80CA069631B80A8C4658 /* DVR */ = {
+		262F0D89A55FAB0E974C21FC44E7C0FE /* DVR */ = {
 			isa = PBXGroup;
 			children = (
-				D4B5F464F17C72F97346BA455405148F /* Cassette.swift */,
-				905354BF255AC546B12955A2C16336C9 /* HTTPURLResponse.swift */,
-				D904F11FAAB5377DB540D013ECA7A6DF /* Interaction.swift */,
-				3376C5620F25C971584F1D417D545B26 /* Session.swift */,
-				3CA743C15110977568614167FA9A4768 /* SessionDataTask.swift */,
-				0F99C2552708543D5A85A76ABB00856E /* SessionDownloadTask.swift */,
-				D13912BB99C61233A79310FA05EA999B /* SessionUploadTask.swift */,
-				660F14245C5CF8A614B7DEC8FAE9632E /* URLRequest.swift */,
-				26CE5373FC23E316B0C2C287C7E8D4D4 /* URLResponse.swift */,
-				58FFB1247489B14DF1C3D01EB5111422 /* Support Files */,
+				E8A41566765A11B28EFCF16648A2531B /* Cassette.swift */,
+				48B95B86D2E401D1BC5919E5738684FD /* HTTPURLResponse.swift */,
+				727EE36471BB3DB1DC2CD9436FF2561B /* Interaction.swift */,
+				5F6D22C70B18F5F7A51F0423315E6106 /* Session.swift */,
+				D07902B675AAE68AA8ED2A4E0D932DD7 /* SessionDataTask.swift */,
+				27BBEA70D0AAE366C881B7953999BA2C /* SessionDownloadTask.swift */,
+				5F7CD9EE3B5C33A0AD08504DADFD7582 /* SessionUploadTask.swift */,
+				DC5AC6925D316BD178382129CA13D31E /* URLRequest.swift */,
+				3224A227B9EAD944BB5A100E16187D55 /* URLResponse.swift */,
+				4B173E9E5148EBF8E549BCFAD05BBFD5 /* Support Files */,
 			);
 			name = DVR;
 			path = DVR;
 			sourceTree = "<group>";
 		};
-		58FFB1247489B14DF1C3D01EB5111422 /* Support Files */ = {
+		4B173E9E5148EBF8E549BCFAD05BBFD5 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				135A81EC12AC4DA1913A633AF50E73E7 /* DVR.modulemap */,
-				47B09AC286D34B79F9EE3EB39278BA0F /* DVR.xcconfig */,
-				18A4F28C4E6AE93D50B4F95A0D929C8A /* DVR-dummy.m */,
-				A7678A69C80182E3533EE856F33449EF /* DVR-prefix.pch */,
-				B29668F224EB29C8E23B0E02AB4FD42C /* DVR-umbrella.h */,
-				8F90A4BF49B845B48EFE8918FF0B985A /* Info.plist */,
+				D051C7D1F609D0480BB5520E0069297B /* DVR.modulemap */,
+				00DD27F5A48C0D96FA7F169B00837677 /* DVR.xcconfig */,
+				168F748845A45309E132426184A6D5D4 /* DVR-dummy.m */,
+				29BFF760129DB1073BCDDD0DC110E202 /* DVR-prefix.pch */,
+				B69FD2845EA04C996177137A0650E2AD /* DVR-umbrella.h */,
+				55DE2EA1BAF2B91039E41F60E4542704 /* Info.plist */,
 			);
 			name = "Support Files";
 			path = "../Target Support Files/DVR";
+			sourceTree = "<group>";
+		};
+		53B0BDCBE3885E9B347C4CB345C315E8 /* SwiftLint */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = SwiftLint;
+			path = SwiftLint;
 			sourceTree = "<group>";
 		};
 		5E0D919E635D23B70123790B8308F8EF /* iOS */ = {
@@ -159,18 +167,10 @@
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
-				981F47320473B1FEEC8FA239F90694D5 /* Pods */,
+				E4A53480DDAD6109807E2460C4163135 /* Pods */,
 				F6D7639866DE8DBD464ACF5148C18EA0 /* Products */,
 				A4887E863052F1E9298F58F1F68026BC /* Targets Support Files */,
 			);
-			sourceTree = "<group>";
-		};
-		981F47320473B1FEEC8FA239F90694D5 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				2348754DE8EF80CA069631B80A8C4658 /* DVR */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		A4887E863052F1E9298F58F1F68026BC /* Targets Support Files */ = {
@@ -205,6 +205,15 @@
 				5E0D919E635D23B70123790B8308F8EF /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E4A53480DDAD6109807E2460C4163135 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				262F0D89A55FAB0E974C21FC44E7C0FE /* DVR */,
+				53B0BDCBE3885E9B347C4CB345C315E8 /* SwiftLint */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		F6D7639866DE8DBD464ACF5148C18EA0 /* Products */ = {
@@ -427,7 +436,7 @@
 /* Begin XCBuildConfiguration section */
 		22EAA030422141B6652998FC15C44128 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 47B09AC286D34B79F9EE3EB39278BA0F /* DVR.xcconfig */;
+			baseConfigurationReference = 00DD27F5A48C0D96FA7F169B00837677 /* DVR.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -720,7 +729,7 @@
 		};
 		CB2484CFD19C2D9B42326022A1A65766 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 47B09AC286D34B79F9EE3EB39278BA0F /* DVR.xcconfig */;
+			baseConfigurationReference = 00DD27F5A48C0D96FA7F169B00837677 /* DVR.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
