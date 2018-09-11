@@ -72,72 +72,63 @@ public extension JSONResult {
 open class JSONRequest {
 
     open static var log: ((String) -> Void)?
-    open static var userAgent: String? {
-        didSet {
-            if let value = userAgent {
-                sessionConfig.httpAdditionalHeaders = ["User-Agent": value]
-            } else {
-                sessionConfig.httpAdditionalHeaders?.removeValue(forKey: "User-Agent")
-            }
-            updateSessionConfig()
-        }
-    }
-    open static var requestTimeout = 5.0 {
-        didSet { updateSessionConfig() }
-    }
-    open static var resourceTimeout = 10.0 {
-        didSet { updateSessionConfig() }
-    }
-    open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy {
-        didSet { updateSessionConfig() }
-    }
-    open static var isURLCacheEnabled: Bool = true {
-        didSet { updateSessionConfig() }
-    }
 
     open static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
 
     /* Used for dependency injection of outside URLSessions (keep nil to use default) */
-    private var urlSession: URLSession?
+    private var urlSession: URLSession
 
     /* Set to false during testing to avoid test failures due to lack of internet access */
     internal static var requireNetworkAccess = true
 
     /* Delegate that allows additional configurations to be made to the URLSessionConfiguration used for the JSONRequest instance.
-        This delegate will be called *after* JSONRequest configures the instance for its needs. Keep in mind making
-        significant changes to the URLSessionConfiguration object could cause undefined behavior that JSONRequest cannot control.
-    */
+     This delegate will be called *after* JSONRequest configures the instance for its needs. Keep in mind making
+     significant changes to the URLSessionConfiguration object could cause undefined behavior that JSONRequest cannot control.
+     */
     public static var sessionConfigurationDelegate: ((URLSessionConfiguration) -> Void)?
 
     /* Omit the session parameter to use the default URLSession */
     public init(session: URLSession? = nil) {
-        urlSession = session
+        self.urlSession = session ?? URLSession(configuration: JSONRequest.createUrlSessionConfiguration())
     }
 
-    private static var _sessionConfig: URLSessionConfiguration?
-    private static var sessionConfig: URLSessionConfiguration {
-        guard _sessionConfig == nil else { return _sessionConfig! }
-        _sessionConfig = URLSessionConfiguration.default
-        // FYI, from Apple's documentation: NSURLSession won't attempt to cache a file larger than 5% of the cache size
-        // https://goo.gl/CpVNqZ
-        return _sessionConfig!
+    public init(requestTimeout: Double = 5.0,
+                resourceTimeout: Double = 10.0,
+                requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy,
+                isURLCacheEnabled: Bool = true,
+                maxEstimatedResponseMegabytes: Int = 5,
+                userAgent: String? = nil) {
+        let sessionConfig = JSONRequest.createUrlSessionConfiguration(requestTimeout: requestTimeout,
+                                                                      resourceTimeout: resourceTimeout,
+                                                                      requestCachePolicy: requestCachePolicy,
+                                                                      isURLCacheEnabled: isURLCacheEnabled,
+                                                                      maxEstimatedResponseMegabytes: maxEstimatedResponseMegabytes,
+                                                                      userAgent: userAgent)
+        urlSession = URLSession(configuration: sessionConfig)
     }
 
-    open static var maxEstimatedResponseMegabytes: Int = 5 {
-        didSet { updateSessionConfig() }
-    }
-
-    private static var urlSession: URLSession! = nil
-
-    private static func updateSessionConfig() {
+    private static func createUrlSessionConfiguration(requestTimeout: Double = 5.0,
+                                                      resourceTimeout: Double = 10.0,
+                                                      requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy,
+                                                      isURLCacheEnabled: Bool = true,
+                                                      maxEstimatedResponseMegabytes: Int = 5,
+                                                      userAgent: String? = nil) -> URLSessionConfiguration {
+        let sessionConfig = URLSessionConfiguration.default
         sessionConfig.requestCachePolicy = requestCachePolicy
         sessionConfig.timeoutIntervalForResource = resourceTimeout
         sessionConfig.timeoutIntervalForRequest = requestTimeout
         let capacity: Int = (maxEstimatedResponseMegabytes * 20) * 1024 * 1024 // max response should be less than 5% of cache size
         let urlCache: URLCache? = isURLCacheEnabled ? URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil) : nil
         sessionConfig.urlCache = urlCache
+
+        if let value = userAgent {
+            sessionConfig.httpAdditionalHeaders = ["User-Agent": value]
+        } else {
+            sessionConfig.httpAdditionalHeaders?.removeValue(forKey: "User-Agent")
+        }
+
         JSONRequest.sessionConfigurationDelegate?(sessionConfig)
-        urlSession = URLSession(configuration: JSONRequest.sessionConfig)
+        return sessionConfig
     }
 
     // MARK: Non-public business logic (testable but not public outside the module)
@@ -151,22 +142,20 @@ open class JSONRequest {
             return
         }
 
-        var request = URLRequest(url: URL(string: url)!,
-                                 cachePolicy: JSONRequest.requestCachePolicy,
-                                 timeoutInterval: timeOut ?? JSONRequest.requestTimeout)
+        var request = URLRequest(url: URL(string: url)!)
+        if let unwrappedTimeout = timeOut {
+            request.timeoutInterval = unwrappedTimeout
+        }
+        JSONRequest.updateRequest(&request, method: method, url: url, queryParams: queryParams)
+        JSONRequest.updateRequest(&request, headers: headers)
+        JSONRequest.updateRequest(&request, payload: payload)
 
-        updateRequest(&request, method: method, url: url, queryParams: queryParams)
-        updateRequest(&request, headers: headers)
-        updateRequest(&request, payload: payload)
-
-        let session = (timeOut == urlSession?.configuration.timeoutIntervalForRequest
-            ? (urlSession ?? networkSession())
-            : networkSession(forcedTimeout: timeOut))
+        let session = self.urlSession
         let start = Date()
 
         let cachedResponse: CachedURLResponse? = session.configuration.urlCache?.cachedResponse(for: request)
         if cachedResponse == nil {
-            removeCachingHeaders(&request)
+            JSONRequest.removeCachingHeaders(&request)
         }
 
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -204,20 +193,6 @@ open class JSONRequest {
         task.resume()
     }
 
-    func networkSession(forcedTimeout: TimeInterval? = nil) -> URLSession {
-        let config = JSONRequest.sessionConfig
-        if let timeout = forcedTimeout {
-            config.timeoutIntervalForRequest = timeout
-            config.timeoutIntervalForResource = timeout
-        }
-        let session = URLSession(configuration: config)
-        if forcedTimeout == nil {
-            // if there isn't a custom timeout, set the member variable with this new session we've created for future use.
-            urlSession = session
-        }
-        return session
-    }
-
     func submitSyncRequest(method: JSONRequestHttpVerb, url: String,
                            queryParams: JSONObject? = nil,
                            payload: Any? = nil,
@@ -238,14 +213,14 @@ open class JSONRequest {
         return requestResult
     }
 
-    func updateRequest(_ request: inout URLRequest,
-                       method: JSONRequestHttpVerb, url: String,
-                       queryParams: JSONObject? = nil) {
+    static func updateRequest(_ request: inout URLRequest,
+                              method: JSONRequestHttpVerb, url: String,
+                              queryParams: JSONObject? = nil) {
         request.url = createURL(urlString: url, queryParams: queryParams)
         request.httpMethod = method.rawValue
     }
 
-    func updateRequest(_ request: inout URLRequest, headers: JSONObject?) {
+    static func updateRequest(_ request: inout URLRequest, headers: JSONObject?) {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         if let headers = headers {
@@ -255,20 +230,20 @@ open class JSONRequest {
         }
     }
 
-    func removeCachingHeaders(_ request: inout URLRequest) {
+    static func removeCachingHeaders(_ request: inout URLRequest) {
         request.setValue(nil, forHTTPHeaderField: "If-None-Match")
         request.setValue(nil, forHTTPHeaderField: "If-Modified-Since")
     }
 
-    func updateRequest(_ request: inout URLRequest,
-                       payload: Any?) {
+    static func updateRequest(_ request: inout URLRequest,
+                              payload: Any?) {
         guard let payload = payload else {
             return
         }
         request.httpBody = objectToJSON(object: payload)
     }
 
-    open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
+    static open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
         guard let baseURL = URL(string: urlString) else {
             return nil
         }
@@ -289,7 +264,7 @@ open class JSONRequest {
         guard let json = JSONToObject(data: data) else {
             return JSONResult.failure(error: JSONError.responseDeserialization,
                                       response: httpResponse,
-                                      body: dataToUTFString(data: data))
+                                      body: JSONRequest.dataToUTFString(data: data))
         }
         return JSONResult.success(data: json, response: httpResponse)
     }
@@ -343,7 +318,7 @@ open class JSONRequest {
             log("Url: \(url)")
         }
         if let headers = task.currentRequest?.allHTTPHeaderFields {
-            log("Headers: \(objectToJSONString(object: headers as Any, pretty: true))")
+            log("Headers: \(JSONRequest.objectToJSONString(object: headers as Any, pretty: true))")
         }
         if let payload = task.currentRequest?.httpBody,
             let body = String(data: payload, encoding: String.Encoding.utf8) {
@@ -369,10 +344,10 @@ open class JSONRequest {
             log("Status Code: \(statusCode)")
         }
         if let headers = httpResponse?.allHeaderFields {
-            log("Headers: \(objectToJSONString(object: headers as Any, pretty: true))")
+            log("Headers: \(JSONRequest.objectToJSONString(object: headers as Any, pretty: true))")
         }
         if let data = responseData, let body = JSONToObject(data: data) {
-            log("Body: \(objectToJSONString(object: body, pretty: true))")
+            log("Body: \(JSONRequest.objectToJSONString(object: body, pretty: true))")
         }
         if let errorString = error?.localizedDescription {
             log("Error: \(errorString)")
@@ -383,7 +358,7 @@ open class JSONRequest {
         return try? JSONSerialization.jsonObject(with: data, options: [.allowFragments])
     }
 
-    fileprivate func objectToJSON(object: Any, pretty: Bool = false) -> Data? {
+    static fileprivate func objectToJSON(object: Any, pretty: Bool = false) -> Data? {
         if JSONSerialization.isValidJSONObject(object) {
             let options = pretty ? JSONSerialization.WritingOptions.prettyPrinted : []
             return try? JSONSerialization.data(withJSONObject: object, options: options)
@@ -391,14 +366,14 @@ open class JSONRequest {
         return nil
     }
 
-    fileprivate func objectToJSONString(object: Any, pretty: Bool) -> String {
+    static fileprivate func objectToJSONString(object: Any, pretty: Bool) -> String {
         if let data = objectToJSON(object: object, pretty: pretty) {
             return dataToUTFString(data: data)
         }
         return ""
     }
 
-    fileprivate func dataToUTFString(data: Data) -> String {
+    static fileprivate func dataToUTFString(data: Data) -> String {
         return String(data: data, encoding: String.Encoding.utf8) ?? ""
     }
 
