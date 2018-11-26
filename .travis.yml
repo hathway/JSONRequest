@@ -18,7 +18,7 @@ env:
     - DESTINATION="OS=11.2,name=iPad Air 2"         SCHEME="$IOS_FRAMEWORK_SCHEME"     SDK="$IOS_SDK"     RUN_TESTS="YES" POD_LINT="NO"
 
 install:
-  - ./install_swiftlint.sh
+  - brew update && brew install swiftlint
   - bundle install
 
 script:
