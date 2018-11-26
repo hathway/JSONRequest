@@ -26,32 +26,32 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     func testSimple() {
-//        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testSimpleGET"))
-//        let result = jsonRequest.get(url: goodUrl, queryParams: params)
-//        switch result {
-//        case .success(let data, let response):
-//            XCTAssertNotNil(data)
-//            let object = data as? JSONObject
-//            XCTAssertNotNil(object?["args"])
-//            XCTAssertEqual((object?["args"] as? JSONObject)?["hello"] as? String, "world")
-//            XCTAssertEqual(response.statusCode, 200)
-//        case .failure(let error):
-//            XCTFail("Request failed with \(error)")
-//        }
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testSimpleGET"))
+        let result = jsonRequest.get(url: goodUrl, queryParams: params)
+        switch result {
+        case .success(let data, let response):
+            XCTAssertNotNil(data)
+            let object = data as? JSONObject
+            XCTAssertNotNil(object?["args"])
+            XCTAssertEqual((object?["args"] as? JSONObject)?["hello"] as? String, "world")
+            XCTAssertEqual(response.statusCode, 200)
+        case .failure(let error):
+            XCTFail("Request failed with \(error)")
+        }
     }
 
     func testDictionaryValue() {
-//        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testDictionaryValueGET"))
-//        let result = jsonRequest.get(url: goodUrl, queryParams: params)
-//        let dict = result.dictionaryValue
-//        XCTAssertEqual((dict["args"] as? JSONObject)?["hello"] as? String, "world")
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testDictionaryValueGET"))
+        let result = jsonRequest.get(url: goodUrl, queryParams: params)
+        let dict = result.dictionaryValue
+        XCTAssertEqual((dict["args"] as? JSONObject)?["hello"] as? String, "world")
     }
 
     func testArrayValue() {
-//        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testArrayValueGET"))
-//        let result = jsonRequest.get(url: goodUrl, queryParams: params)
-//        let array = result.arrayValue
-//        XCTAssertEqual(array.count, 0)
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testArrayValueGET"))
+        let result = jsonRequest.get(url: goodUrl, queryParams: params)
+        let array = result.arrayValue
+        XCTAssertEqual(array.count, 0)
     }
 
     func testFailing() {
@@ -69,17 +69,17 @@ class JSONRequestGETTests: XCTestCase {
     }
 
     func testAsync() {
-//        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testAsyncGET"))
-//        let expectation = self.expectation(description: "async")
-//        jsonRequest.get(url: goodUrl) { (result) in
-//            XCTAssertNil(result.error)
-//            expectation.fulfill()
-//        }
-//        waitForExpectations(timeout: 15) { error in
-//            if error != nil {
-//                XCTFail()
-//            }
-//        }
+        let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testAsyncGET"))
+        let expectation = self.expectation(description: "async")
+        jsonRequest.get(url: goodUrl) { (result) in
+            XCTAssertNil(result.error)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 15) { error in
+            if error != nil {
+                XCTFail()
+            }
+        }
     }
 
     func testAsyncFail() {
