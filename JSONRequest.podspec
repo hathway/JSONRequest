@@ -15,5 +15,5 @@ Pod::Spec.new do |s|
 
   s.source = { :git => "https://github.com/hathway/JSONRequest.git", :tag => s.version }
   s.source_files  = "Sources/*.swift"
-  s.swift_version = '4.0'
+  s.swift_version = '4.2'
 end
