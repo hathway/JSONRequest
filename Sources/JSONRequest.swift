@@ -70,9 +70,8 @@ public extension JSONResult {
 }
 
 open class JSONRequest {
-
-    open static var log: ((String) -> Void)?
-    open static var userAgent: String? {
+    public static var log: ((String) -> Void)?
+    public static var userAgent: String? {
         didSet {
             if let value = userAgent {
                 sessionConfig.httpAdditionalHeaders = ["User-Agent": value]
@@ -82,20 +81,20 @@ open class JSONRequest {
             updateSessionConfig()
         }
     }
-    open static var requestTimeout = 5.0 {
+    public static var requestTimeout = 5.0 {
         didSet { updateSessionConfig() }
     }
-    open static var resourceTimeout = 10.0 {
+    public static var resourceTimeout = 10.0 {
         didSet { updateSessionConfig() }
     }
-    open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy {
+    public static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy {
         didSet { updateSessionConfig() }
     }
-    open static var isURLCacheEnabled: Bool = true {
+    public static var isURLCacheEnabled: Bool = true {
         didSet { updateSessionConfig() }
     }
 
-    open static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
+    public static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
 
     /* Used for dependency injection of outside URLSessions (keep nil to use default) */
     private var urlSession: URLSession?
@@ -123,7 +122,7 @@ open class JSONRequest {
         return _sessionConfig!
     }
 
-    open static var maxEstimatedResponseMegabytes: Int = 5 {
+    public static var maxEstimatedResponseMegabytes: Int = 5 {
         didSet { updateSessionConfig() }
     }
 
@@ -151,17 +150,13 @@ open class JSONRequest {
             return
         }
 
-        var request = URLRequest(url: URL(string: url)!,
-                                 cachePolicy: JSONRequest.requestCachePolicy,
-                                 timeoutInterval: timeOut ?? JSONRequest.requestTimeout)
+        var request = URLRequest(url: URL(string: url)!, cachePolicy: JSONRequest.requestCachePolicy, timeoutInterval: timeOut ?? JSONRequest.requestTimeout)
 
         updateRequest(&request, method: method, url: url, queryParams: queryParams)
         updateRequest(&request, headers: headers)
         updateRequest(&request, payload: payload)
 
-        let session = (timeOut == urlSession?.configuration.timeoutIntervalForRequest
-            ? (urlSession ?? networkSession())
-            : networkSession(forcedTimeout: timeOut))
+        let session = (timeOut == urlSession?.configuration.timeoutIntervalForRequest ? (urlSession ?? networkSession()) : networkSession(forcedTimeout: timeOut))
         let start = Date()
 
         let cachedResponse: CachedURLResponse? = session.configuration.urlCache?.cachedResponse(for: request)
@@ -175,14 +170,10 @@ open class JSONRequest {
                                httpResponse: response as? HTTPURLResponse,
                                error: error as NSError?)
             if let error = error {
-                let result = JSONResult.failure(error: JSONError.requestFailed(error: error),
-                                                response: response as? HTTPURLResponse,
-                                                body: self.body(fromData: data))
+                let result = JSONResult.failure(error: JSONError.requestFailed(error: error), response: response as? HTTPURLResponse, body: self.body(fromData: data))
                 complete(result)
                 return
-            } else if let httpResponse = (response as? HTTPURLResponse),
-                httpResponse.statusCode == 304,
-                let cachedResponseObj = cachedResponse {
+            } else if let httpResponse = (response as? HTTPURLResponse), httpResponse.statusCode == 304, let cachedResponseObj = cachedResponse {
                 /*  For some rediculous reason, there are cases where the cache contains a response for the HTTP request (as verified
                  by the conditional check above), but that cached response isn't passed transparently to us as a 200OK response, and is
                  instead a 304, which throws the consumer out of wack since there's no guarantee they have cached the data themselves.
@@ -223,7 +214,6 @@ open class JSONRequest {
                            payload: Any? = nil,
                            headers: JSONObject? = nil,
                            timeOut: TimeInterval? = nil) -> JSONResult {
-
         var requestResult: JSONResult = JSONResult.failure(error: JSONError.unknownError,
                                                            response: nil, body: nil)
 
@@ -260,8 +250,7 @@ open class JSONRequest {
         request.setValue(nil, forHTTPHeaderField: "If-Modified-Since")
     }
 
-    func updateRequest(_ request: inout URLRequest,
-                       payload: Any?) {
+    func updateRequest(_ request: inout URLRequest, payload: Any?) {
         guard let payload = payload else {
             return
         }
@@ -401,5 +390,4 @@ open class JSONRequest {
     fileprivate func dataToUTFString(data: Data) -> String {
         return String(data: data, encoding: String.Encoding.utf8) ?? ""
     }
-
 }
