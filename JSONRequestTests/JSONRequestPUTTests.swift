@@ -59,7 +59,7 @@ class JSONRequestPUTTests: XCTestCase {
 
     func testFailing() {
         // We don't use DVR on this test because it is designed to fail immediately
-        let result = JSONRequest.put(url: badUrl, payload: payload)
+        let result = JSONRequest().put(url: badUrl, payload: payload)
         switch result {
         case .success:
             XCTFail("Request should have failed")

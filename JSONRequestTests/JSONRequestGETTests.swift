@@ -56,7 +56,7 @@ class JSONRequestGETTests: XCTestCase {
 
     func testFailing() {
         // We don't use DVR on this test because it is designed to fail immediately
-        let result = JSONRequest.get(url: badUrl, queryParams: params)
+        let result = JSONRequest().get(url: badUrl, queryParams: params)
         switch result {
         case .success:
             XCTFail("Request should have failed")

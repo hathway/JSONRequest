@@ -57,37 +57,3 @@ public extension JSONRequest {
     }
 
 }
-
-// MARK: Class HTTP Sync methods
-
-public extension JSONRequest {
-
-    public class func get(url: String, queryParams: JSONObject? = nil,
-                          headers: JSONObject? = nil) -> JSONResult {
-        return JSONRequest().get(url: url, queryParams: queryParams, headers: headers)
-    }
-
-    public class func post(url: String, queryParams: JSONObject? = nil, payload: Any? = nil,
-                           headers: JSONObject? = nil) -> JSONResult {
-        return JSONRequest().post(url: url, queryParams: queryParams, payload: payload,
-                                  headers: headers)
-    }
-
-    public class func put(url: String, queryParams: JSONObject? = nil, payload: Any? = nil,
-                          headers: JSONObject? = nil) -> JSONResult {
-        return JSONRequest().put(url: url, queryParams: queryParams, payload: payload,
-                                 headers: headers)
-    }
-
-    public class func patch(url: String, queryParams: JSONObject? = nil, payload: Any? = nil,
-                            headers: JSONObject? = nil) -> JSONResult {
-        return JSONRequest().patch(url: url, queryParams: queryParams, payload: payload,
-                                   headers: headers)
-    }
-
-    public class func delete(url: String, queryParams: JSONObject? = nil,
-                             headers: JSONObject? = nil) -> JSONResult {
-        return JSONRequest().delete(url: url, queryParams: queryParams, headers: headers)
-    }
-
-}
