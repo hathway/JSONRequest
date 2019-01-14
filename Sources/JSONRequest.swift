@@ -153,7 +153,7 @@ open class JSONRequest {
     ///   - method: HTTP Method (GET|POST|PUT|PATCH|DELETE)
     ///   - url: Destination URL
     ///   - queryParams: Query parameters
-    ///   - payload: BOdy parameters
+    ///   - payload: Body parameters
     ///   - headers: Headers
     ///   - timeOut: Request timeout
     ///   - complete: Completion handler which accepts Result value
