@@ -74,7 +74,7 @@ class JSONRequestPATCHTests: XCTestCase {
     func testAsync() {
         let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testAsyncPATCH"))
         let expectation = self.expectation(description: "async")
-        jsonRequest.patch(url: goodUrl) { (result) in
+        jsonRequest.send(.PATCH, url: goodUrl) { (result) in
             XCTAssertNil(result.error)
             expectation.fulfill()
         }
@@ -88,7 +88,7 @@ class JSONRequestPATCHTests: XCTestCase {
     func testAsyncFail() {
         // We don't use DVR on this test because it is designed to fail immediately
         let expectation = self.expectation(description: "async")
-        JSONRequest.patch(url: badUrl) { (result) in
+        JSONRequest().send(.PATCH, url: badUrl) { (result) in
             XCTAssertNotNil(result.error)
             expectation.fulfill()
         }
