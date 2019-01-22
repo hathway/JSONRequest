@@ -59,7 +59,7 @@ class JSONRequestPUTTests: XCTestCase {
 
     func testFailing() {
         // We don't use DVR on this test because it is designed to fail immediately
-        let result = JSONRequest.put(url: badUrl, payload: payload)
+        let result = JSONRequest().put(url: badUrl, payload: payload)
         switch result {
         case .success:
             XCTFail("Request should have failed")
@@ -74,7 +74,7 @@ class JSONRequestPUTTests: XCTestCase {
     func testAsync() {
         let jsonRequest = JSONRequest(session: DVR.Session(cassetteName: "testFiles/testAsyncPUT"))
         let expectation = self.expectation(description: "async")
-        jsonRequest.put(url: goodUrl) { (result) in
+        jsonRequest.send(.PUT, url: goodUrl) { (result) in
             XCTAssertNil(result.error)
             expectation.fulfill()
         }
@@ -88,7 +88,7 @@ class JSONRequestPUTTests: XCTestCase {
     func testAsyncFail() {
         // We don't use DVR on this test because it is designed to fail immediately
         let expectation = self.expectation(description: "async")
-        JSONRequest.put(url: badUrl) { (result) in
+        JSONRequest().send(.PUT, url: badUrl) { (result) in
             XCTAssertNotNil(result.error)
             expectation.fulfill()
         }

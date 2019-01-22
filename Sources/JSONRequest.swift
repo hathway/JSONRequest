@@ -30,6 +30,12 @@ public enum JSONResult {
     case failure(error: JSONError, response: HTTPURLResponse?, body: String?)
 }
 
+public protocol JSONCancellableRequest {
+    func cancel()
+}
+
+extension URLSessionDataTask: JSONCancellableRequest {}
+
 public extension JSONResult {
 
     public var data: Any? {
@@ -141,13 +147,23 @@ open class JSONRequest {
 
     // MARK: Non-public business logic (testable but not public outside the module)
 
-    func submitAsyncRequest(method: JSONRequestHttpVerb, url: String,
-                            queryParams: JSONObject? = nil, payload: Any? = nil,
-                            headers: JSONObject? = nil, timeOut: TimeInterval? = nil, complete: @escaping (JSONResult) -> Void) {
+    /// Method for sending asynchronous requests
+    ///
+    /// - Parameters:
+    ///   - method: HTTP Method (GET|POST|PUT|PATCH|DELETE)
+    ///   - url: Destination URL
+    ///   - queryParams: Query parameters
+    ///   - payload: Body parameters
+    ///   - headers: Headers
+    ///   - timeOut: Request timeout
+    ///   - complete: Completion handler which accepts Result value
+    /// - Returns: Active request which can be cancelled
+    @discardableResult
+    public func send(_ method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil, payload: Any? = nil, headers: JSONObject? = nil, timeOut: TimeInterval? = nil, complete: @escaping (JSONResult) -> Void) -> JSONCancellableRequest? {
         if (isConnectedToNetwork() == false) && (JSONRequest.requireNetworkAccess) {
             let error = JSONError.noInternetConnection
             complete(.failure(error: error, response: nil, body: nil))
-            return
+            return nil
         }
 
         var request = URLRequest(url: URL(string: url)!, cachePolicy: JSONRequest.requestCachePolicy, timeoutInterval: timeOut ?? JSONRequest.requestTimeout)
@@ -193,6 +209,7 @@ open class JSONRequest {
         }
         trace(task: task)
         task.resume()
+        return task
     }
 
     func networkSession(forcedTimeout: TimeInterval? = nil) -> URLSession {
@@ -218,7 +235,7 @@ open class JSONRequest {
                                                            response: nil, body: nil)
 
         let semaphore = DispatchSemaphore(value: 0)
-        submitAsyncRequest(method: method, url: url, queryParams: queryParams,
+        send(method, url: url, queryParams: queryParams,
                            payload: payload, headers: headers, timeOut: timeOut) { result in
                             requestResult = result
                             semaphore.signal()
