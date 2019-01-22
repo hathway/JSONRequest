@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "JSONRequest"
-  s.version      = "0.8.0"
+  s.version      = "0.9.0"
   s.summary      = "JSONRequest is a tiny Swift library for Synchronous and Asynchronous HTTP JSON requests."
   s.homepage     = "http://github.com/hathway/JSONRequest"
   s.license      = { :type => "MIT", :file => "LICENSE" }
