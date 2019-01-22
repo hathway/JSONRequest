@@ -16,4 +16,10 @@ Pod::Spec.new do |s|
   s.source = { :git => "https://github.com/hathway/JSONRequest.git", :tag => s.version }
   s.source_files  = "Sources/*.swift"
   s.swift_version = '4.2'
+
+  s.default_subspec = ''
+  s.subspec 'Rx' do |ss|
+    ss.source_files = "Source/Rx/*.swift"
+    ss.dependency "RxSwift"
+  end
 end

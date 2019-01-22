@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		50793BE819D5B57100F5DEB2 /* JSONRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50793BE719D5B57100F5DEB2 /* JSONRequestTests.swift */; };
+		63490B6C21F74E6C00D1D361 /* JSONRequest+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63490B6B21F74E6C00D1D361 /* JSONRequest+Rx.swift */; };
+		63490B6F21F7523D00D1D361 /* JSONRequestTests+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63490B6E21F7523D00D1D361 /* JSONRequestTests+Rx.swift */; };
 		6C2311BA224C91041C7E7525 /* Pods_JSONRequest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7ED0987CE9FB3315B6174D22 /* Pods_JSONRequest.framework */; };
 		9575F2071C4443E8000B5A59 /* JSONRequestGETTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9575F2061C4443E8000B5A59 /* JSONRequestGETTests.swift */; };
 		9575F2091C448965000B5A59 /* JSONRequestVerbs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */; };
@@ -42,6 +44,8 @@
 		50793BE719D5B57100F5DEB2 /* JSONRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRequestTests.swift; sourceTree = "<group>"; };
 		50793BF419D5B80E00F5DEB2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		5C486882FA13BCBFB3ACE32C /* Pods-JSONRequest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JSONRequest.release.xcconfig"; path = "Pods/Target Support Files/Pods-JSONRequest/Pods-JSONRequest.release.xcconfig"; sourceTree = "<group>"; };
+		63490B6B21F74E6C00D1D361 /* JSONRequest+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONRequest+Rx.swift"; sourceTree = "<group>"; };
+		63490B6E21F7523D00D1D361 /* JSONRequestTests+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONRequestTests+Rx.swift"; sourceTree = "<group>"; };
 		7821646C4C7326C958BCC553 /* Pods-JSONRequestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JSONRequestTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JSONRequestTests/Pods-JSONRequestTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7ED0987CE9FB3315B6174D22 /* Pods_JSONRequest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JSONRequest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9575F2041C443758000B5A59 /* JSONRequest.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = JSONRequest.podspec; sourceTree = "<group>"; };
@@ -121,6 +125,7 @@
 		50793BE419D5B57100F5DEB2 /* JSONRequestTests */ = {
 			isa = PBXGroup;
 			children = (
+				63490B6D21F7522900D1D361 /* Rx */,
 				D4F9B0EF1F268BE3004C6B15 /* testFiles */,
 				957B333C1CA43EAD00A4A2C6 /* JSONRequestDELETETests.swift */,
 				9575F2061C4443E8000B5A59 /* JSONRequestGETTests.swift */,
@@ -140,6 +145,22 @@
 				50793BE619D5B57100F5DEB2 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		63490B6A21F74E6000D1D361 /* Rx */ = {
+			isa = PBXGroup;
+			children = (
+				63490B6B21F74E6C00D1D361 /* JSONRequest+Rx.swift */,
+			);
+			name = Rx;
+			sourceTree = "<group>";
+		};
+		63490B6D21F7522900D1D361 /* Rx */ = {
+			isa = PBXGroup;
+			children = (
+				63490B6E21F7523D00D1D361 /* JSONRequestTests+Rx.swift */,
+			);
+			name = Rx;
 			sourceTree = "<group>";
 		};
 		953C5C25C1D34A52BEC8AF04 /* Frameworks */ = {
@@ -163,6 +184,7 @@
 		95975B061C1E2CC2004750A8 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				63490B6A21F74E6000D1D361 /* Rx */,
 				95975B071C1E2CFF004750A8 /* JSONRequest.swift */,
 				9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */,
 				DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */,
@@ -289,11 +311,19 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-JSONRequestTests/Pods-JSONRequestTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/DVR/DVR.framework",
+				"${BUILT_PRODUCTS_DIR}/RxBlocking/RxBlocking.framework",
+				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DVR.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxBlocking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxTest.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -360,6 +390,7 @@
 				9575F2091C448965000B5A59 /* JSONRequestVerbs.swift in Sources */,
 				95975B081C1E2CFF004750A8 /* JSONRequest.swift in Sources */,
 				DA9BEACF1F2BF63700EEDC94 /* URLEncoding.swift in Sources */,
+				63490B6C21F74E6C00D1D361 /* JSONRequest+Rx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,6 +400,7 @@
 			files = (
 				9575F2071C4443E8000B5A59 /* JSONRequestGETTests.swift in Sources */,
 				957B33391CA43E9500A4A2C6 /* JSONRequestPUTTests.swift in Sources */,
+				63490B6F21F7523D00D1D361 /* JSONRequestTests+Rx.swift in Sources */,
 				957B333D1CA43EAD00A4A2C6 /* JSONRequestDELETETests.swift in Sources */,
 				957B333B1CA43EA200A4A2C6 /* JSONRequestPATCHTests.swift in Sources */,
 				957B33371CA43E7A00A4A2C6 /* JSONRequestPOSTTests.swift in Sources */,

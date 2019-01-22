@@ -1,16 +1,36 @@
 PODS:
   - DVR (1.3.2)
+  - RxAtomic (4.4.0)
+  - RxBlocking (4.4.0):
+    - RxAtomic (~> 4.4)
+    - RxSwift (~> 4.0)
+  - RxSwift (4.4.0):
+    - RxAtomic (~> 4.4)
+  - RxTest (4.4.0):
+    - RxAtomic (~> 4.4)
+    - RxSwift (~> 4.0)
 
 DEPENDENCIES:
   - DVR (~> 1.0)
+  - RxBlocking
+  - RxSwift
+  - RxTest
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - DVR
+    - RxAtomic
+    - RxBlocking
+    - RxSwift
+    - RxTest
 
 SPEC CHECKSUMS:
   DVR: 32654d5cab900135a0219f0a9548ab61e8644960
+  RxAtomic: eacf60db868c96bfd63320e28619fe29c179656f
+  RxBlocking: 138ad53217434444d6eeeb4fb406a45431d92e31
+  RxSwift: 5976ecd04fc2fefd648827c23de5e11157faa973
+  RxTest: 19d03286bdc0a3aaea5d61d4cde31fdf4bb8a5ba
 
-PODFILE CHECKSUM: c101fa753f28c720b49dbc6323bb77406bb42cbf
+PODFILE CHECKSUM: 7dcf72fb846bb895c56fac01d1cf50426852c8ef
 
 COCOAPODS: 1.5.3

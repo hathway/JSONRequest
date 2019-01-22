@@ -6,10 +6,13 @@ target 'JSONRequest' do
   use_frameworks!
 
   # Pods for JSONRequest
+  podspec
 
   target 'JSONRequestTests' do
     inherit! :search_paths
     pod 'DVR', '~> 1.0'
+    pod 'RxTest'
+    pod 'RxBlocking'
   end
 
 end
