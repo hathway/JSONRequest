@@ -38,7 +38,7 @@ extension URLSessionDataTask: JSONCancellableRequest {}
 
 public extension JSONResult {
 
-    public var data: Any? {
+    var data: Any? {
         switch self {
         case .success(let data, _):
             return data
@@ -47,15 +47,15 @@ public extension JSONResult {
         }
     }
 
-    public var arrayValue: [Any] {
+    var arrayValue: [Any] {
         return data as? [Any] ?? []
     }
 
-    public var dictionaryValue: [String: Any] {
+    var dictionaryValue: [String: Any] {
         return data as? [String: Any] ?? [:]
     }
 
-    public var httpResponse: HTTPURLResponse? {
+    var httpResponse: HTTPURLResponse? {
         switch self {
         case .success(_, let response):
             return response
@@ -64,7 +64,7 @@ public extension JSONResult {
         }
     }
 
-    public var error: Error? {
+    var error: Error? {
         switch self {
         case .success:
             return nil
@@ -159,7 +159,7 @@ open class JSONRequest {
     ///   - complete: Completion handler which accepts Result value
     /// - Returns: Active request which can be cancelled
     @discardableResult
-    public func send(_ method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil, payload: Any? = nil, headers: JSONObject? = nil, timeOut: TimeInterval? = nil, complete: @escaping (JSONResult) -> Void) -> JSONCancellableRequest? {
+    func send(_ method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil, payload: Any? = nil, headers: JSONObject? = nil, timeOut: TimeInterval? = nil, complete: @escaping (JSONResult) -> Void) -> JSONCancellableRequest? {
         if (isConnectedToNetwork() == false) && (JSONRequest.requireNetworkAccess) {
             let error = JSONError.noInternetConnection
             complete(.failure(error: error, response: nil, body: nil))
