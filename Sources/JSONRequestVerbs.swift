@@ -16,7 +16,7 @@ public enum JSONRequestHttpVerb: String {
 
 // MARK: Instance basic sync/async
 
-extension JSONRequest {
+public extension JSONRequest {
     func send(method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil, payload: Any? = nil, headers: JSONObject? = nil, timeOut: TimeInterval? = nil) -> JSONResult {
         return submitSyncRequest(method: method, url: url, queryParams: queryParams,
                                  payload: payload, headers: headers, timeOut: timeOut)
