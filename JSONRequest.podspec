@@ -14,6 +14,6 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = "9.0"
 
   s.source = { :git => "https://github.com/hathway/JSONRequest.git", :tag => s.version }
-  s.source_files  = "Sources/*.swift"
+  s.source_files  = "JSONRequest/*.swift"
   s.swift_versions = ['5.0']
 end
