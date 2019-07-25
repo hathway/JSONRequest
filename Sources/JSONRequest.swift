@@ -38,7 +38,7 @@ extension URLSessionDataTask: JSONCancellableRequest {}
 
 public extension JSONResult {
 
-    public var data: Any? {
+    var data: Any? {
         switch self {
         case .success(let data, _):
             return data
@@ -47,15 +47,15 @@ public extension JSONResult {
         }
     }
 
-    public var arrayValue: [Any] {
+    var arrayValue: [Any] {
         return data as? [Any] ?? []
     }
 
-    public var dictionaryValue: [String: Any] {
+    var dictionaryValue: [String: Any] {
         return data as? [String: Any] ?? [:]
     }
 
-    public var httpResponse: HTTPURLResponse? {
+    var httpResponse: HTTPURLResponse? {
         switch self {
         case .success(_, let response):
             return response
@@ -64,7 +64,7 @@ public extension JSONResult {
         }
     }
 
-    public var error: Error? {
+    var error: Error? {
         switch self {
         case .success:
             return nil
@@ -153,7 +153,7 @@ open class JSONRequest {
     ///   - method: HTTP Method (GET|POST|PUT|PATCH|DELETE)
     ///   - url: Destination URL
     ///   - queryParams: Query parameters
-    ///   - payload: Body parameters
+    ///   - payload: Body parameters. If payload is Array or Dictionary it's tried to be converted to JSON. If payload is Data it stays as it
     ///   - headers: Headers
     ///   - timeOut: Request timeout
     ///   - complete: Completion handler which accepts Result value
@@ -271,7 +271,12 @@ open class JSONRequest {
         guard let payload = payload else {
             return
         }
-        request.httpBody = objectToJSON(object: payload)
+
+        if let jsonData = objectToJSON(object: payload) {
+            request.httpBody = jsonData
+        } else if let data = payload as? Data {
+            request.httpBody = data
+        }
     }
 
     open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
