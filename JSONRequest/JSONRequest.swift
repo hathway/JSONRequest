@@ -87,10 +87,10 @@ open class JSONRequest {
             updateSessionConfig()
         }
     }
-    public static var requestTimeout = 5.0 {
+    public static var requestTimeout = 60.0 {
         didSet { updateSessionConfig() }
     }
-    public static var resourceTimeout = 10.0 {
+    public static var resourceTimeout = 60.0 {
         didSet { updateSessionConfig() }
     }
     public static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy {
@@ -153,7 +153,7 @@ open class JSONRequest {
     ///   - method: HTTP Method (GET|POST|PUT|PATCH|DELETE)
     ///   - url: Destination URL
     ///   - queryParams: Query parameters
-    ///   - payload: Body parameters
+    ///   - payload: Body parameters. If payload is Array or Dictionary it's tried to be converted to JSON. If payload is Data it stays as it
     ///   - headers: Headers
     ///   - timeOut: Request timeout
     ///   - complete: Completion handler which accepts Result value
@@ -271,7 +271,12 @@ open class JSONRequest {
         guard let payload = payload else {
             return
         }
-        request.httpBody = objectToJSON(object: payload)
+
+        if let jsonData = objectToJSON(object: payload) {
+            request.httpBody = jsonData
+        } else if let data = payload as? Data {
+            request.httpBody = data
+        }
     }
 
     open func createURL(urlString: String, queryParams: JSONObject?) -> URL? {
