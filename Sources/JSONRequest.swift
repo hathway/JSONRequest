@@ -32,7 +32,7 @@ public enum JSONResult {
 
 public extension JSONResult {
 
-    public var data: Any? {
+    var data: Any? {
         switch self {
         case .success(let data, _):
             return data
@@ -41,15 +41,15 @@ public extension JSONResult {
         }
     }
 
-    public var arrayValue: [Any] {
+    var arrayValue: [Any] {
         return data as? [Any] ?? []
     }
 
-    public var dictionaryValue: [String: Any] {
+    var dictionaryValue: [String: Any] {
         return data as? [String: Any] ?? [:]
     }
 
-    public var httpResponse: HTTPURLResponse? {
+    var httpResponse: HTTPURLResponse? {
         switch self {
         case .success(_, let response):
             return response
@@ -58,7 +58,7 @@ public extension JSONResult {
         }
     }
 
-    public var error: Error? {
+    var error: Error? {
         switch self {
         case .success:
             return nil
@@ -66,20 +66,19 @@ public extension JSONResult {
             return error
         }
     }
-
 }
 
 open class JSONRequest {
 
     fileprivate(set) var request: NSMutableURLRequest?
 
-    open static var log: ((String) -> Void)?
-    open static var userAgent: String?
-    open static var requestTimeout = 5.0
-    open static var resourceTimeout = 10.0
-    open static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
+    public static var log: ((String) -> Void)?
+    public static var userAgent: String?
+    public static var requestTimeout = 5.0
+    public static var resourceTimeout = 10.0
+    public static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy
 
-    open static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
+    public static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
 
     open var httpRequest: NSMutableURLRequest? {
         return request
@@ -161,7 +160,7 @@ open class JSONRequest {
         // Wait for the request to complete
         while semaphore.wait(timeout: DispatchTime.now()) == .timedOut {
             let intervalDate = Date(timeIntervalSinceNow: 0.01) // 10 milliseconds
-            RunLoop.current.run(mode: RunLoopMode.defaultRunLoopMode, before: intervalDate)
+            RunLoop.current.run(mode: RunLoop.Mode.default, before: intervalDate)
         }
         return requestResult
     }
@@ -322,5 +321,4 @@ open class JSONRequest {
     fileprivate func dataToUTFString(data: Data) -> String {
         return String(data: data, encoding: String.Encoding.utf8) ?? ""
     }
-
 }
