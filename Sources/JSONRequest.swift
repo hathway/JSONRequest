@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Hathway. All rights reserved.
 //
 
-import Foundation
 import SystemConfiguration
 
 public typealias JSONObject = [String: Any]
@@ -75,6 +74,7 @@ public extension JSONResult {
 
 }
 
+// swiftlint:disable type_body_length file_length
 open class JSONRequest {
     public static var log: ((String) -> Void)?
     public static var userAgent: String? {
