@@ -102,6 +102,8 @@ open class JSONRequest {
 
     public static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
 
+    public var errorCallback: (Error) -> Void = { _ in }
+
     /* Used for dependency injection of outside URLSessions (keep nil to use default) */
     private var urlSession: URLSession?
 
@@ -187,6 +189,7 @@ open class JSONRequest {
                                error: error as NSError?)
             if let error = error {
                 let result = JSONResult.failure(error: JSONError.requestFailed(error: error), response: response as? HTTPURLResponse, body: self.body(fromData: data))
+                self.errorCallback(error)
                 complete(result)
                 return
             } else if let httpResponse = (response as? HTTPURLResponse), httpResponse.statusCode == 304, let cachedResponseObj = cachedResponse {
@@ -201,9 +204,15 @@ open class JSONRequest {
                                    httpResponse: cachedResponseObj.response as? HTTPURLResponse,
                                    error: error as NSError?)
                 let result = self.parse(data: cachedResponseObj.data, response: cachedResponseObj.response)
+                if let error = result.error {
+                    self.errorCallback(error)
+                }
                 complete(result)
             } else {
                 let result = self.parse(data: data, response: response)
+                if let error = result.error {
+                    self.errorCallback(error)
+                }
                 complete(result)
             }
         }
