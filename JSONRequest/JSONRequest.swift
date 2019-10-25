@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Hathway. All rights reserved.
 //
 
+import Foundation
 import SystemConfiguration
 
 public typealias JSONObject = [String: Any]
