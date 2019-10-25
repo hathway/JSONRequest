@@ -87,10 +87,10 @@ open class JSONRequest {
             updateSessionConfig()
         }
     }
-    public static var requestTimeout = 60.0 {
+    public static var requestTimeout = 30.0 {
         didSet { updateSessionConfig() }
     }
-    public static var resourceTimeout = 60.0 {
+    public static var resourceTimeout = 30.0 {
         didSet { updateSessionConfig() }
     }
     public static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy {
