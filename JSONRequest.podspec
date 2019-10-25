@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "JSONRequest"
-  s.version      = "0.9.2"
+  s.version      = "0.10.0"
   s.summary      = "JSONRequest is a tiny Swift library for Synchronous and Asynchronous HTTP JSON requests."
   s.homepage     = "http://github.com/hathway/JSONRequest"
   s.license      = { :type => "MIT", :file => "LICENSE" }
@@ -14,6 +14,6 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = "9.0"
 
   s.source = { :git => "https://github.com/hathway/JSONRequest.git", :tag => s.version }
-  s.source_files  = "Sources/*.swift"
-  s.swift_version = '5.0'
+  s.source_files  = "JSONRequest/*.swift"
+  s.swift_versions = ['5.0']
 end

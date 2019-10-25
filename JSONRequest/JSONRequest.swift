@@ -87,10 +87,10 @@ open class JSONRequest {
             updateSessionConfig()
         }
     }
-    public static var requestTimeout = 5.0 {
+    public static var requestTimeout = 30.0 {
         didSet { updateSessionConfig() }
     }
-    public static var resourceTimeout = 10.0 {
+    public static var resourceTimeout = 30.0 {
         didSet { updateSessionConfig() }
     }
     public static var requestCachePolicy: NSURLRequest.CachePolicy = .useProtocolCachePolicy {
@@ -161,7 +161,7 @@ open class JSONRequest {
     ///   - complete: Completion handler which accepts Result value
     /// - Returns: Active request which can be cancelled
     @discardableResult
-    public func send(_ method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil, payload: Any? = nil, headers: JSONObject? = nil, timeOut: TimeInterval? = nil, complete: @escaping (JSONResult) -> Void) -> JSONCancellableRequest? {
+    func send(_ method: JSONRequestHttpVerb, url: String, queryParams: JSONObject? = nil, payload: Any? = nil, headers: JSONObject? = nil, timeOut: TimeInterval? = nil, complete: @escaping (JSONResult) -> Void) -> JSONCancellableRequest? {
         if (isConnectedToNetwork() == false) && (JSONRequest.requireNetworkAccess) {
             let error = JSONError.noInternetConnection
             complete(.failure(error: error, response: nil, body: nil))

@@ -47,7 +47,7 @@
 		9575F2041C443758000B5A59 /* JSONRequest.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = JSONRequest.podspec; sourceTree = "<group>"; };
 		9575F2051C443758000B5A59 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		9575F2061C4443E8000B5A59 /* JSONRequestGETTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONRequestGETTests.swift; sourceTree = "<group>"; };
-		9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestVerbs.swift; path = Sources/JSONRequestVerbs.swift; sourceTree = "<group>"; };
+		9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestVerbs.swift; path = JSONRequest/JSONRequestVerbs.swift; sourceTree = "<group>"; };
 		957B33231CA1A3C300A4A2C6 /* JSONResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONResultTests.swift; sourceTree = "<group>"; };
 		957B33361CA43E7A00A4A2C6 /* JSONRequestPOSTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONRequestPOSTTests.swift; sourceTree = "<group>"; };
 		957B33381CA43E9500A4A2C6 /* JSONRequestPUTTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONRequestPUTTests.swift; sourceTree = "<group>"; };
@@ -55,11 +55,11 @@
 		957B333C1CA43EAD00A4A2C6 /* JSONRequestDELETETests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONRequestDELETETests.swift; sourceTree = "<group>"; };
 		95975AFF1C1E2C68004750A8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = JSONRequest/Info.plist; sourceTree = "<group>"; };
 		95975B031C1E2CA0004750A8 /* JSONRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSONRequest.h; path = JSONRequest/JSONRequest.h; sourceTree = "<group>"; };
-		95975B071C1E2CFF004750A8 /* JSONRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequest.swift; path = Sources/JSONRequest.swift; sourceTree = "<group>"; };
+		95975B071C1E2CFF004750A8 /* JSONRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequest.swift; path = JSONRequest/JSONRequest.swift; sourceTree = "<group>"; };
 		95975B0E1C1F39D2004750A8 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		A262DBB8FA4EFE8496CA36C8 /* Pods-JSONRequest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JSONRequest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JSONRequest/Pods-JSONRequest.debug.xcconfig"; sourceTree = "<group>"; };
 		D4F9B0EF1F268BE3004C6B15 /* testFiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = testFiles; sourceTree = "<group>"; };
-		DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLEncoding.swift; path = Sources/URLEncoding.swift; sourceTree = "<group>"; };
+		DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLEncoding.swift; path = JSONRequest/URLEncoding.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +103,6 @@
 				95975B0E1C1F39D2004750A8 /* Package.swift */,
 				50793BD919D5B57000F5DEB2 /* Products */,
 				50793BF419D5B80E00F5DEB2 /* README.md */,
-				95975B061C1E2CC2004750A8 /* Sources */,
 				41CD3E1B32673753B2AE4123 /* Pods */,
 				953C5C25C1D34A52BEC8AF04 /* Frameworks */,
 			);
@@ -156,18 +155,11 @@
 			children = (
 				95975B031C1E2CA0004750A8 /* JSONRequest.h */,
 				95975AFF1C1E2C68004750A8 /* Info.plist */,
-			);
-			name = JSONRequest;
-			sourceTree = "<group>";
-		};
-		95975B061C1E2CC2004750A8 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
 				95975B071C1E2CFF004750A8 /* JSONRequest.swift */,
 				9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */,
 				DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */,
 			);
-			name = Sources;
+			name = JSONRequest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -232,26 +224,27 @@
 			attributes = {
 				LastSwiftMigration = 0720;
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Hathway;
 				TargetAttributes = {
 					50793BD719D5B57000F5DEB2 = {
 						CreatedOnToolsVersion = 6.0;
-						LastSwiftMigration = 1100;
+						LastSwiftMigration = 1020;
 					};
 					50793BE219D5B57000F5DEB2 = {
 						CreatedOnToolsVersion = 6.0;
-						LastSwiftMigration = 1100;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
 			buildConfigurationList = 50793BD219D5B57000F5DEB2 /* Build configuration list for PBXProject "JSONRequest" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				English,
 				en,
+				Base,
 			);
 			mainGroup = 50793BCE19D5B57000F5DEB2;
 			productRefGroup = 50793BD919D5B57000F5DEB2 /* Products */;
@@ -289,7 +282,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-JSONRequestTests/Pods-JSONRequestTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-JSONRequestTests/Pods-JSONRequestTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/DVR/DVR.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -298,7 +291,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-JSONRequestTests/Pods-JSONRequestTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-JSONRequestTests/Pods-JSONRequestTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9575F20A1C4489DC000B5A59 /* SwiftLint */ = {
