@@ -8,14 +8,20 @@
 
 import Foundation
 
+public struct JSONRequestAuthChallengeResult {
+    let disposition: URLSession.AuthChallengeDisposition
+    let credential: URLCredential?
+}
+
 public protocol JSONRequestAuthChallengeHandler {
-    func handle(_ session: URLSession, challenge: URLAuthenticationChallenge) -> URLSession.AuthChallengeDisposition
+    func handle(_ session: URLSession, challenge: URLAuthenticationChallenge) -> JSONRequestAuthChallengeResult
 }
 
 class JSONRequestSessionDelegate: NSObject, URLSessionDelegate {
     var authChallengeHandler: JSONRequestAuthChallengeHandler?
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        let disposition = authChallengeHandler?.handle(session, challenge: challenge) ?? .performDefaultHandling
-        completionHandler(disposition, nil)
+        let result = authChallengeHandler?.handle(session, challenge: challenge)
+        let disposition = result?.disposition ?? .performDefaultHandling
+        completionHandler(disposition, result?.credential)
     }
 }
