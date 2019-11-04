@@ -108,6 +108,12 @@ open class JSONRequest {
     /* Used for dependency injection of outside URLSessions (keep nil to use default) */
     private var urlSession: URLSession?
 
+    private static let urlSessionDelegate = JSONRequestSessionDelegate()
+    public static var authChallengeHandler: JSONRequestAuthChallengeHandler? {
+        get { return urlSessionDelegate.authChallengeHandler }
+        set { urlSessionDelegate.authChallengeHandler = newValue }
+    }
+
     /* Set to false during testing to avoid test failures due to lack of internet access */
     internal static var requireNetworkAccess = true
 
@@ -145,7 +151,9 @@ open class JSONRequest {
         let urlCache: URLCache? = isURLCacheEnabled ? URLCache(memoryCapacity: capacity, diskCapacity: capacity, diskPath: nil) : nil
         sessionConfig.urlCache = urlCache
         JSONRequest.sessionConfigurationDelegate?(sessionConfig)
-        urlSession = URLSession(configuration: JSONRequest.sessionConfig)
+        urlSession = URLSession(configuration: JSONRequest.sessionConfig,
+                                delegate: JSONRequest.urlSessionDelegate,
+                                delegateQueue: .main)
     }
 
     // MARK: Non-public business logic (testable but not public outside the module)
@@ -228,7 +236,9 @@ open class JSONRequest {
             config.timeoutIntervalForRequest = timeout
             config.timeoutIntervalForResource = timeout
         }
-        let session = URLSession(configuration: config)
+        let session = URLSession(configuration: config,
+                                 delegate: JSONRequest.urlSessionDelegate,
+                                 delegateQueue: .main)
         if forcedTimeout == nil {
             // if there isn't a custom timeout, set the member variable with this new session we've created for future use.
             urlSession = session
