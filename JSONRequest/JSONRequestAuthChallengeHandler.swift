@@ -11,6 +11,11 @@ import Foundation
 public struct JSONRequestAuthChallengeResult {
     let disposition: URLSession.AuthChallengeDisposition
     let credential: URLCredential?
+
+    public init(disposition: URLSession.AuthChallengeDisposition, credential: URLCredential? = nil) {
+        self.disposition = disposition
+        self.credential = credential
+    }
 }
 
 public protocol JSONRequestAuthChallengeHandler {
