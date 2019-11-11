@@ -18,6 +18,8 @@
 		957B333D1CA43EAD00A4A2C6 /* JSONRequestDELETETests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957B333C1CA43EAD00A4A2C6 /* JSONRequestDELETETests.swift */; };
 		95975B081C1E2CFF004750A8 /* JSONRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95975B071C1E2CFF004750A8 /* JSONRequest.swift */; };
 		95975B0B1C1E31E0004750A8 /* JSONRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 95975B031C1E2CA0004750A8 /* JSONRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D1E0A4872379710500F9285E /* JSONRequestAuthChallengeHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E0A4862379710500F9285E /* JSONRequestAuthChallengeHandlerTests.swift */; };
+		D1E0A48D2379745200F9285E /* JSONRequestSSLPinningHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E0A48B2379740100F9285E /* JSONRequestSSLPinningHandler.swift */; };
 		D1FA0587237033810011424E /* JSONRequestAuthChallengeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FA0586237033810011424E /* JSONRequestAuthChallengeHandler.swift */; };
 		D4F9B0F01F268BE3004C6B15 /* testFiles in Resources */ = {isa = PBXBuildFile; fileRef = D4F9B0EF1F268BE3004C6B15 /* testFiles */; };
 		DA9BEACF1F2BF63700EEDC94 /* URLEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */; };
@@ -59,6 +61,8 @@
 		95975B071C1E2CFF004750A8 /* JSONRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequest.swift; path = JSONRequest/JSONRequest.swift; sourceTree = "<group>"; };
 		95975B0E1C1F39D2004750A8 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		A262DBB8FA4EFE8496CA36C8 /* Pods-JSONRequest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JSONRequest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JSONRequest/Pods-JSONRequest.debug.xcconfig"; sourceTree = "<group>"; };
+		D1E0A4862379710500F9285E /* JSONRequestAuthChallengeHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRequestAuthChallengeHandlerTests.swift; sourceTree = "<group>"; };
+		D1E0A48B2379740100F9285E /* JSONRequestSSLPinningHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestSSLPinningHandler.swift; path = JSONRequest/JSONRequestSSLPinningHandler.swift; sourceTree = "<group>"; };
 		D1FA0586237033810011424E /* JSONRequestAuthChallengeHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestAuthChallengeHandler.swift; path = JSONRequest/JSONRequestAuthChallengeHandler.swift; sourceTree = "<group>"; };
 		D4F9B0EF1F268BE3004C6B15 /* testFiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = testFiles; sourceTree = "<group>"; };
 		DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLEncoding.swift; path = JSONRequest/URLEncoding.swift; sourceTree = "<group>"; };
@@ -130,6 +134,7 @@
 				957B33381CA43E9500A4A2C6 /* JSONRequestPUTTests.swift */,
 				50793BE719D5B57100F5DEB2 /* JSONRequestTests.swift */,
 				957B33231CA1A3C300A4A2C6 /* JSONResultTests.swift */,
+				D1E0A4862379710500F9285E /* JSONRequestAuthChallengeHandlerTests.swift */,
 				50793BE519D5B57100F5DEB2 /* Supporting Files */,
 			);
 			path = JSONRequestTests;
@@ -159,6 +164,7 @@
 				95975AFF1C1E2C68004750A8 /* Info.plist */,
 				95975B071C1E2CFF004750A8 /* JSONRequest.swift */,
 				D1FA0586237033810011424E /* JSONRequestAuthChallengeHandler.swift */,
+				D1E0A48B2379740100F9285E /* JSONRequestSSLPinningHandler.swift */,
 				9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */,
 				DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */,
 			);
@@ -245,7 +251,6 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -356,6 +361,7 @@
 			files = (
 				9575F2091C448965000B5A59 /* JSONRequestVerbs.swift in Sources */,
 				95975B081C1E2CFF004750A8 /* JSONRequest.swift in Sources */,
+				D1E0A48D2379745200F9285E /* JSONRequestSSLPinningHandler.swift in Sources */,
 				D1FA0587237033810011424E /* JSONRequestAuthChallengeHandler.swift in Sources */,
 				DA9BEACF1F2BF63700EEDC94 /* URLEncoding.swift in Sources */,
 			);
@@ -371,6 +377,7 @@
 				957B333B1CA43EA200A4A2C6 /* JSONRequestPATCHTests.swift in Sources */,
 				957B33371CA43E7A00A4A2C6 /* JSONRequestPOSTTests.swift in Sources */,
 				50793BE819D5B57100F5DEB2 /* JSONRequestTests.swift in Sources */,
+				D1E0A4872379710500F9285E /* JSONRequestAuthChallengeHandlerTests.swift in Sources */,
 				957B33241CA1A3C300A4A2C6 /* JSONResultTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,7 +440,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -485,7 +492,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
