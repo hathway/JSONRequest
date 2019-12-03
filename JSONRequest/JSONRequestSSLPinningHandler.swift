@@ -25,6 +25,7 @@ import CommonCrypto
 ///
 ///[Certificate and Public Key Pinning]: https://www.owasp.org/index.php/Certificate_and_Public_Key_Pinning
 ///For more information, see [Certificate and Public Key Pinning].
+@available(iOS 10.3, *)
 public final class JSONRequestSSLPinningHandler: JSONRequestAuthChallengeHandler {
     let rsa2048Asn1Header: [UInt8] = [
         0x30, 0x82, 0x01, 0x22, 0x30, 0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86,
@@ -52,6 +53,10 @@ public final class JSONRequestSSLPinningHandler: JSONRequestAuthChallengeHandler
         keyWithHeader.append(data)
         var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
 
+        #warning("Check this code for warning fix")
+//        keyWithHeader.withUnsafeBytes { (data: UnsafeRawBufferPointer) in
+//            _ = CC_SHA256(data.baseAddress, CC_LONG(keyWithHeader.count), &hash)
+//        }
         keyWithHeader.withUnsafeBytes {
            _ = CC_SHA256($0, CC_LONG(keyWithHeader.count), &hash)
         }
