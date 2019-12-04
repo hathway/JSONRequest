@@ -108,6 +108,13 @@ open class JSONRequest {
     /* Used for dependency injection of outside URLSessions (keep nil to use default) */
     private var urlSession: URLSession?
 
+    private static let sessionDelegateQueue: OperationQueue = {
+        let operationQueue = OperationQueue()
+        operationQueue.qualityOfService = .userInitiated
+        operationQueue.maxConcurrentOperationCount = 1
+        operationQueue.name = "JSONRequest::session_delegate"
+        return operationQueue
+    }()
     private static let urlSessionDelegate = JSONRequestSessionDelegate()
     public static var authChallengeHandler: JSONRequestAuthChallengeHandler? {
         get { return urlSessionDelegate.authChallengeHandler }
@@ -153,7 +160,7 @@ open class JSONRequest {
         JSONRequest.sessionConfigurationDelegate?(sessionConfig)
         urlSession = URLSession(configuration: JSONRequest.sessionConfig,
                                 delegate: JSONRequest.urlSessionDelegate,
-                                delegateQueue: .main)
+                                delegateQueue: sessionDelegateQueue)
     }
 
     // MARK: Non-public business logic (testable but not public outside the module)
@@ -238,7 +245,7 @@ open class JSONRequest {
         }
         let session = URLSession(configuration: config,
                                  delegate: JSONRequest.urlSessionDelegate,
-                                 delegateQueue: .main)
+                                 delegateQueue: Self.sessionDelegateQueue)
         if forcedTimeout == nil {
             // if there isn't a custom timeout, set the member variable with this new session we've created for future use.
             urlSession = session
