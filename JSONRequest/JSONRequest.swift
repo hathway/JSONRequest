@@ -101,7 +101,8 @@ open class JSONRequest {
         didSet { updateSessionConfig() }
     }
 
-    public static let serviceTripTimeNotification = NSNotification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
+    public static let serviceTripTimeNotification = Notification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
+    public static let mainThreadSyncRequestWarningNotification = Notification.Name("JSON_REQUEST_MAIN_THREAD_SYNC_REQUEST_WARNING_NOTIFICATION")
 
     public static var errorCallback: (Error) -> Void = { _ in }
 
@@ -258,6 +259,9 @@ open class JSONRequest {
                            payload: Any? = nil,
                            headers: JSONObject? = nil,
                            timeOut: TimeInterval? = nil) -> JSONResult {
+        if Thread.isMainThread {
+            NotificationCenter.default.post(name: JSONRequest.mainThreadSyncRequestWarningNotification, object: url)
+        }
         var requestResult: JSONResult = JSONResult.failure(error: JSONError.unknownError,
                                                            response: nil, body: nil)
 
