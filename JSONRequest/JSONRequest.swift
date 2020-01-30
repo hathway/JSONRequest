@@ -151,6 +151,20 @@ open class JSONRequest {
 
     private static var urlSession: URLSession! = nil
 
+    
+    /// Create URL session with JSONRequest configuration
+    /// - Parameter forcedTimeout: Forced timeout
+    public static func createNetworkSession(forcedTimeout: TimeInterval? = nil) -> URLSession {
+        let config = JSONRequest.sessionConfig
+        if let timeout = forcedTimeout {
+            config.timeoutIntervalForRequest = timeout
+            config.timeoutIntervalForResource = timeout
+        }
+        return URLSession(configuration: config,
+                          delegate: JSONRequest.urlSessionDelegate,
+                          delegateQueue: Self.sessionDelegateQueue)
+    }
+
     private static func updateSessionConfig() {
         sessionConfig.requestCachePolicy = requestCachePolicy
         sessionConfig.timeoutIntervalForResource = resourceTimeout
@@ -239,14 +253,7 @@ open class JSONRequest {
     }
 
     func networkSession(forcedTimeout: TimeInterval? = nil) -> URLSession {
-        let config = JSONRequest.sessionConfig
-        if let timeout = forcedTimeout {
-            config.timeoutIntervalForRequest = timeout
-            config.timeoutIntervalForResource = timeout
-        }
-        let session = URLSession(configuration: config,
-                                 delegate: JSONRequest.urlSessionDelegate,
-                                 delegateQueue: Self.sessionDelegateQueue)
+        let session = JSONRequest.createNetworkSession(forcedTimeout: forcedTimeout)
         if forcedTimeout == nil {
             // if there isn't a custom timeout, set the member variable with this new session we've created for future use.
             urlSession = session
