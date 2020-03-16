@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Hathway. All rights reserved.
 //
 
-import Foundation
 import SystemConfiguration
 
 public typealias JSONObject = [String: Any]
@@ -101,6 +100,10 @@ open class JSONRequest {
         didSet { updateSessionConfig() }
     }
 
+    /// These headers are added to each request.
+    /// - Note: this property is thread unsafe
+    public static var additionalHeaders: JSONObject = [:]
+
     public static let serviceTripTimeNotification = Notification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
     public static let mainThreadSyncRequestWarningNotification = Notification.Name("JSON_REQUEST_MAIN_THREAD_SYNC_REQUEST_WARNING_NOTIFICATION")
 
@@ -151,7 +154,6 @@ open class JSONRequest {
 
     private static var urlSession: URLSession! = nil
 
-    
     /// Create URL session with JSONRequest configuration
     /// - Parameter forcedTimeout: Forced timeout
     public static func createNetworkSession(forcedTimeout: TimeInterval? = nil) -> URLSession {
@@ -293,6 +295,11 @@ open class JSONRequest {
     func updateRequest(_ request: inout URLRequest, headers: JSONObject?) {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        for (headerName, headerValue) in JSONRequest.additionalHeaders {
+            request.setValue(String(describing: headerValue), forHTTPHeaderField: headerName)
+        }
+
         if let headers = headers {
             for (headerName, headerValue) in headers {
                 request.setValue(String(describing: headerValue), forHTTPHeaderField: headerName)
