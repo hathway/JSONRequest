@@ -104,6 +104,10 @@ open class JSONRequest {
     /// - Note: this property is thread unsafe
     public static var additionalHeaders: JSONObject = [:]
 
+    
+    /// Set this property if the app needs transform some error
+    public static var errorMapper: JSONRequestResponseErrorMapper?
+
     public static let serviceTripTimeNotification = Notification.Name("JSON_REQUEST_TRIP_TIME_NOTIFICATION")
     public static let mainThreadSyncRequestWarningNotification = Notification.Name("JSON_REQUEST_MAIN_THREAD_SYNC_REQUEST_WARNING_NOTIFICATION")
 
@@ -221,9 +225,19 @@ open class JSONRequest {
                                httpResponse: response as? HTTPURLResponse,
                                error: error as NSError?)
             if let error = error {
-                let result = JSONResult.failure(error: JSONError.requestFailed(error: error), response: response as? HTTPURLResponse, body: self.body(fromData: data))
                 JSONRequest.errorCallback(error)
-                complete(result)
+                let completeAction: (Error) -> Void = { err in
+                    let result = JSONResult.failure(error: JSONError.requestFailed(error: err), response: response as? HTTPURLResponse, body: self.body(fromData: data))
+                    complete(result)
+                }
+
+                if let errorMapper = JSONRequest.errorMapper {
+                    errorMapper.handle(error, response: response as? HTTPURLResponse) { newError in
+                        completeAction(newError)
+                    }
+                } else {
+                    completeAction(error)
+                }
                 return
             } else if let httpResponse = (response as? HTTPURLResponse), httpResponse.statusCode == 304, let cachedResponseObj = cachedResponse {
                 /*  For some rediculous reason, there are cases where the cache contains a response for the HTTP request (as verified
