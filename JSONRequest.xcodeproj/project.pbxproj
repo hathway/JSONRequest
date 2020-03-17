@@ -21,6 +21,7 @@
 		D1E0A4872379710500F9285E /* JSONRequestAuthChallengeHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E0A4862379710500F9285E /* JSONRequestAuthChallengeHandlerTests.swift */; };
 		D1E0A48D2379745200F9285E /* JSONRequestSSLPinningHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E0A48B2379740100F9285E /* JSONRequestSSLPinningHandler.swift */; };
 		D1FA0587237033810011424E /* JSONRequestAuthChallengeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FA0586237033810011424E /* JSONRequestAuthChallengeHandler.swift */; };
+		D1FDC0B12421805C003E3E18 /* JSONRequestResponseErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FDC0B02421805B003E3E18 /* JSONRequestResponseErrorMapper.swift */; };
 		D4F9B0F01F268BE3004C6B15 /* testFiles in Resources */ = {isa = PBXBuildFile; fileRef = D4F9B0EF1F268BE3004C6B15 /* testFiles */; };
 		DA9BEACF1F2BF63700EEDC94 /* URLEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */; };
 		F5CA216D29A78D7BD6E012C3 /* Pods_JSONRequestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F6AFE01224BBF6E8DD4CBAD /* Pods_JSONRequestTests.framework */; };
@@ -64,6 +65,7 @@
 		D1E0A4862379710500F9285E /* JSONRequestAuthChallengeHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRequestAuthChallengeHandlerTests.swift; sourceTree = "<group>"; };
 		D1E0A48B2379740100F9285E /* JSONRequestSSLPinningHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestSSLPinningHandler.swift; path = JSONRequest/JSONRequestSSLPinningHandler.swift; sourceTree = "<group>"; };
 		D1FA0586237033810011424E /* JSONRequestAuthChallengeHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestAuthChallengeHandler.swift; path = JSONRequest/JSONRequestAuthChallengeHandler.swift; sourceTree = "<group>"; };
+		D1FDC0B02421805B003E3E18 /* JSONRequestResponseErrorMapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JSONRequestResponseErrorMapper.swift; path = JSONRequest/JSONRequestResponseErrorMapper.swift; sourceTree = "<group>"; };
 		D4F9B0EF1F268BE3004C6B15 /* testFiles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = testFiles; sourceTree = "<group>"; };
 		DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = URLEncoding.swift; path = JSONRequest/URLEncoding.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -164,6 +166,7 @@
 				95975AFF1C1E2C68004750A8 /* Info.plist */,
 				95975B071C1E2CFF004750A8 /* JSONRequest.swift */,
 				D1FA0586237033810011424E /* JSONRequestAuthChallengeHandler.swift */,
+				D1FDC0B02421805B003E3E18 /* JSONRequestResponseErrorMapper.swift */,
 				D1E0A48B2379740100F9285E /* JSONRequestSSLPinningHandler.swift */,
 				9575F2081C448965000B5A59 /* JSONRequestVerbs.swift */,
 				DA9BEACE1F2BF63700EEDC94 /* URLEncoding.swift */,
@@ -363,6 +366,7 @@
 				95975B081C1E2CFF004750A8 /* JSONRequest.swift in Sources */,
 				D1E0A48D2379745200F9285E /* JSONRequestSSLPinningHandler.swift in Sources */,
 				D1FA0587237033810011424E /* JSONRequestAuthChallengeHandler.swift in Sources */,
+				D1FDC0B12421805C003E3E18 /* JSONRequestResponseErrorMapper.swift in Sources */,
 				DA9BEACF1F2BF63700EEDC94 /* URLEncoding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
