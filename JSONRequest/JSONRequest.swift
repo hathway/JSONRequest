@@ -203,7 +203,19 @@ open class JSONRequest {
             complete(.failure(error: error, response: nil, body: nil))
             return nil
         }
-        var request = URLRequest(url: URL(string: url)!, cachePolicy: JSONRequest.requestCachePolicy, timeoutInterval: timeOut ?? JSONRequest.requestTimeout)
+        
+        guard let requestURL = URL(string: url) else {
+            complete(.failure(error: .invalidURL, response: nil, body: nil))
+            return nil
+        }
+        
+        let urlRequest: URLRequest? = URLRequest(url: requestURL, cachePolicy: JSONRequest.requestCachePolicy, timeoutInterval: timeOut ?? JSONRequest.requestTimeout)
+        
+        guard var request = urlRequest else {
+            complete(.failure(error: .invalidURL, response: nil, body: nil))
+            return nil
+        }
+        
         updateRequest(&request, method: method, url: url, queryParams: queryParams)
         updateRequest(&request, headers: headers)
         updateRequest(&request, payload: payload)
