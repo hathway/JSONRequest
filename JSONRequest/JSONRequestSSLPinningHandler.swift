@@ -6,6 +6,7 @@
 //  Copyright © 2019 Hathway. All rights reserved.
 //
 
+import Foundation
 import CommonCrypto
 
 ///JSONRequestSSLPinningHandler helps to associate a host with their hash of expected certificate public key

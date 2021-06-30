@@ -5,6 +5,7 @@
 //  Created by Eneko Alonso on 1/11/16.
 //  Copyright © 2016 Hathway. All rights reserved.
 //
+import Foundation
 
 public enum JSONRequestHttpVerb: String {
     case GET
