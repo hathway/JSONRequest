@@ -5,7 +5,7 @@
 //  Created by Eneko Alonso on 9/12/14.
 //  Copyright (c) 2014 Hathway. All rights reserved.
 //
-
+import Foundation
 import SystemConfiguration
 
 public typealias JSONObject = [String: Any]
