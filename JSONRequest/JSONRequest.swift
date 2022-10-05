@@ -310,7 +310,10 @@ open class JSONRequest {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
-        for (headerName, headerValue) in JSONRequest.additionalHeaders {
+        //FYI: Iterating over global static variables can lead to a crash in release optimized code
+        //Ref: https://stackoverflow.com/questions/52734074/what-does-outlined-init-with-copy-of-protocol-mean/55582763#55582763
+        let additionalHeaders = JSONRequest.additionalHeaders
+        for (headerName, headerValue) in additionalHeaders {
             request.setValue(String(describing: headerValue), forHTTPHeaderField: headerName)
         }
 
