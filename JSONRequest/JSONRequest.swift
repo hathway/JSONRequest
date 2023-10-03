@@ -20,7 +20,7 @@ public enum JSONError: Error {
 
     case nonHTTPResponse
     case responseDeserialization
-
+    case responseHTMLParseError
     case unknownError
 }
 
@@ -360,10 +360,13 @@ open class JSONRequest {
             return JSONResult.success(data: nil, response: httpResponse)
         }
         guard let json = JSONToObject(data: data) else {
-            return JSONResult.failure(error: JSONError.responseDeserialization,
-                                      response: httpResponse,
-                                      body: dataToUTFString(data: data))
+            var jsonResult: JSONResult = JSONResult.failure(error: JSONError.responseDeserialization,response: httpResponse,body: dataToUTFString(data: data))
+            if(isLoginWrongPasswordLimitExceded(data)){
+                jsonResult = JSONResult.failure(error: JSONError.responseHTMLParseError,response: httpResponse,body: dataToUTFString(data: data))
+            }
+            return jsonResult
         }
+
         return JSONResult.success(data: json, response: httpResponse)
     }
 
@@ -473,5 +476,19 @@ open class JSONRequest {
 
     fileprivate func dataToUTFString(data: Data) -> String {
         return String(data: data, encoding: String.Encoding.utf8) ?? ""
+    }
+
+    // This method will check received response is a html string and contains rate limited string
+    fileprivate func isLoginWrongPasswordLimitExceded(_ data: Data) -> Bool {
+        var isLimitExceded : Bool = false
+        let response = dataToUTFString(data: data)
+        if response.isEmpty {
+            return isLimitExceded
+        }
+        var isHTMLString = response.range(of: "<(\"[^\"]*\"|'[^']*'|[^'\">])*>", options: .regularExpression) != nil
+        if((response.range(of:"You are being rate limited") != nil) && (isHTMLString == true)){
+            isLimitExceded = true
+        }
+        return isLimitExceded
     }
 }
