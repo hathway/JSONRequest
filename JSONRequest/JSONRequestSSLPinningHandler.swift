@@ -54,12 +54,8 @@ public final class JSONRequestSSLPinningHandler: JSONRequestAuthChallengeHandler
         keyWithHeader.append(data)
         var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
 
-        #warning("Check this code for warning fix")
-//        keyWithHeader.withUnsafeBytes { (data: UnsafeRawBufferPointer) in
-//            _ = CC_SHA256(data.baseAddress, CC_LONG(keyWithHeader.count), &hash)
-//        }
-        keyWithHeader.withUnsafeBytes {
-           _ = CC_SHA256($0, CC_LONG(keyWithHeader.count), &hash)
+        keyWithHeader.withUnsafeBytes { (data: UnsafeRawBufferPointer) in
+            _ = CC_SHA256(data.baseAddress, CC_LONG(keyWithHeader.count), &hash)
         }
 
         return Data(hash).base64EncodedString()
@@ -84,7 +80,7 @@ public final class JSONRequestSSLPinningHandler: JSONRequestAuthChallengeHandler
             return JSONRequestAuthChallengeResult(disposition: .cancelAuthenticationChallenge)
         }
 
-        guard let serverPublicKey = SecCertificateCopyPublicKey(serverCertificate),
+        guard let serverPublicKey = SecCertificateCopyKey(serverCertificate),
               let serverPublicKeyData: NSData = SecKeyCopyExternalRepresentation(serverPublicKey, nil ) else {
             return JSONRequestAuthChallengeResult(disposition: .performDefaultHandling)
         }
