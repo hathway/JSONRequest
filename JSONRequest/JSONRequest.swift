@@ -101,8 +101,7 @@ open class JSONRequest {
     }
 
     /// These headers are added to each request.
-    /// - Note: this property is thread unsafe
-    public static var additionalHeaders: JSONObject = [:]
+    public static var additionalHeadersDataSource: (() -> JSONObject)?
 
     /// Set this property if the app needs handle raw HTTP responses
     public static var rawResponsesHandler: JSONRequestRawResponseHandler?
@@ -312,9 +311,10 @@ open class JSONRequest {
 
         //FYI: Iterating over global static variables can lead to a crash in release optimized code
         //Ref: https://stackoverflow.com/questions/52734074/what-does-outlined-init-with-copy-of-protocol-mean/55582763#55582763
-        let additionalHeaders = JSONRequest.additionalHeaders
-        for (headerName, headerValue) in additionalHeaders {
-            request.setValue(String(describing: headerValue), forHTTPHeaderField: headerName)
+        if let additionalHeaders = JSONRequest.additionalHeadersDataSource?() {
+            for (headerName, headerValue) in additionalHeaders {
+                request.setValue(String(describing: headerValue), forHTTPHeaderField: headerName)
+            }
         }
 
         if let headers = headers {
